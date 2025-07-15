@@ -1,0 +1,77 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Header -->
+  <div class="bg-white shadow-sm border-b">
+    <div class="container mx-auto px-4 py-4">
+      <div class="flex items-center justify-between">
+        <h1 class="text-2xl font-bold text-blue-600">Career Path Explorer</h1>
+        <button 
+          routerLink="/landing" 
+          class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+          Back to Home
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="flex h-[calc(100vh-80px)]">
+    <!-- Left Panel - 30% -->
+    <div class="w-[30%] bg-white border-r border-gray-200 overflow-y-auto">
+      <div class="p-6">
+        <h2 class="text-xl font-semibold mb-4 text-gray-800">Position Details</h2>
+        
+        @if (!selectedNode) {
+          <div class="text-center py-8">
+            <div class="text-gray-400 text-5xl mb-4">👆</div>
+            <p class="text-gray-600">Click on a node in the graph to view detailed information.</p>
+          </div>
+        } @else {
+          <div class="space-y-4">
+            <div class="bg-blue-50 rounded-lg p-4">
+              <h3 class="text-lg font-semibold text-blue-600 mb-2">
+                {{ selectedNode.label }}
+              </h3>
+              <div class="space-y-2 text-sm">
+                <p><span class="font-medium">Department:</span> {{ selectedNode.department }}</p>
+                <p><span class="font-medium">Level:</span> {{ selectedNode.level }}</p>
+                <p><span class="font-medium">Salary:</span> {{ selectedNode.salary }}</p>
+              </div>
+            </div>
+            
+            <div>
+              <h4 class="font-medium text-gray-800 mb-2">Description</h4>
+              <p class="text-gray-600 text-sm">{{ selectedNode.description }}</p>
+            </div>
+            
+            <div>
+              <h4 class="font-medium text-gray-800 mb-2">Requirements</h4>
+              <ul class="space-y-1">
+                @for (req of selectedNode.requirements; track req) {
+                  <li class="text-sm text-gray-600 flex items-start">
+                    <span class="text-green-600 mr-2">•</span>
+                    {{ req }}
+                  </li>
+                }
+              </ul>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Right Panel - 70% -->
+    <div class="w-[70%] relative">
+      <div class="absolute inset-0 bg-gray-100">
+        <div #cytoscapeContainer class="w-full h-full"></div>
+      </div>
+      
+      <div class="absolute top-4 right-4">
+        <button 
+          (click)="resetView()"
+          class="bg-white shadow-md px-3 py-2 rounded-lg text-sm hover:bg-gray-50">
+          Reset View
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
