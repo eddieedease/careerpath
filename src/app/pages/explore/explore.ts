@@ -1,5 +1,6 @@
 import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import cytoscape from 'cytoscape';
 
 interface NodeData {
@@ -20,7 +21,7 @@ interface CareerPath {
 
 @Component({
   selector: 'app-explore',
-  imports: [RouterLink],
+  imports: [RouterLink, FormsModule],
   templateUrl: './explore.html',
   styleUrl: './explore.css',
   standalone: true
@@ -30,6 +31,11 @@ export class Explore implements OnInit, AfterViewInit {
   
   cy: any;
   selectedNode: NodeData | null = null;
+
+  // Add new properties
+  searchQuery: string = '';
+  searchResults: NodeData[] = [];
+  selectedNodePaths: CareerPath[] = [];
 
   private careerData: NodeData[] = [
     {
@@ -211,19 +217,42 @@ export class Explore implements OnInit, AfterViewInit {
         directed: true,
         spacingFactor: 1.8,
         avoidOverlap: true
-      }
+      },
+      // Disable built-in zoom
+      userZoomingEnabled: false,
+      minZoom: 0.1,
+      maxZoom: 3,
+      zoom: 1
     });
 
-    // Add this to prevent unwanted zooming
-    this.cy.minZoom(0.5);
-    this.cy.maxZoom(2);
+    // Custom zoom handler
+    let currentZoom = 1;
+    const zoomStep = 0.1;
+
+    this.cytoscapeContainer.nativeElement.addEventListener('wheel', (event: WheelEvent) => {
+      event.preventDefault();
+      
+      // Calculate new zoom level
+      if (event.deltaY < 0) {
+        currentZoom = Math.min(currentZoom + zoomStep, 3);
+      } else {
+        currentZoom = Math.max(currentZoom - zoomStep, 0.1);
+      }
+
+      // Apply zoom centered on mouse position
+      const mousePosition = this.cy.renderer().projectIntoViewport(event.offsetX, event.offsetY);
+      this.cy.zoom({
+        level: currentZoom,
+        renderedPosition: { x: event.offsetX, y: event.offsetY }
+      });
+    });
 
     this.cy.on('tap', 'node', (event: any) => {
       const nodeId = event.target.id();
       const node = event.target;
       
-      // Find the node data
       this.selectedNode = this.careerData.find(node => node.id === nodeId) || null;
+      this.updateSelectedNodePaths(nodeId);
       
       // Reset all edges to default style first
       this.cy.edges().style({
@@ -242,6 +271,17 @@ export class Explore implements OnInit, AfterViewInit {
     });
   }
 
+  selectSearchResult(node: NodeData) {
+    this.searchQuery = '';
+    this.searchResults = [];
+    const cyNode = this.cy.getElementById(node.id);
+    if (cyNode) {
+      cyNode.trigger('tap');
+      
+      this.cy.fit(cyNode.neighborhood().add(cyNode), 100);
+    }
+  }
+
   public resetView(): void {
     if (this.cy) {
       this.cy.edges().style({
@@ -251,7 +291,29 @@ export class Explore implements OnInit, AfterViewInit {
       });
       
       this.cy.fit();
-      this.cy.center();
     }
+  }
+
+  // Add new methods
+  onSearch(event: any) {
+    const query = this.searchQuery.toLowerCase();
+    if (query.length < 2) {
+      this.searchResults = [];
+      return;
+    }
+
+    this.searchResults = this.careerData.filter(node =>
+      node.label.toLowerCase().includes(query) ||
+      node.department.toLowerCase().includes(query)
+    ).slice(0, 5); // Limit to 5 results
+  }
+
+  getNodeLabel(nodeId: string): string {
+    return this.careerData.find(node => node.id === nodeId)?.label || nodeId;
+  }
+
+  updateSelectedNodePaths(nodeId: string) {
+    // Find all possible career paths from this node
+    this.selectedNodePaths = this.careerPaths.filter(path => path.from === nodeId);
   }
 }

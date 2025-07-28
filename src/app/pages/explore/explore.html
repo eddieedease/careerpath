@@ -17,6 +17,30 @@
   <div class="flex h-[calc(100vh-80px)]">
     <!-- Left Panel - Fixed width -->
     <div class="w-[30%] bg-white border-r border-gray-200 overflow-y-auto">
+      <!-- Add search box -->
+      <div class="p-4 border-b border-gray-200">
+        <div class="relative">
+          <input 
+            type="text" 
+            [(ngModel)]="searchQuery" 
+            (input)="onSearch($event)"
+            placeholder="Zoek een functie..." 
+            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+          @if (searchResults.length > 0) {
+            <div class="absolute z-10 w-full mt-1 bg-white border rounded-lg shadow-lg">
+              @for (result of searchResults; track result.id) {
+                <button 
+                  (click)="selectSearchResult(result)"
+                  class="w-full px-4 py-2 text-left hover:bg-gray-50 text-sm">
+                  {{ result.label }}
+                </button>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
       <div class="p-6">
         <h2 class="text-xl font-semibold mb-4 text-gray-800">Functiedetails</h2>
         
@@ -34,7 +58,7 @@
               <div class="space-y-2 text-sm">
                 <p><span class="font-medium">Afdeling:</span> {{ selectedNode.department }}</p>
                 <p><span class="font-medium">Niveau:</span> {{ selectedNode.level }}</p>
-                <p><span class="font-medium">Salaris:</span> {{ selectedNode.salary }}</p>
+                <!-- <p><span class="font-medium">Salaris:</span> {{ selectedNode.salary }}</p> -->
               </div>
             </div>
             
@@ -54,15 +78,33 @@
                 }
               </ul>
             </div>
+            
+            <!-- Add career paths section -->
+            @if (selectedNodePaths.length > 0) {
+              <div>
+                <h4 class="font-medium text-gray-800 mb-2">Loopbaanmogelijkheden</h4>
+                <div class="space-y-3">
+                  @for (path of selectedNodePaths; track path.to) {
+                    <div class="bg-gray-50 p-3 rounded-lg text-sm">
+                      <div class="flex items-center justify-between mb-1">
+                        <span class="font-medium text-blue-600">{{ getNodeLabel(path.to) }}</span>
+                        <span class="text-gray-500 text-xs">{{ path.timeframe }}</span>
+                      </div>
+                      <p class="text-gray-600">Mogelijke vervolgstap</p>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
           </div>
         }
       </div>
     </div>
 
     <!-- Right Panel - Fill remaining width -->
-    <div class="w-[70%] relative">
-      <div class="absolute inset-0 bg-gray-100">
-        <div #cytoscapeContainer class="w-full h-full"></div>
+    <div class="w-[70%] relative overflow-hidden">  <!-- Added overflow-hidden -->
+      <div class="absolute inset-0">
+        <div #cytoscapeContainer class="w-full h-full" style="overflow: hidden;"></div>
       </div>
       
       <div class="absolute top-4 right-4">
