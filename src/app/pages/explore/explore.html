@@ -1,5 +1,5 @@
 <div class="min-h-screen bg-gray-50">
-  <!-- Header -->
+  <!-- Header - Fixed height -->
   <div class="bg-white shadow-sm border-b">
     <div class="container mx-auto px-4 py-4">
       <div class="flex items-center justify-between">
@@ -13,9 +13,9 @@
     </div>
   </div>
 
-  <!-- Main Content -->
+  <!-- Main Content - Fill remaining space -->
   <div class="flex h-[calc(100vh-80px)]">
-    <!-- Left Panel - 30% -->
+    <!-- Left Panel - Fixed width -->
     <div class="w-[30%] bg-white border-r border-gray-200 overflow-y-auto">
       <div class="p-6">
         <h2 class="text-xl font-semibold mb-4 text-gray-800">Functiedetails</h2>
@@ -59,7 +59,7 @@
       </div>
     </div>
 
-    <!-- Right Panel - 70% -->
+    <!-- Right Panel - Fill remaining width -->
     <div class="w-[70%] relative">
       <div class="absolute inset-0 bg-gray-100">
         <div #cytoscapeContainer class="w-full h-full"></div>

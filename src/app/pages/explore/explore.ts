@@ -22,7 +22,8 @@ interface CareerPath {
   selector: 'app-explore',
   imports: [RouterLink],
   templateUrl: './explore.html',
-  styleUrl: './explore.css'
+  styleUrl: './explore.css',
+  standalone: true
 })
 export class Explore implements OnInit, AfterViewInit {
   @ViewChild('cytoscapeContainer', { static: true }) cytoscapeContainer!: ElementRef;
@@ -213,6 +214,10 @@ export class Explore implements OnInit, AfterViewInit {
       }
     });
 
+    // Add this to prevent unwanted zooming
+    this.cy.minZoom(0.5);
+    this.cy.maxZoom(2);
+
     this.cy.on('tap', 'node', (event: any) => {
       const nodeId = event.target.id();
       const node = event.target;
@@ -237,16 +242,14 @@ export class Explore implements OnInit, AfterViewInit {
     });
   }
 
-  resetView() {
+  public resetView(): void {
     if (this.cy) {
-      // Reset edge styling
       this.cy.edges().style({
         'line-color': '#6b7280',
         'target-arrow-color': '#6b7280',
         'width': 3
       });
       
-      // Fit and center the graph
       this.cy.fit();
       this.cy.center();
     }
