@@ -85,7 +85,9 @@
                 <h4 class="font-medium text-gray-800 mb-2">Loopbaanmogelijkheden</h4>
                 <div class="space-y-3">
                   @for (path of selectedNodePaths; track path.to) {
-                    <div class="bg-gray-50 p-3 rounded-lg text-sm">
+                    <div 
+                      (click)="selectNodeById(path.to)"
+                      class="bg-gray-50 p-3 rounded-lg text-sm cursor-pointer hover:bg-gray-100 transition-colors">
                       <div class="flex items-center justify-between mb-1">
                         <span class="font-medium text-blue-600">{{ getNodeLabel(path.to) }}</span>
                         <span class="text-gray-500 text-xs">{{ path.timeframe }}</span>

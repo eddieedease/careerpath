@@ -38,101 +38,581 @@ export class Explore implements OnInit, AfterViewInit {
   selectedNodePaths: CareerPath[] = [];
 
   private careerData: NodeData[] = [
-    {
-      id: 'nurse-assistant',
-      label: 'Zorgassistent',
-      department: 'Verpleging',
-      level: 'Instapniveau',
-      description: 'Biedt basiszorg aan patiënten onder toezicht van gediplomeerde verpleegkundigen.',
-      requirements: ['Middelbare school diploma', 'Verzorgende IG certificaat', 'Basale levensondersteuning'],
-      salary: '€23.000 - €32.000'
-    },
-    {
-      id: 'registered-nurse',
-      label: 'Verpleegkundige',
-      department: 'Verpleging',
-      level: 'Professional',
-      description: 'Verleent directe patiëntenzorg, dient medicatie toe, en coördineert zorgplannen.',
-      requirements: ['HBO-V', 'BIG-registratie', 'Klinische ervaring'],
-      salary: '€35.000 - €55.000'
-    },
-    {
-      id: 'nurse-manager',
-      label: 'Afdelingshoofd Verpleging',
-      department: 'Verpleging',
-      level: 'Management',
-      description: 'Leidt verplegend personeel, beheert afdelingsoperaties, en zorgt voor kwaliteitszorg.',
-      requirements: ['HBO-V/Master', 'Management ervaring', 'Leiderschapsvaardigheden'],
-      salary: '€55.000 - €75.000'
-    },
-    {
-      id: 'med-tech',
-      label: 'Medisch Analist',
-      department: 'Laboratorium',
-      level: 'Professional',
-      description: 'Voert complexe laboratoriumtests uit en analyseert resultaten.',
-      requirements: ['Bachelor Medische Technologie', 'Laboratorium certificering'],
-      salary: '€32.000 - €50.000'
-    },
-    {
-      id: 'lab-manager',
-      label: 'Laboratorium Manager',
-      department: 'Laboratorium',
-      level: 'Management',
-      description: 'Superviseert laboratoriumoperaties, beheert personeel en zorgt voor kwaliteitscontrole van alle tests.',
-      requirements: ['Master Medische Biologie of Chemie', 'Management ervaring', 'Kwaliteitsbeheersysteem kennis'],
-      salary: '€60.000 - €80.000'
-    },
-    {
-      id: 'physician-assistant',
-      label: 'Physician Assistant',
-      department: 'Medisch',
-      level: 'Professional',
-      description: 'Assisteert artsen bij diagnose en behandeling van patiënten, voert medische procedures uit.',
-      requirements: ['Master Physician Assistant', 'BIG-registratie', 'Klinische ervaring'],
-      salary: '€45.000 - €65.000'
-    },
-    {
-      id: 'medical-specialist',
-      label: 'Medisch Specialist',
-      department: 'Medisch',
-      level: 'Expert',
-      description: 'Diagnosticeert en behandelt patiënten binnen een medisch specialisme zoals cardiologie of neurologie.',
-      requirements: ['Geneeskunde opleiding', 'Specialisatie', 'BIG-registratie'],
-      salary: '€90.000 - €120.000'
-    },
-    {
-      id: 'it-support',
-      label: 'IT Ondersteuning',
-      department: 'ICT',
-      level: 'Instapniveau',
-      description: 'Biedt technische ondersteuning voor ziekenhuissystemen en apparatuur.',
-      requirements: ['MBO Informatica', 'Kennis van netwerken', 'Probleemoplossend vermogen'],
-      salary: '€28.000 - €38.000'
-    },
-    {
-      id: 'health-informatics',
-      label: 'Zorginformaticus',
-      department: 'ICT',
-      level: 'Professional',
-      description: 'Ontwikkelt en beheert klinische informatiesystemen en zorgt voor data-integratie binnen het ziekenhuis.',
-      requirements: ['HBO/WO Informatica of Zorginformatica', 'Kennis van EPD-systemen', 'SQL en databeheer'],
-      salary: '€45.000 - €65.000'
-    }
-  ];
+  {
+    id: 'afdelingsassistent-fwg20',
+    label: 'Afdelingsassistent',
+    department: 'Zorg',
+    level: 'Medewerker zorg C',
+    description: 'Ondersteunt bij administratieve en organisatorische taken op de afdeling.',
+    requirements: ['example'],
+    salary: 'FWG 20'
+  },
+  {
+    id: 'zorgassistent-fwg30',
+    label: 'Zorgassistent',
+    department: 'Zorg',
+    level: 'Medewerker zorg A - helpende zorg en welzijn niv 2',
+    description: 'Biedt basiszorg aan patiënten onder toezicht van gediplomeerde verpleegkundigen.',
+    requirements: ['example'],
+    salary: 'FWG 30'
+  },
+  {
+    id: 'spreekuurassistent-fwg30',
+    label: 'Spreekuurassistent',
+    department: 'Medisch',
+    level: 'medisch assistent D',
+    description: 'Assisteert artsen tijdens spreekuren en ondersteunt patiënten.',
+    requirements: ['example'],
+    salary: 'FWG 30'
+  },
+  {
+    id: 'polikliniek-assistent-fwg35',
+    label: 'Polikliniek assistent',
+    department: 'Medisch',
+    level: 'medisch assistent C',
+    description: 'Ondersteunt medische processen in de polikliniek.',
+    requirements: ['example'],
+    salary: 'FWG 35'
+  },
+  {
+    id: 'medisch-assistent-fwg40',
+    label: 'Medisch assistent',
+    department: 'Medisch',
+    level: 'medisch assistent B',
+    description: 'Voert medisch-administratieve taken uit en ondersteunt artsen.',
+    requirements: ['example'],
+    salary: 'FWG 40'
+  },
+  {
+    id: 'dialyse-assistent-fwg40',
+    label: 'Dialyse assistent',
+    department: 'Verpleging',
+    level: 'Medewerker verpleging en verzorging',
+    description: 'Assisteert bij dialysebehandelingen van patiënten.',
+    requirements: ['example'],
+    salary: 'FWG 40'
+  },
+  {
+    id: 'mbo-verpleegkundige-fwg45',
+    label: 'Mbo-Verpleegkundige',
+    department: 'Verpleging',
+    level: 'verpleegkundige B',
+    description: 'Verleent directe patiëntenzorg op MBO-niveau.',
+    requirements: ['example'],
+    salary: 'FWG 45'
+  },
+  {
+    id: 'mbo-verpleegkundige-baz-fwg45',
+    label: 'Mbo-Verpleegkundige met BAZ',
+    department: 'Verpleging',
+    level: 'verpleegkundige B (BAZ)',
+    description: 'MBO-verpleegkundige met Beperkt Aangepaste Zorg specialisatie.',
+    requirements: ['example'],
+    salary: 'FWG 45'
+  },
+  {
+    id: 'polikliniek-verpleegkundige-fwg45',
+    label: 'Polikliniek verpleegkundige',
+    department: 'Verpleging',
+    level: 'medisch assistent A',
+    description: 'Verpleegkundige werkzaam in de polikliniek.',
+    requirements: ['example'],
+    salary: 'FWG 45'
+  },
+  {
+    id: 'radiologisch-laborant-allround-fwg45',
+    label: 'Radiologisch laborant all round',
+    department: 'Radiologie',
+    level: 'Laborant beeldvormende technieken B - MBRT aangevuld met aandachtsgebied',
+    description: 'All-round radiologisch laborant voor verschillende beeldvormende technieken.',
+    requirements: ['example'],
+    salary: 'FWG 45'
+  },
+  {
+    id: 'hbo-verpleegkundige-fwg50',
+    label: 'Hbo-Verpleegkundige',
+    department: 'Verpleging',
+    level: 'Verpleegkundige A',
+    description: 'Verleent directe patiëntenzorg op HBO-niveau.',
+    requirements: ['example'],
+    salary: 'FWG 50'
+  },
+  {
+    id: 'hbo-verpleegkundige-baz-fwg50',
+    label: 'Hbo-Verpleegkundige met BAZ',
+    department: 'Verpleging',
+    level: 'Verpleegkundige A (BAZ)',
+    description: 'HBO-verpleegkundige met Beperkt Aangepaste Zorg specialisatie.',
+    requirements: ['example'],
+    salary: 'FWG 50'
+  },
+  {
+    id: 'oncologie-verpleegkundige-fwg50',
+    label: 'Oncologie verpleegkundige',
+    department: 'Verpleging',
+    level: 'Specialistisch verpleegkundige B',
+    description: 'Gespecialiseerde verpleegkundige in de oncologie.',
+    requirements: ['example'],
+    salary: 'FWG 50'
+  },
+  {
+    id: 'kinderverpleegkundige-fwg50',
+    label: 'Kinderverpleegkundige',
+    department: 'Verpleging',
+    level: 'Specialistisch verpleegkundige B',
+    description: 'Gespecialiseerde verpleegkundige voor pediatrische zorg.',
+    requirements: ['example'],
+    salary: 'FWG 50'
+  },
+  {
+    id: 'verpleegkundige-obstetrie-fwg50',
+    label: 'Verpleegkundige obstetrie',
+    department: 'Verpleging',
+    level: 'Specialistisch verpleegkundige B',
+    description: 'Gespecialiseerde verpleegkundige in de verloskunde.',
+    requirements: ['example'],
+    salary: 'FWG 50'
+  },
+  {
+    id: 'neuro-verpleegkundige-fwg50',
+    label: 'Neuro verpleegkundige',
+    department: 'Verpleging',
+    level: 'Specialistisch verpleegkundige B',
+    description: 'Gespecialiseerde verpleegkundige in de neurologie.',
+    requirements: ['example'],
+    salary: 'FWG 50'
+  },
+  {
+    id: 'geriatrie-verpleegkundige-fwg50',
+    label: 'Geriatrie verpleegkundige',
+    department: 'Verpleging',
+    level: 'Specialistisch verpleegkundige B',
+    description: 'Gespecialiseerde verpleegkundige in de geriatrie.',
+    requirements: ['example'],
+    salary: 'FWG 50'
+  },
+  {
+    id: 'psychiatrisch-verpleegkundige-fwg50',
+    label: 'Psychiatrisch verpleegkundige',
+    department: 'Verpleging',
+    level: 'Psychiatrisch verpleegkundige',
+    description: 'Gespecialiseerde verpleegkundige in de psychiatrie.',
+    requirements: ['example'],
+    salary: 'FWG 50'
+  },
+  {
+    id: 'neonatologie-verpleegkundige-fwg50',
+    label: 'Neonatologie verpleegkundige',
+    department: 'Verpleging',
+    level: 'Specialistisch verpleegkundige B',
+    description: 'Gespecialiseerde verpleegkundige in de neonatologie.',
+    requirements: ['example'],
+    salary: 'FWG 50'
+  },
+  {
+    id: 'dialyse-verpleegkundige-fwg50',
+    label: 'Dialyse verpleegkundige',
+    department: 'Verpleging',
+    level: 'Specialistisch verpleegkundige B',
+    description: 'Gespecialiseerde verpleegkundige voor dialysebehandelingen.',
+    requirements: ['example'],
+    salary: 'FWG 50'
+  },
+  {
+    id: 'endoscopie-verpleegkundige-fwg50',
+    label: 'Endoscopie verpleegkundige',
+    department: 'Verpleging',
+    level: 'Specialistisch verpleegkundige B',
+    description: 'Gespecialiseerde verpleegkundige voor endoscopische procedures.',
+    requirements: ['example'],
+    salary: 'FWG 50'
+  },
+  {
+    id: 'avond-nacht-coordinator-fwg50',
+    label: 'Avond/nacht coördinator',
+    department: 'Verpleging',
+    level: 'avond/nachtcoördinator',
+    description: 'Coördineert zorgverlening tijdens avond- en nachtdiensten.',
+    requirements: ['example'],
+    salary: 'FWG 50'
+  },
+  {
+    id: 'pacu-verpleegkundige-fwg50',
+    label: 'PACU verpleegkundige',
+    department: 'Verpleging',
+    level: 'verpleegkundige bewaking B2',
+    description: 'Verpleegkundige werkzaam op de Post Anesthesia Care Unit.',
+    requirements: ['example'],
+    salary: 'FWG 50'
+  },
+  {
+    id: 'operatieassistent-fwg50',
+    label: 'Operatieassistent',
+    department: 'Operatie',
+    level: 'Operatieassistent B',
+    description: 'Assisteert bij operatieve ingrepen.',
+    requirements: ['example'],
+    salary: 'FWG 50'
+  },
+  {
+    id: 'anesthesiemedewerker-fwg50',
+    label: 'Anesthesiemedewerker',
+    department: 'Anesthesie',
+    level: 'Anesthesiemedewerker B',
+    description: 'Ondersteunt bij anesthesieprocedures.',
+    requirements: ['example'],
+    salary: 'FWG 50'
+  },
+  {
+    id: 'radiologisch-laborant-specialisatie-fwg50',
+    label: 'Radiologisch laborant met specialisatie',
+    department: 'Radiologie',
+    level: 'Laborant beeldvormende technieken A - MBRT',
+    description: 'Gespecialiseerde radiologisch laborant.',
+    requirements: ['example'],
+    salary: 'FWG 50'
+  },
+  {
+    id: 'teamleider-c-fwg50',
+    label: 'Teamleider C',
+    department: 'Management',
+    level: 'generiek',
+    description: 'Teamleider op basis niveau.',
+    requirements: ['example'],
+    salary: 'FWG 50'
+  },
+  {
+    id: 'ic-verpleegkundige-fwg55',
+    label: 'IC verpleegkundige',
+    department: 'Verpleging',
+    level: 'Verpleegkundige bewaking A',
+    description: 'Gespecialiseerde verpleegkundige op de Intensive Care.',
+    requirements: ['example'],
+    salary: 'FWG 55'
+  },
+  {
+    id: 'seh-verpleegkundige-fwg55',
+    label: 'SEH verpleegkundige',
+    department: 'Verpleging',
+    level: 'verpleegkundige spoedeisende zorg A',
+    description: 'Gespecialiseerde verpleegkundige op de Spoedeisende Hulp.',
+    requirements: ['example'],
+    salary: 'FWG 55'
+  },
+  {
+    id: 'ccu-verpleegkundige-fwg55',
+    label: 'CCU verpleegkundige',
+    department: 'Verpleging',
+    level: 'verpleegkundige bewaking A',
+    description: 'Gespecialiseerde verpleegkundige op de Coronary Care Unit.',
+    requirements: ['example'],
+    salary: 'FWG 55'
+  },
+  {
+    id: 'seh-verpleegkundige-ambulance-fwg55',
+    label: 'SEH verpleegkundige + Ambulance',
+    department: 'Verpleging',
+    level: 'verpleegkundige spoedeisende zorg A = ambulance',
+    description: 'SEH verpleegkundige met ambulance-ervaring.',
+    requirements: ['example'],
+    salary: 'FWG 55'
+  },
+  {
+    id: 'ventilation-renal-neural-practitioner-fwg55',
+    label: 'Ventilation, Renal of Neural practitioner',
+    department: 'Verpleging',
+    level: 'Verpleegkundige bewaking A',
+    description: 'Gespecialiseerde practitioner voor beademing, nier- of neurologische zorg.',
+    requirements: ['example'],
+    salary: 'FWG 55'
+  },
+  {
+    id: 'medisch-hulpverlener-fwg55',
+    label: 'Medisch hulpverlener',
+    department: 'Medisch',
+    level: 'Medisch hulpverlener',
+    description: 'Verleent medische hulp en ondersteuning.',
+    requirements: ['example'],
+    salary: 'FWG 55'
+  },
+  {
+    id: 'fysiotherapeut-fwg55',
+    label: 'Fysiotherapeut',
+    department: 'Paramedisch',
+    level: 'Fysiotherapeut',
+    description: 'Verleent fysiotherapeutische behandelingen.',
+    requirements: ['example'],
+    salary: 'FWG 55'
+  },
+  {
+    id: 'teamleider-kliniek-fwg55',
+    label: 'Teamleider kliniek',
+    department: 'Management',
+    level: 'Teamleider zorg B',
+    description: 'Leidt team in klinische omgeving.',
+    requirements: ['example'],
+    salary: 'FWG 55'
+  },
+  {
+    id: 'gipsverbandmeester-fwg55',
+    label: 'Gipsverbandmeester',
+    department: 'Paramedisch',
+    level: 'vakman vormende techniek A',
+    description: 'Gespecialiseerd in het aanleggen van gipsverbanden.',
+    requirements: ['example'],
+    salary: 'FWG 55'
+  },
+  {
+    id: 'interventielaborant-fwg55',
+    label: 'Interventielaborant',
+    department: 'Radiologie',
+    level: 'Laborant functieonderzoek A1',
+    description: 'Gespecialiseerde laborant voor interventionele procedures.',
+    requirements: ['example'],
+    salary: 'FWG 55'
+  },
+  {
+    id: 'radiologisch-laborant-echo-gyn-fwg55',
+    label: 'Radiologisch laborant met specialisatie (echo gyn)',
+    department: 'Radiologie',
+    level: 'Laborant functieonderzoek A2',
+    description: 'Gespecialiseerde laborant voor gynecologische echografie.',
+    requirements: ['example'],
+    salary: 'FWG 55'
+  },
+  {
+    id: 'operatieassistent-fwg55',
+    label: 'Operatieassistent',
+    department: 'Operatie',
+    level: 'Operatieassistent A',
+    description: 'Senior operatieassistent.',
+    requirements: ['example'],
+    salary: 'FWG 55'
+  },
+  {
+    id: 'anesthesiemedewerker-fwg55',
+    label: 'Anesthesiemedewerker',
+    department: 'Anesthesie',
+    level: 'Anesthesiemedewerker A',
+    description: 'Senior anesthesiemedewerker.',
+    requirements: ['example'],
+    salary: 'FWG 55'
+  },
+  {
+    id: 'interventielaborant-specialisatie-fwg55',
+    label: 'Interventielaborant met specialisatie',
+    department: 'Radiologie',
+    level: 'Laborant functieonderzoek A1',
+    description: 'Gespecialiseerde interventielaborant.',
+    requirements: ['example'],
+    salary: 'FWG 55'
+  },
+  {
+    id: 'teamleider-b-fwg55',
+    label: 'Teamleider B',
+    department: 'Management',
+    level: 'generiek',
+    description: 'Teamleider op middenniveau.',
+    requirements: ['example'],
+    salary: 'FWG 55'
+  },
+  {
+    id: 'physician-assistant-fwg60',
+    label: 'Physician assistant',
+    department: 'Medisch',
+    level: 'Physician assistant',
+    description: 'Assisteert artsen bij diagnose en behandeling van patiënten.',
+    requirements: ['example'],
+    salary: 'FWG 60'
+  },
+  {
+    id: 'verpleegkundig-specialist-fwg60',
+    label: 'Verpleegkundig specialist',
+    department: 'Verpleging',
+    level: 'verpleegkundige specialist',
+    description: 'Hooggespecialiseerde verpleegkundige met uitgebreide bevoegdheden.',
+    requirements: ['example'],
+    salary: 'FWG 60'
+  },
+  {
+    id: 'teamleider-acute-as-fwg60',
+    label: 'Teamleider acute as',
+    department: 'Management',
+    level: 'Teamleider zorg A',
+    description: 'Leidt team in acute zorgomgeving.',
+    requirements: ['example'],
+    salary: 'FWG 60'
+  },
+  {
+    id: 'deskundige-infectiepreventie-fwg60',
+    label: 'Deskundige infectiepreventie',
+    department: 'Infectiepreventie',
+    level: 'Deskundige infectiepreventie',
+    description: 'Expert in infectiepreventie en -controle.',
+    requirements: ['example'],
+    salary: 'FWG 60'
+  },
+  {
+    id: 'sedatiepraktijk-specialist-fwg60',
+    label: 'Sedatiepraktijk-specialist',
+    department: 'Anesthesie',
+    level: 'Sedatie praktijk specialist',
+    description: 'Gespecialiseerd in sedatieprocedures.',
+    requirements: ['example'],
+    salary: 'FWG 60'
+  },
+  {
+    id: 'teamleider-a-fwg60',
+    label: 'Teamleider A',
+    department: 'Management',
+    level: 'generiek',
+    description: 'Senior teamleider.',
+    requirements: ['example'],
+    salary: 'FWG 60'
+  },
+  {
+    id: 'organisatorisch-hoofd-klinieken-fwg65',
+    label: 'Organisatorisch hoofd klinieken',
+    department: 'Management',
+    level: 'Organisatorisch hoofd B1',
+    description: 'Hoofd van klinische afdelingen.',
+    requirements: ['example'],
+    salary: 'FWG 65'
+  },
+  {
+    id: 'organisatorisch-hoofd-acute-as-fwg70',
+    label: 'Organisatorisch hoofd acute as',
+    department: 'Management',
+    level: 'Organisatorisch hoofd A',
+    description: 'Hoofd van acute zorgafdelingen.',
+    requirements: ['example'],
+    salary: 'FWG 70'
+  }
+];
 
-  private careerPaths: CareerPath[] = [
-    { from: 'nurse-assistant', to: 'registered-nurse', timeframe: '2-4 jaar' },
-    { from: 'registered-nurse', to: 'nurse-manager', timeframe: '5-7 jaar' },
-    { from: 'med-tech', to: 'lab-manager', timeframe: '4-6 jaar' },
-    { from: 'registered-nurse', to: 'physician-assistant', timeframe: '3-5 jaar' },
-    { from: 'physician-assistant', to: 'medical-specialist', timeframe: '5-8 jaar' },
-    { from: 'it-support', to: 'health-informatics', timeframe: '2-4 jaar' },
-    { from: 'med-tech', to: 'health-informatics', timeframe: '2-3 jaar' },
-    { from: 'registered-nurse', to: 'health-informatics', timeframe: '1-2 jaar' },
-    { from: 'nurse-manager', to: 'medical-specialist', timeframe: '6-8 jaar' },
-    { from: 'lab-manager', to: 'medical-specialist', timeframe: '7-9 jaar' }
-  ];
+  // Career paths based on the flowchart connections:
+private careerPaths: CareerPath[] = [
+  // Entry level to basic nursing
+  { from: 'afdelingsassistent-fwg20', to: 'zorgassistent-fwg30', timeframe: '1-2 jaar' },
+  { from: 'zorgassistent-fwg30', to: 'dialyse-assistent-fwg40', timeframe: '2-3 jaar' },
+  { from: 'dialyse-assistent-fwg40', to: 'mbo-verpleegkundige-fwg45', timeframe: '1-2 jaar' },
+  
+  // Medical assistant pathway
+  { from: 'spreekuurassistent-fwg30', to: 'polikliniek-assistent-fwg35', timeframe: '1-2 jaar' },
+  { from: 'polikliniek-assistent-fwg35', to: 'medisch-assistent-fwg40', timeframe: '1-2 jaar' },
+  { from: 'medisch-assistent-fwg40', to: 'polikliniek-verpleegkundige-fwg45', timeframe: '2-3 jaar' },
+  
+  // MBO to HBO nursing progression
+  { from: 'mbo-verpleegkundige-fwg45', to: 'hbo-verpleegkundige-fwg50', timeframe: '2-4 jaar' },
+  { from: 'mbo-verpleegkundige-baz-fwg45', to: 'hbo-verpleegkundige-baz-fwg50', timeframe: '2-4 jaar' },
+  
+  // Specialization pathways from HBO nurse
+  { from: 'hbo-verpleegkundige-fwg50', to: 'oncologie-verpleegkundige-fwg50', timeframe: '1-2 jaar' },
+  { from: 'hbo-verpleegkundige-fwg50', to: 'kinderverpleegkundige-fwg50', timeframe: '1-2 jaar' },
+  { from: 'hbo-verpleegkundige-fwg50', to: 'verpleegkundige-obstetrie-fwg50', timeframe: '1-2 jaar' },
+  { from: 'hbo-verpleegkundige-fwg50', to: 'neuro-verpleegkundige-fwg50', timeframe: '1-2 jaar' },
+  { from: 'hbo-verpleegkundige-fwg50', to: 'geriatrie-verpleegkundige-fwg50', timeframe: '1-2 jaar' },
+  { from: 'hbo-verpleegkundige-fwg50', to: 'psychiatrisch-verpleegkundige-fwg50', timeframe: '1-2 jaar' },
+  { from: 'hbo-verpleegkundige-fwg50', to: 'neonatologie-verpleegkundige-fwg50', timeframe: '1-2 jaar' },
+  { from: 'hbo-verpleegkundige-fwg50', to: 'dialyse-verpleegkundige-fwg50', timeframe: '1-2 jaar' },
+  { from: 'hbo-verpleegkundige-fwg50', to: 'endoscopie-verpleegkundige-fwg50', timeframe: '1-2 jaar' },
+  { from: 'hbo-verpleegkundige-fwg50', to: 'avond-nacht-coordinator-fwg50', timeframe: '2-3 jaar' },
+  { from: 'hbo-verpleegkundige-fwg50', to: 'pacu-verpleegkundige-fwg50', timeframe: '1-2 jaar' },
+  
+  // Advanced nursing specializations
+  { from: 'hbo-verpleegkundige-fwg50', to: 'ic-verpleegkundige-fwg55', timeframe: '2-3 jaar' },
+  { from: 'hbo-verpleegkundige-fwg50', to: 'seh-verpleegkundige-fwg55', timeframe: '2-3 jaar' },
+  { from: 'hbo-verpleegkundige-fwg50', to: 'ccu-verpleegkundige-fwg55', timeframe: '2-3 jaar' },
+  { from: 'seh-verpleegkundige-fwg55', to: 'seh-verpleegkundige-ambulance-fwg55', timeframe: '1-2 jaar' },
+  { from: 'ic-verpleegkundige-fwg55', to: 'ventilation-renal-neural-practitioner-fwg55', timeframe: '1-2 jaar' },
+  
+  // Technical/procedural pathways
+  { from: 'radiologisch-laborant-allround-fwg45', to: 'radiologisch-laborant-specialisatie-fwg50', timeframe: '2-3 jaar' },
+  { from: 'radiologisch-laborant-specialisatie-fwg50', to: 'radiologisch-laborant-echo-gyn-fwg55', timeframe: '1-2 jaar' },
+  { from: 'operatieassistent-fwg50', to: 'operatieassistent-fwg55', timeframe: '2-3 jaar' },
+  { from: 'anesthesiemedewerker-fwg50', to: 'anesthesiemedewerker-fwg55', timeframe: '2-3 jaar' },
+  { from: 'interventielaborant-fwg55', to: 'interventielaborant-specialisatie-fwg55', timeframe: '1-2 jaar' },
+  
+  // Management progression
+  { from: 'teamleider-c-fwg50', to: 'teamleider-b-fwg55', timeframe: '2-3 jaar' },
+  { from: 'teamleider-b-fwg55', to: 'teamleider-kliniek-fwg55', timeframe: '1-2 jaar' },
+  { from: 'teamleider-b-fwg55', to: 'teamleider-a-fwg60', timeframe: '2-3 jaar' },
+  { from: 'teamleider-kliniek-fwg55', to: 'teamleider-acute-as-fwg60', timeframe: '2-3 jaar' },
+  { from: 'teamleider-acute-as-fwg60', to: 'organisatorisch-hoofd-klinieken-fwg65', timeframe: '3-5 jaar' },
+  { from: 'organisatorisch-hoofd-klinieken-fwg65', to: 'organisatorisch-hoofd-acute-as-fwg70', timeframe: '3-5 jaar' },
+  
+  // Advanced professional roles
+  { from: 'hbo-verpleegkundige-fwg50', to: 'physician-assistant-fwg60', timeframe: '3-4 jaar' },
+  { from: 'ic-verpleegkundige-fwg55', to: 'verpleegkundig-specialist-fwg60', timeframe: '3-4 jaar' },
+  { from: 'seh-verpleegkundige-fwg55', to: 'verpleegkundig-specialist-fwg60', timeframe: '3-4 jaar' },
+  { from: 'ccu-verpleegkundige-fwg55', to: 'verpleegkundig-specialist-fwg60', timeframe: '3-4 jaar' },
+  
+  // Specialized expert roles
+  { from: 'anesthesiemedewerker-fwg55', to: 'sedatiepraktijk-specialist-fwg60', timeframe: '2-3 jaar' },
+  { from: 'hbo-verpleegkundige-fwg50', to: 'deskundige-infectiepreventie-fwg60', timeframe: '3-4 jaar' },
+  
+  // Cross-departmental moves
+  { from: 'medisch-assistent-fwg40', to: 'mbo-verpleegkundige-fwg45', timeframe: '2-3 jaar' },
+  { from: 'polikliniek-verpleegkundige-fwg45', to: 'hbo-verpleegkundige-fwg50', timeframe: '2-3 jaar' },
+  { from: 'dialyse-assistent-fwg40', to: 'dialyse-verpleegkundige-fwg50', timeframe: '2-3 jaar' },
+  
+  // Alternative specialist pathways
+  { from: 'hbo-verpleegkundige-fwg50', to: 'medisch-hulpverlener-fwg55', timeframe: '2-3 jaar' },
+  { from: 'medisch-hulpverlener-fwg55', to: 'physician-assistant-fwg60', timeframe: '2-3 jaar' },
+  
+  // Leadership from clinical roles
+  { from: 'oncologie-verpleegkundige-fwg50', to: 'teamleider-c-fwg50', timeframe: '2-3 jaar' },
+  { from: 'kinderverpleegkundige-fwg50', to: 'teamleider-c-fwg50', timeframe: '2-3 jaar' },
+  { from: 'neuro-verpleegkundige-fwg50', to: 'teamleider-c-fwg50', timeframe: '2-3 jaar' },
+  { from: 'ic-verpleegkundige-fwg55', to: 'teamleider-kliniek-fwg55', timeframe: '3-4 jaar' },
+  { from: 'seh-verpleegkundige-fwg55', to: 'teamleider-acute-as-fwg60', timeframe: '3-4 jaar' },
+  
+  // Additional technical progressions
+  { from: 'gipsverbandmeester-fwg55', to: 'fysiotherapeut-fwg55', timeframe: '2-3 jaar' },
+  
+  // Senior specialist to management
+  { from: 'physician-assistant-fwg60', to: 'teamleider-a-fwg60', timeframe: '2-3 jaar' },
+  { from: 'verpleegkundig-specialist-fwg60', to: 'organisatorisch-hoofd-klinieken-fwg65', timeframe: '4-5 jaar' },
+  
+  // Internal progression within same level but different specializations
+  { from: 'oncologie-verpleegkundige-fwg50', to: 'kinderverpleegkundige-fwg50', timeframe: '1-2 jaar' },
+  { from: 'kinderverpleegkundige-fwg50', to: 'neonatologie-verpleegkundige-fwg50', timeframe: '1-2 jaar' },
+  { from: 'verpleegkundige-obstetrie-fwg50', to: 'neonatologie-verpleegkundige-fwg50', timeframe: '1-2 jaar' },
+  
+  // HBO verpleegkundige met BAZ career advancement paths (missing from original)
+  { from: 'hbo-verpleegkundige-baz-fwg50', to: 'ic-verpleegkundige-fwg55', timeframe: '2-3 jaar' },
+  { from: 'hbo-verpleegkundige-baz-fwg50', to: 'seh-verpleegkundige-fwg55', timeframe: '2-3 jaar' },
+  { from: 'hbo-verpleegkundige-baz-fwg50', to: 'ccu-verpleegkundige-fwg55', timeframe: '2-3 jaar' },
+  { from: 'hbo-verpleegkundige-baz-fwg50', to: 'physician-assistant-fwg60', timeframe: '3-4 jaar' },
+  { from: 'hbo-verpleegkundige-baz-fwg50', to: 'teamleider-c-fwg50', timeframe: '2-3 jaar' },
+  
+  // Additional missing paths from other roles
+  { from: 'polikliniek-verpleegkundige-fwg45', to: 'operatieassistent-fwg50', timeframe: '2-3 jaar' },
+  { from: 'polikliniek-verpleegkundige-fwg45', to: 'anesthesiemedewerker-fwg50', timeframe: '2-3 jaar' },
+  { from: 'mbo-verpleegkundige-fwg45', to: 'operatieassistent-fwg50', timeframe: '2-3 jaar' },
+  { from: 'mbo-verpleegkundige-fwg45', to: 'anesthesiemedewerker-fwg50', timeframe: '2-3 jaar' },
+  { from: 'mbo-verpleegkundige-baz-fwg45', to: 'operatieassistent-fwg50', timeframe: '2-3 jaar' },
+  { from: 'mbo-verpleegkundige-baz-fwg45', to: 'anesthesiemedewerker-fwg50', timeframe: '2-3 jaar' },
+  
+  // Radiological career advancement from base level
+  { from: 'radiologisch-laborant-allround-fwg45', to: 'interventielaborant-fwg55', timeframe: '3-4 jaar' },
+  
+  // Additional specialist to leadership paths
+  { from: 'verpleegkundige-obstetrie-fwg50', to: 'teamleider-c-fwg50', timeframe: '2-3 jaar' },
+  { from: 'geriatrie-verpleegkundige-fwg50', to: 'teamleider-c-fwg50', timeframe: '2-3 jaar' },
+  { from: 'psychiatrisch-verpleegkundige-fwg50', to: 'teamleider-c-fwg50', timeframe: '2-3 jaar' },
+  { from: 'dialyse-verpleegkundige-fwg50', to: 'teamleider-c-fwg50', timeframe: '2-3 jaar' },
+  { from: 'endoscopie-verpleegkundige-fwg50', to: 'teamleider-c-fwg50', timeframe: '2-3 jaar' },
+  
+  // Technical specialist cross-training
+  { from: 'operatieassistent-fwg55', to: 'anesthesiemedewerker-fwg55', timeframe: '1-2 jaar' },
+  { from: 'anesthesiemedewerker-fwg55', to: 'operatieassistent-fwg55', timeframe: '1-2 jaar' },
+  
+  // Advanced coordinator roles
+  { from: 'avond-nacht-coordinator-fwg50', to: 'teamleider-kliniek-fwg55', timeframe: '2-3 jaar' },
+  { from: 'pacu-verpleegkundige-fwg50', to: 'ic-verpleegkundige-fwg55', timeframe: '2-3 jaar' },
+  { from: 'pacu-verpleegkundige-fwg50', to: 'anesthesiemedewerker-fwg55', timeframe: '2-3 jaar' },
+];
 
   ngOnInit() {}
 
@@ -166,7 +646,7 @@ export class Explore implements OnInit, AfterViewInit {
         {
           selector: 'node',
           style: {
-            'background-color': '#1e40af',
+            'background-color': '#1e40af', // Default blue
             'label': 'data(label)',
             'color': '#ffffff',
             'text-valign': 'center',
@@ -182,17 +662,30 @@ export class Explore implements OnInit, AfterViewInit {
             'text-max-width': '120px'
           }
         },
+        // Entry level positions (green)
         {
-          selector: 'node[level="Instapniveau"]',
-          style: { 'background-color': '#059669' }
+          selector: 'node[level="Medewerker zorg C"], node[level="Medewerker zorg A - helpende zorg en welzijn niv 2"], node[level="medisch assistent D"], node[level="medisch assistent C"]',
+          style: { 'background-color': '#16a34a' }
         },
+        // Standard healthcare roles (blue)
         {
-          selector: 'node[level="Management"]',
+          selector: 'node[level="verpleegkundige B"], node[level="Verpleegkundige A"], node[level="medisch assistent B"], node[level="medisch assistent A"], node[level="Specialistisch verpleegkundige B"]',
+          style: { 'background-color': '#2563eb' }
+        },
+        // Management roles (red)
+        {
+          selector: 'node[level="Teamleider zorg A"], node[level="Teamleider zorg B"], node[level="Organisatorisch hoofd A"], node[level="Organisatorisch hoofd B1"], node[level="generiek"]',
           style: { 'background-color': '#dc2626' }
         },
+        // High specialized roles (purple)
         {
-          selector: 'node[level="Expert"]',
+          selector: 'node[level="verpleegkundige specialist"], node[level="Physician assistant"], node[level="Sedatie praktijk specialist"], node[level="Deskundige infectiepreventie"], node[level="verpleegkundige bewaking A"], node[level="verpleegkundige spoedeisende zorg A"], node[level="verpleegkundige spoedeisende zorg A = ambulance"]',
           style: { 'background-color': '#7e22ce' }
+        },
+        // Support/technical roles (orange) 
+        {
+          selector: 'node[level="vakman vormende techniek A"], node[level="Fysiotherapeut"], node[level="Laborant functieonderzoek A1"], node[level="Laborant functieonderzoek A2"], node[level="Laborant beeldvormende technieken A"], node[level="Laborant beeldvormende technieken B"], node[level="Operatieassistent A"], node[level="Operatieassistent B"], node[level="Anesthesiemedewerker A"], node[level="Anesthesiemedewerker B"]',
+          style: { 'background-color': '#f97316' }
         },
         {
           selector: 'node:selected',
@@ -315,5 +808,19 @@ export class Explore implements OnInit, AfterViewInit {
   updateSelectedNodePaths(nodeId: string) {
     // Find all possible career paths from this node
     this.selectedNodePaths = this.careerPaths.filter(path => path.from === nodeId);
+  }
+
+  selectNodeById(nodeId: string) {
+    const node = this.cy.getElementById(nodeId);
+    if (node) {
+      // Trigger the tap event to update selection
+      node.trigger('tap');
+      
+      // Center and zoom to the node
+      this.cy.fit(node.neighborhood().add(node), 100);
+      
+      // Ensure the node is clearly visible
+      this.cy.center(node);
+    }
   }
 }
