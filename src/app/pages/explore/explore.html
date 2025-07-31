@@ -3,7 +3,18 @@
   <div class="bg-white shadow-sm border-b">
     <div class="container mx-auto px-4 py-4">
       <div class="flex items-center justify-between">
-        <h1 class="text-2xl font-bold text-blue-600">Loopbaanpaden Verkenner</h1>
+        <div class="flex items-center gap-4">
+          <h1 class="text-2xl font-bold text-blue-600">Loopbaanpaden Verkenner</h1>
+          <select 
+            (change)="changeLayout($event)"
+            class="px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="breadthfirst">Hierarchisch</option>
+            <option value="circle">Cirkel</option>
+            <option value="concentric">Concentrisch</option>
+            <option value="grid">Grid</option>
+            <option value="random">Willekeurig</option>
+          </select>
+        </div>
         <button 
           routerLink="/landing" 
           class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
@@ -47,7 +58,7 @@
         @if (!selectedNode) {
           <div class="text-center py-8">
             <div class="text-gray-400 text-5xl mb-4">👆</div>
-            <p class="text-gray-600">Klik op een knoop in de grafiek om gedetailleerde informatie te bekijken.</p>
+            <p class="text-gray-600">Klik op een knop in de grafiek om gedetailleerde informatie te bekijken.</p>
           </div>
         } @else {
           <div class="space-y-4">

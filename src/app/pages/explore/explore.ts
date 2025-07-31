@@ -709,7 +709,11 @@ private careerPaths: CareerPath[] = [
         name: 'breadthfirst',
         directed: true,
         spacingFactor: 1.8,
-        avoidOverlap: true
+        avoidOverlap: true,
+        // Add more default layout options
+        padding: 50,
+        animate: true,
+        animationDuration: 500,
       },
       // Disable built-in zoom
       userZoomingEnabled: false,
@@ -822,5 +826,54 @@ private careerPaths: CareerPath[] = [
       // Ensure the node is clearly visible
       this.cy.center(node);
     }
+  }
+
+  // Add new method to handle layout changes
+  changeLayout(event: Event) {
+    const select = event.target as HTMLSelectElement;
+    const layoutName = select.value;
+    
+    const layoutOptions: any = {
+      breadthfirst: {
+        name: 'breadthfirst',
+        directed: true,
+        spacingFactor: 1.8,
+        avoidOverlap: true,
+      },
+      circle: {
+        name: 'circle',
+        spacingFactor: 1.5,
+        avoidOverlap: true,
+      },
+      concentric: {
+        name: 'concentric',
+        minNodeSpacing: 50,
+        avoidOverlap: true,
+      },
+      grid: {
+        name: 'grid',
+        avoidOverlap: true,
+        spacingFactor: 1.5,
+      },
+      random: {
+        name: 'random',
+        avoidOverlap: true,
+      }
+    };
+
+    // Common options for all layouts
+    const commonOptions = {
+      animate: true,
+      animationDuration: 500,
+      padding: 50,
+      fit: true
+    };
+
+    const layout = this.cy.layout({
+      ...layoutOptions[layoutName],
+      ...commonOptions
+    });
+
+    layout.run();
   }
 }
