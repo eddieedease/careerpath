@@ -869,15 +869,15 @@ private careerPaths: CareerPath[] = [
       
       // First reset all edges to default style
       this.cy.edges().style({
-        'opacity': 0.2,
+        'opacity': 0.1, // Reduced from 0.2
         'line-color': '#6b7280',
         'target-arrow-color': '#6b7280',
         'width': 1
       });
 
-      // Set all nodes to dim state but keep them visible
+      // Set all nodes to dim state but keep them barely visible
       this.cy.nodes().style({
-        'opacity': 0.15
+        'opacity': 0.08  // Reduced from 0.15
       });
 
       // Get connected elements

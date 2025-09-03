@@ -1,0 +1,44 @@
+{
+  "paths": [
+    {
+      "from": "afdelingsassistent-fwg20",
+      "to": "zorgassistent-fwg30",
+      "timeframe": "1-2 jaar"
+    },
+    {
+      "from": "zorgassistent-fwg30",
+      "to": "dialyse-assistent-fwg40",
+      "timeframe": "2-3 jaar"
+    },
+    {
+      "from": "dialyse-assistent-fwg40",
+      "to": "mbo-verpleegkundige-fwg45",
+      "timeframe": "1-2 jaar"
+    },
+    {
+      "from": "spreekuurassistent-fwg30",
+      "to": "polikliniek-assistent-fwg35",
+      "timeframe": "1-2 jaar"
+    },
+    {
+      "from": "polikliniek-assistent-fwg35",
+      "to": "medisch-assistent-fwg40",
+      "timeframe": "1-2 jaar"
+    },
+    {
+      "from": "medisch-assistent-fwg40",
+      "to": "polikliniek-verpleegkundige-fwg45",
+      "timeframe": "2-3 jaar"
+    },
+    {
+      "from": "mbo-verpleegkundige-fwg45",
+      "to": "hbo-verpleegkundige-fwg50",
+      "timeframe": "2-4 jaar"
+    },
+    {
+      "from": "mbo-verpleegkundige-baz-fwg45",
+      "to": "hbo-verpleegkundige-baz-fwg50",
+      "timeframe": "2-4 jaar"
+    }
+  ]
+}

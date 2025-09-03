@@ -1,0 +1,85 @@
+{
+  "nodes": [
+    {
+      "id": "afdelingsassistent-fwg20",
+      "label": "Afdelingsassistent",
+      "department": "Zorg",
+      "level": "Medewerker zorg C",
+      "description": "Ondersteunt bij administratieve en organisatorische taken op de afdeling.",
+      "requirements": ["example"],
+      "salary": "FWG 20"
+    },
+    {
+      "id": "zorgassistent-fwg30",
+      "label": "Zorgassistent",
+      "department": "Zorg",
+      "level": "Medewerker zorg A - helpende zorg en welzijn niv 2",
+      "description": "Biedt basiszorg aan patiënten onder toezicht van gediplomeerde verpleegkundigen.",
+      "requirements": ["example"],
+      "salary": "FWG 30"
+    },
+    {
+      "id": "spreekuurassistent-fwg30",
+      "label": "Spreekuurassistent",
+      "department": "Medisch",
+      "level": "medisch assistent D",
+      "description": "Assisteert artsen tijdens spreekuren en ondersteunt patiënten.",
+      "requirements": ["example"],
+      "salary": "FWG 30"
+    },
+    {
+      "id": "polikliniek-assistent-fwg35",
+      "label": "Polikliniek assistent",
+      "department": "Medisch",
+      "level": "medisch assistent C",
+      "description": "Ondersteunt medische processen in de polikliniek.",
+      "requirements": ["example"],
+      "salary": "FWG 35"
+    },
+    {
+      "id": "medisch-assistent-fwg40",
+      "label": "Medisch assistent",
+      "department": "Medisch",
+      "level": "medisch assistent B",
+      "description": "Voert medisch-administratieve taken uit en ondersteunt artsen.",
+      "requirements": ["example"],
+      "salary": "FWG 40"
+    },
+    {
+      "id": "dialyse-assistent-fwg40",
+      "label": "Dialyse assistent",
+      "department": "Verpleging",
+      "level": "Medewerker verpleging en verzorging",
+      "description": "Assisteert bij dialysebehandelingen van patiënten.",
+      "requirements": ["example"],
+      "salary": "FWG 40"
+    },
+    {
+      "id": "mbo-verpleegkundige-fwg45",
+      "label": "Mbo-Verpleegkundige",
+      "department": "Verpleging",
+      "level": "verpleegkundige B",
+      "description": "Verleent directe patiëntenzorg op MBO-niveau.",
+      "requirements": ["example"],
+      "salary": "FWG 45"
+    },
+    {
+      "id": "mbo-verpleegkundige-baz-fwg45",
+      "label": "Mbo-Verpleegkundige met BAZ",
+      "department": "Verpleging",
+      "level": "verpleegkundige B (BAZ)",
+      "description": "MBO-verpleegkundige met Beperkt Aangepaste Zorg specialisatie.",
+      "requirements": ["example"],
+      "salary": "FWG 45"
+    },
+    {
+      "id": "polikliniek-verpleegkundige-fwg45",
+      "label": "Polikliniek verpleegkundige",
+      "department": "Verpleging",
+      "level": "medisch assistent A",
+      "description": "Verpleegkundige werkzaam in de polikliniek.",
+      "requirements": ["example"],
+      "salary": "FWG 45"
+    }
+  ]
+}
