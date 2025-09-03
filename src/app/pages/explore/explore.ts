@@ -36,6 +36,19 @@ export class Explore implements OnInit, AfterViewInit {
   searchQuery: string = '';
   searchResults: NodeData[] = [];
   selectedNodePaths: CareerPath[] = [];
+  
+  // Filter properties
+  departments: string[] = [];
+  selectedDepartment: string = '';
+  salaryLevels: string[] = [];
+  selectedSalaryLevel: string = '';
+  
+  // Initialize filters in constructor
+  constructor() {
+    // Get unique departments and salary levels
+    this.departments = [...new Set(this.careerData.map(node => node.department))].sort();
+    this.salaryLevels = [...new Set(this.careerData.map(node => node.salary))].sort();
+  }
 
   private careerData: NodeData[] = [
   {
@@ -659,39 +672,58 @@ private careerPaths: CareerPath[] = [
             'border-width': '2px',
             'border-color': '#ffffff',
             'text-wrap': 'wrap',
-            'text-max-width': '120px'
+            'text-max-width': '120px',
+            'text-outline-color': '#000000',
+            'text-outline-width': '1px',
+            'opacity': 1
           }
         },
         // Entry level positions (green)
         {
           selector: 'node[level="Medewerker zorg C"], node[level="Medewerker zorg A - helpende zorg en welzijn niv 2"], node[level="medisch assistent D"], node[level="medisch assistent C"]',
-          style: { 'background-color': '#16a34a' }
+          style: { 
+            'background-color': '#16a34a',
+            'opacity': 1
+          }
         },
         // Standard healthcare roles (blue)
         {
           selector: 'node[level="verpleegkundige B"], node[level="Verpleegkundige A"], node[level="medisch assistent B"], node[level="medisch assistent A"], node[level="Specialistisch verpleegkundige B"]',
-          style: { 'background-color': '#2563eb' }
+          style: { 
+            'background-color': '#2563eb',
+            'opacity': 1
+          }
         },
         // Management roles (red)
         {
           selector: 'node[level="Teamleider zorg A"], node[level="Teamleider zorg B"], node[level="Organisatorisch hoofd A"], node[level="Organisatorisch hoofd B1"], node[level="generiek"]',
-          style: { 'background-color': '#dc2626' }
+          style: { 
+            'background-color': '#dc2626',
+            'opacity': 1
+          }
         },
         // High specialized roles (purple)
         {
           selector: 'node[level="verpleegkundige specialist"], node[level="Physician assistant"], node[level="Sedatie praktijk specialist"], node[level="Deskundige infectiepreventie"], node[level="verpleegkundige bewaking A"], node[level="verpleegkundige spoedeisende zorg A"], node[level="verpleegkundige spoedeisende zorg A = ambulance"]',
-          style: { 'background-color': '#7e22ce' }
+          style: { 
+            'background-color': '#7e22ce',
+            'opacity': 1
+          }
         },
         // Support/technical roles (orange) 
         {
           selector: 'node[level="vakman vormende techniek A"], node[level="Fysiotherapeut"], node[level="Laborant functieonderzoek A1"], node[level="Laborant functieonderzoek A2"], node[level="Laborant beeldvormende technieken A"], node[level="Laborant beeldvormende technieken B"], node[level="Operatieassistent A"], node[level="Operatieassistent B"], node[level="Anesthesiemedewerker A"], node[level="Anesthesiemedewerker B"]',
-          style: { 'background-color': '#f97316' }
+          style: { 
+            'background-color': '#f97316',
+            'opacity': 1
+          }
         },
         {
           selector: 'node:selected',
           style: {
             'border-color': '#fbbf24',
-            'border-width': '4px'
+            'border-width': '4px',
+            'opacity': 1
           }
         },
         {
@@ -751,19 +783,51 @@ private careerPaths: CareerPath[] = [
       this.selectedNode = this.careerData.find(node => node.id === nodeId) || null;
       this.updateSelectedNodePaths(nodeId);
       
-      // Reset all edges to default style first
+      // First reset all edges to default style
       this.cy.edges().style({
+        'opacity': 0.2,
         'line-color': '#6b7280',
         'target-arrow-color': '#6b7280',
-        'width': 3
+        'width': 1
+      });
+
+      // Set all nodes to dim state but keep them visible
+      this.cy.nodes().style({
+        'opacity': 0.15
+      });
+
+      // Get connected elements
+      const connectedEdges = node.connectedEdges();
+      const connectedNodes = connectedEdges.connectedNodes();
+      
+      // Highlight connected nodes
+      connectedNodes.style({
+        'opacity': 1
       });
       
-      // Highlight connected edges
-      const connectedEdges = node.connectedEdges();
-      connectedEdges.style({
-        'line-color': '#fbbf24',
-        'target-arrow-color': '#fbbf24',
-        'width': 5
+      // Color incoming edges red
+      const incomingEdges = node.incomers('edge');
+      incomingEdges.style({
+        'line-color': '#dc2626',
+        'target-arrow-color': '#dc2626',
+        'width': 3,
+        'opacity': 1
+      });
+      
+      // Color outgoing edges green
+      const outgoingEdges = node.outgoers('edge');
+      outgoingEdges.style({
+        'line-color': '#16a34a',
+        'target-arrow-color': '#16a34a',
+        'width': 3,
+        'opacity': 1
+      });
+
+      // Make selected node stand out
+      node.style({
+        'opacity': 1,
+        'border-color': '#fbbf24',
+        'border-width': '4px'
       });
     });
   }
@@ -781,10 +845,15 @@ private careerPaths: CareerPath[] = [
 
   public resetView(): void {
     if (this.cy) {
-      this.cy.edges().style({
+      // Reset all elements to default style
+      this.cy.elements().style({
+        'opacity': 1,
         'line-color': '#6b7280',
         'target-arrow-color': '#6b7280',
-        'width': 3
+        'width': 3,
+        'arrow-scale': 1,
+        'border-width': '2px',
+        'border-color': '#ffffff'
       });
       
       this.cy.fit();
@@ -826,6 +895,37 @@ private careerPaths: CareerPath[] = [
       // Ensure the node is clearly visible
       this.cy.center(node);
     }
+  }
+
+  // Filter nodes based on selected department and salary
+  applyFilters() {
+    // Reset all nodes to visible first
+    this.cy.nodes().style({ 'display': 'element' });
+    
+    // Apply department filter
+    if (this.selectedDepartment) {
+      this.cy.nodes().filter((node: any) => 
+        node.data('department') !== this.selectedDepartment
+      ).style({ 'display': 'none' });
+    }
+    
+    // Apply salary filter
+    if (this.selectedSalaryLevel) {
+      this.cy.nodes().filter((node: any) => 
+        node.data('salary') !== this.selectedSalaryLevel
+      ).style({ 'display': 'none' });
+    }
+    
+    // Fit the view to show visible nodes
+    this.cy.fit();
+  }
+
+  // Reset all filters
+  resetFilters() {
+    this.selectedDepartment = '';
+    this.selectedSalaryLevel = '';
+    this.cy.nodes().style({ 'display': 'element' });
+    this.cy.fit();
   }
 
   // Add new method to handle layout changes
