@@ -43,11 +43,95 @@ export class Explore implements OnInit, AfterViewInit {
   salaryLevels: string[] = [];
   selectedSalaryLevel: string = '';
   
-  // Initialize filters in constructor
+  // Welcome screen properties
+  showWelcome: boolean = true;
+  welcomeChoice: 'starter' | 'experienced' | 'specialized' | 'management' | '' = '';
+  selectedStartNode: NodeData | null = null;
+  
   constructor() {
     // Get unique departments and salary levels
     this.departments = [...new Set(this.careerData.map(node => node.department))].sort();
     this.salaryLevels = [...new Set(this.careerData.map(node => node.salary))].sort();
+  }
+
+  setWelcomeChoice(choice: 'starter' | 'experienced' | 'specialized' | 'management') {
+    this.welcomeChoice = choice;
+    this.selectedStartNode = null;
+  }
+
+  getRelevantDepartments(): string[] {
+    switch (this.welcomeChoice) {
+      case 'starter':
+        return this.departments.filter(dept => 
+          this.careerData.some(node => 
+            node.department === dept && 
+            ['Medewerker zorg C', 'Medewerker zorg A - helpende zorg en welzijn niv 2', 
+             'medisch assistent D', 'medisch assistent C'].includes(node.level)
+          )
+        );
+      case 'management':
+        return this.departments.filter(dept => 
+          this.careerData.some(node => 
+            node.department === dept && 
+            ['Teamleider zorg A', 'Teamleider zorg B', 'Organisatorisch hoofd A', 
+             'Organisatorisch hoofd B1', 'generiek'].includes(node.level)
+          )
+        );
+      case 'specialized':
+        return this.departments.filter(dept => 
+          this.careerData.some(node => 
+            node.department === dept && 
+            ['verpleegkundige specialist', 'Physician assistant', 'Sedatie praktijk specialist',
+             'Deskundige infectiepreventie', 'verpleegkundige bewaking A'].includes(node.level)
+          )
+        );
+      default:
+        return this.departments;
+    }
+  }
+
+  selectDepartment(department: string) {
+    if (!department) {
+      this.selectedStartNode = null;
+      return;
+    }
+
+    this.selectedDepartment = department;
+    const nodes = this.careerData.filter(node => node.department === department);
+    
+    switch (this.welcomeChoice) {
+      case 'starter':
+        this.selectedStartNode = nodes.find(node => 
+          ['Medewerker zorg C', 'Medewerker zorg A - helpende zorg en welzijn niv 2', 
+           'medisch assistent D', 'medisch assistent C'].includes(node.level)
+        ) || nodes[0];
+        break;
+      case 'management':
+        this.selectedStartNode = nodes.find(node => 
+          ['Teamleider zorg C', 'Teamleider zorg B'].includes(node.level)
+        ) || nodes[0];
+        break;
+      case 'specialized':
+        this.selectedStartNode = nodes.find(node => 
+          node.level.includes('verpleegkundige') || node.level.includes('specialist')
+        ) || nodes[0];
+        break;
+      default:
+        this.selectedStartNode = nodes[0];
+    }
+  }
+
+  startExploring() {
+    this.showWelcome = false;
+    this.cy.nodes().style({ 'opacity': 0.15 });
+    
+    if (this.selectedStartNode) {
+      const node = this.cy.getElementById(this.selectedStartNode.id);
+      if (node) {
+        this.selectNodeById(this.selectedStartNode.id);
+        this.cy.center(node);
+      }
+    }
   }
 
   private careerData: NodeData[] = [
@@ -868,6 +952,7 @@ private careerPaths: CareerPath[] = [
       return;
     }
 
+    this.showWelcome = false; // Hide welcome screen when searching
     this.searchResults = this.careerData.filter(node =>
       node.label.toLowerCase().includes(query) ||
       node.department.toLowerCase().includes(query)
@@ -886,6 +971,7 @@ private careerPaths: CareerPath[] = [
   selectNodeById(nodeId: string) {
     const node = this.cy.getElementById(nodeId);
     if (node) {
+      this.showWelcome = false; // Hide welcome screen when a node is selected
       // Trigger the tap event to update selection
       node.trigger('tap');
       
@@ -904,6 +990,7 @@ private careerPaths: CareerPath[] = [
     
     // Apply department filter
     if (this.selectedDepartment) {
+      this.showWelcome = false; // Hide welcome screen when a department is selected
       this.cy.nodes().filter((node: any) => 
         node.data('department') !== this.selectedDepartment
       ).style({ 'display': 'none' });
@@ -911,6 +998,7 @@ private careerPaths: CareerPath[] = [
     
     // Apply salary filter
     if (this.selectedSalaryLevel) {
+      this.showWelcome = false; // Hide welcome screen when a salary level is selected
       this.cy.nodes().filter((node: any) => 
         node.data('salary') !== this.selectedSalaryLevel
       ).style({ 'display': 'none' });
