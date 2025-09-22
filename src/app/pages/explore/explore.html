@@ -163,14 +163,86 @@
       <!-- Cytoscape Container -->
       <div #cytoscapeContainer class="w-full h-full" style="overflow: hidden;"></div>
       
-      <!-- Reset View Button -->
-      <div class="absolute top-4 right-4">
+      <!-- Control buttons -->
+      <div class="absolute top-4 right-4 space-y-2">
         <button 
           (click)="resetView()"
-          class="bg-white shadow-md px-3 py-2 rounded-lg text-sm hover:bg-gray-50">
+          class="bg-white shadow-md px-3 py-2 rounded-lg text-sm hover:bg-gray-50 w-full">
           Herstel Weergave
         </button>
+        <button 
+          (click)="toggleNodeLabels()"
+          class="bg-white shadow-md px-3 py-2 rounded-lg text-sm hover:bg-gray-50 w-full">
+          {{ showLabels ? 'Verberg' : 'Toon' }} Labels
+        </button>
       </div>
+      
+      <!-- Zoom Controls -->
+      <div class="absolute bottom-4 right-4 bg-white shadow-md rounded-lg p-2 space-y-2">
+        <button 
+          (click)="zoomIn()"
+          title="Zoom in (+ toets)"
+          class="w-10 h-10 flex items-center justify-center hover:bg-gray-100 rounded">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+        </button>
+        <div class="text-center text-sm text-gray-600">
+          {{ currentZoomLevel }}%
+        </div>
+        <button 
+          (click)="zoomOut()"
+          title="Zoom uit (- toets)"
+          class="w-10 h-10 flex items-center justify-center hover:bg-gray-100 rounded">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Help Tips -->
+      <div class="absolute bottom-4 left-4 bg-white/90 shadow-md rounded-lg p-3 text-xs text-gray-600 help-tips">
+        <div class="font-semibold mb-1">Tips:</div>
+        <div class="space-y-0.5">
+          <div>• Hover over een knop voor details</div>
+          <div>• Klik voor volledige informatie</div>
+          <div>• Scroll voor zoom (+/- toetsen)</div>
+          <div>• R = Herstel weergave</div>
+          <div>• L = Toggle labels</div>
+        </div>
+      </div>
+
+      <!-- Zoom notification -->
+      @if (currentZoomLevel < 50) {
+        <div class="absolute top-20 left-1/2 transform -translate-x-1/2 bg-yellow-100 border border-yellow-400 rounded-lg px-4 py-2 text-sm text-yellow-800 zoom-notification">
+          <div class="flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span>Zoom in of hover over knoppen om labels te lezen</span>
+          </div>
+        </div>
+      }
+
+      <!-- Hover Tooltip -->
+      @if (showTooltip && hoveredNode) {
+        <div 
+          class="absolute bg-white rounded-lg shadow-xl border border-gray-200 p-4 z-40 pointer-events-none"
+          [style.left.px]="tooltipPosition.x"
+          [style.top.px]="tooltipPosition.y"
+          style="max-width: 300px; transform: translate(-50%, calc(-100% - 10px));">
+          <div class="space-y-2">
+            <h4 class="font-semibold text-blue-600">{{ hoveredNode.label }}</h4>
+            <div class="text-sm text-gray-600 space-y-1">
+              <p><span class="font-medium">Afdeling:</span> {{ hoveredNode.department }}</p>
+              <p><span class="font-medium">Niveau:</span> {{ hoveredNode.level }}</p>
+              <p><span class="font-medium">Salaris:</span> {{ hoveredNode.salary }}</p>
+            </div>
+            <p class="text-sm text-gray-700 mt-2">{{ hoveredNode.description }}</p>
+            <p class="text-xs text-gray-500 mt-2 italic">Klik voor meer details</p>
+          </div>
+        </div>
+      }
 
       <!-- Welcome Screen Overlay -->
       @if (showWelcome) {

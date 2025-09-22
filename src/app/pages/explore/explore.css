@@ -1,0 +1,54 @@
+/* Tooltip animations */
+.tooltip-enter {
+  animation: tooltipFadeIn 0.2s ease-out;
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-100% - 5px));
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, calc(-100% - 10px));
+  }
+}
+
+/* Graph container cursor */
+.cytoscape-container {
+  cursor: grab;
+}
+
+.cytoscape-container:active {
+  cursor: grabbing;
+}
+
+/* Hide tooltip on small screens */
+@media (max-width: 768px) {
+  .help-tips {
+    display: none;
+  }
+}
+
+/* Smooth transitions for controls */
+.control-button {
+  transition: all 0.2s ease;
+}
+
+.control-button:hover {
+  transform: scale(1.05);
+}
+
+/* Highlight effect for zoom notification */
+.zoom-notification {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}

@@ -48,6 +48,15 @@ export class Explore implements OnInit, AfterViewInit {
   welcomeChoice: 'starter' | 'experienced' | 'specialized' | 'management' | '' = '';
   selectedStartNode: NodeData | null = null;
   
+  // Hover tooltip properties
+  hoveredNode: NodeData | null = null;
+  tooltipPosition = { x: 0, y: 0 };
+  showTooltip = false;
+  
+  // Additional UI state
+  showLabels = true;
+  currentZoomLevel = 100;
+  
   constructor() {
     // Get unique departments and salary levels
     this.departments = [...new Set(this.careerData.map(node => node.department))].sort();
@@ -715,6 +724,7 @@ private careerPaths: CareerPath[] = [
 
   ngAfterViewInit() {
     this.initializeCytoscape();
+    this.setupKeyboardShortcuts();
   }
 
   private initializeCytoscape() {
@@ -858,11 +868,90 @@ private careerPaths: CareerPath[] = [
         level: currentZoom,
         renderedPosition: { x: event.offsetX, y: event.offsetY }
       });
+      
+      // Update zoom level display
+      this.updateZoomLevel();
+      
+      // Adjust text visibility based on zoom level
+      if (currentZoom < 0.5) {
+        // Hide labels when zoomed out too much
+        this.cy.style()
+          .selector('node')
+          .style({
+            'font-size': '0px',
+            'text-opacity': 0
+          })
+          .update();
+      } else if (currentZoom < 0.8) {
+        // Show abbreviated labels
+        this.cy.style()
+          .selector('node')
+          .style({
+            'font-size': '8px',
+            'text-opacity': 0.7
+          })
+          .update();
+      } else {
+        // Show full labels
+        this.cy.style()
+          .selector('node')
+          .style({
+            'font-size': '11px',
+            'text-opacity': 1
+          })
+          .update();
+      }
+    });
+
+    // Hover event handlers for tooltip
+    this.cy.on('mouseover', 'node', (event: any) => {
+      const nodeId = event.target.id();
+      const node = event.target;
+      
+      this.hoveredNode = this.careerData.find(n => n.id === nodeId) || null;
+      
+      if (this.hoveredNode) {
+        // Get the rendered position of the node
+        const renderedPosition = node.renderedPosition();
+        const containerRect = this.cytoscapeContainer.nativeElement.getBoundingClientRect();
+        
+        this.tooltipPosition = {
+          x: renderedPosition.x,
+          y: renderedPosition.y
+        };
+        
+        this.showTooltip = true;
+        
+        // Add hover style to node
+        node.style({
+          'border-color': '#3b82f6',
+          'border-width': '3px'
+        });
+      }
+    });
+    
+    this.cy.on('mouseout', 'node', (event: any) => {
+      this.showTooltip = false;
+      this.hoveredNode = null;
+      
+      // Reset border unless it's the selected node
+      const node = event.target;
+      if (!node.hasClass('selected')) {
+        node.style({
+          'border-color': '#ffffff',
+          'border-width': '2px'
+        });
+      }
     });
 
     this.cy.on('tap', 'node', (event: any) => {
       const nodeId = event.target.id();
       const node = event.target;
+      
+      // Remove selected class from all nodes
+      this.cy.nodes().removeClass('selected');
+      // Add selected class to clicked node
+      node.addClass('selected');
       
       this.selectedNode = this.careerData.find(node => node.id === nodeId) || null;
       this.updateSelectedNodePaths(nodeId);
@@ -914,6 +1003,11 @@ private careerPaths: CareerPath[] = [
         'border-width': '4px'
       });
     });
+    
+    // Hide tooltip when panning or zooming
+    this.cy.on('viewport', () => {
+      this.showTooltip = false;
+    });
   }
 
   selectSearchResult(node: NodeData) {
@@ -929,18 +1023,53 @@ private careerPaths: CareerPath[] = [
 
   public resetView(): void {
     if (this.cy) {
-      // Reset all elements to default style
-      this.cy.elements().style({
+      // Remove selected class from all nodes
+      this.cy.nodes().removeClass('selected');
+      
+      // Clear selection
+      this.selectedNode = null;
+      this.selectedNodePaths = [];
+      
+      // Reset all nodes to be visible with proper colors based on their level
+      this.cy.nodes().forEach((node: any) => {
+        const level = node.data('level');
+        let backgroundColor = '#1e40af'; // Default blue
+        
+        // Determine color based on level
+        if (['Medewerker zorg C', 'Medewerker zorg A - helpende zorg en welzijn niv 2', 'medisch assistent D', 'medisch assistent C'].includes(level)) {
+          backgroundColor = '#16a34a'; // Green for entry level
+        } else if (['verpleegkundige B', 'Verpleegkundige A', 'medisch assistent B', 'medisch assistent A', 'Specialistisch verpleegkundige B'].includes(level)) {
+          backgroundColor = '#2563eb'; // Blue for standard roles
+        } else if (['Teamleider zorg A', 'Teamleider zorg B', 'Organisatorisch hoofd A', 'Organisatorisch hoofd B1', 'generiek'].includes(level)) {
+          backgroundColor = '#dc2626'; // Red for management
+        } else if (['verpleegkundige specialist', 'Physician assistant', 'Sedatie praktijk specialist', 'Deskundige infectiepreventie', 'verpleegkundige bewaking A', 'verpleegkundige spoedeisende zorg A', 'verpleegkundige spoedeisende zorg A = ambulance'].includes(level)) {
+          backgroundColor = '#7e22ce'; // Purple for specialized
+        } else if (['vakman vormende techniek A', 'Fysiotherapeut', 'Laborant functieonderzoek A1', 'Laborant functieonderzoek A2', 'Laborant beeldvormende technieken A', 'Laborant beeldvormende technieken B', 'Operatieassistent A', 'Operatieassistent B', 'Anesthesiemedewerker A', 'Anesthesiemedewerker B'].includes(level)) {
+          backgroundColor = '#f97316'; // Orange for support/technical
+        }
+        
+        node.style({
+          'background-color': backgroundColor,
+          'opacity': 1,
+          'border-width': '2px',
+          'border-color': '#ffffff',
+          'label': this.showLabels ? node.data('label') : '',
+          'font-size': '11px',
+          'text-opacity': this.showLabels ? 1 : 0
+        });
+      });
+      
+      // Reset all edges
+      this.cy.edges().style({
         'opacity': 1,
         'line-color': '#6b7280',
         'target-arrow-color': '#6b7280',
-        'width': 3,
-        'arrow-scale': 1,
-        'border-width': '2px',
-        'border-color': '#ffffff'
+        'width': 3
       });
       
+      // Reset zoom and fit
       this.cy.fit();
+      this.updateZoomLevel();
     }
   }
 
@@ -1063,5 +1192,72 @@ private careerPaths: CareerPath[] = [
     });
 
     layout.run();
+  }
+
+  // Toggle node labels visibility
+  toggleNodeLabels() {
+    this.showLabels = !this.showLabels;
+    
+    // Update each node's label visibility
+    this.cy.nodes().forEach((node: any) => {
+      node.style({
+        'label': this.showLabels ? node.data('label') : '',
+        'text-opacity': this.showLabels ? 1 : 0,
+        'font-size': '11px'
+      });
+    });
+  }
+
+  // Zoom control methods
+  zoomIn() {
+    const currentZoom = this.cy.zoom();
+    const newZoom = Math.min(currentZoom * 1.2, 3);
+    this.cy.zoom(newZoom);
+    this.cy.center();
+    this.updateZoomLevel();
+  }
+
+  zoomOut() {
+    const currentZoom = this.cy.zoom();
+    const newZoom = Math.max(currentZoom * 0.8, 0.1);
+    this.cy.zoom(newZoom);
+    this.cy.center();
+    this.updateZoomLevel();
+  }
+
+  private updateZoomLevel() {
+    this.currentZoomLevel = Math.round(this.cy.zoom() * 100);
+  }
+
+  private setupKeyboardShortcuts() {
+    window.addEventListener('keydown', (event: KeyboardEvent) => {
+      // Only handle shortcuts when not typing in an input
+      if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
+        return;
+      }
+
+      switch(event.key) {
+        case '+':
+        case '=':
+          event.preventDefault();
+          this.zoomIn();
+          break;
+        case '-':
+        case '_':
+          event.preventDefault();
+          this.zoomOut();
+          break;
+        case 'r':
+        case 'R':
+          event.preventDefault();
+          this.resetView();
+          break;
+        case 'l':
+        case 'L':
+          event.preventDefault();
+          this.toggleNodeLabels();
+          break;
+      }
+    });
   }
 }
