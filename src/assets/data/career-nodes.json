@@ -80,6 +80,375 @@
       "description": "Verpleegkundige werkzaam in de polikliniek.",
       "requirements": ["example"],
       "salary": "FWG 45"
+    },
+    {
+      "id": "radiologisch-laborant-allround-fwg45",
+      "label": "Radiologisch laborant all round",
+      "department": "Radiologie",
+      "level": "Laborant beeldvormende technieken B - MBRT aangevuld met aandachtsgebied",
+      "description": "All-round radiologisch laborant voor verschillende beeldvormende technieken.",
+      "requirements": ["example"],
+      "salary": "FWG 45"
+    },
+    {
+      "id": "hbo-verpleegkundige-fwg50",
+      "label": "Hbo-Verpleegkundige",
+      "department": "Verpleging",
+      "level": "Verpleegkundige A",
+      "description": "Verleent directe patiëntenzorg op HBO-niveau.",
+      "requirements": ["example"],
+      "salary": "FWG 50"
+    },
+    {
+      "id": "hbo-verpleegkundige-baz-fwg50",
+      "label": "Hbo-Verpleegkundige met BAZ",
+      "department": "Verpleging",
+      "level": "Verpleegkundige A (BAZ)",
+      "description": "HBO-verpleegkundige met Beperkt Aangepaste Zorg specialisatie.",
+      "requirements": ["example"],
+      "salary": "FWG 50"
+    },
+    {
+      "id": "oncologie-verpleegkundige-fwg50",
+      "label": "Oncologie verpleegkundige",
+      "department": "Verpleging",
+      "level": "Specialistisch verpleegkundige B",
+      "description": "Gespecialiseerde verpleegkundige in de oncologie.",
+      "requirements": ["example"],
+      "salary": "FWG 50"
+    },
+    {
+      "id": "kinderverpleegkundige-fwg50",
+      "label": "Kinderverpleegkundige",
+      "department": "Verpleging",
+      "level": "Specialistisch verpleegkundige B",
+      "description": "Gespecialiseerde verpleegkundige voor pediatrische zorg.",
+      "requirements": ["example"],
+      "salary": "FWG 50"
+    },
+    {
+      "id": "verpleegkundige-obstetrie-fwg50",
+      "label": "Verpleegkundige obstetrie",
+      "department": "Verpleging",
+      "level": "Specialistisch verpleegkundige B",
+      "description": "Gespecialiseerde verpleegkundige in de verloskunde.",
+      "requirements": ["example"],
+      "salary": "FWG 50"
+    },
+    {
+      "id": "neuro-verpleegkundige-fwg50",
+      "label": "Neuro verpleegkundige",
+      "department": "Verpleging",
+      "level": "Specialistisch verpleegkundige B",
+      "description": "Gespecialiseerde verpleegkundige in de neurologie.",
+      "requirements": ["example"],
+      "salary": "FWG 50"
+    },
+    {
+      "id": "geriatrie-verpleegkundige-fwg50",
+      "label": "Geriatrie verpleegkundige",
+      "department": "Verpleging",
+      "level": "Specialistisch verpleegkundige B",
+      "description": "Gespecialiseerde verpleegkundige in de geriatrie.",
+      "requirements": ["example"],
+      "salary": "FWG 50"
+    },
+    {
+      "id": "psychiatrisch-verpleegkundige-fwg50",
+      "label": "Psychiatrisch verpleegkundige",
+      "department": "Verpleging",
+      "level": "Psychiatrisch verpleegkundige",
+      "description": "Gespecialiseerde verpleegkundige in de psychiatrie.",
+      "requirements": ["example"],
+      "salary": "FWG 50"
+    },
+    {
+      "id": "neonatologie-verpleegkundige-fwg50",
+      "label": "Neonatologie verpleegkundige",
+      "department": "Verpleging",
+      "level": "Specialistisch verpleegkundige B",
+      "description": "Gespecialiseerde verpleegkundige in de neonatologie.",
+      "requirements": ["example"],
+      "salary": "FWG 50"
+    },
+    {
+      "id": "dialyse-verpleegkundige-fwg50",
+      "label": "Dialyse verpleegkundige",
+      "department": "Verpleging",
+      "level": "Specialistisch verpleegkundige B",
+      "description": "Gespecialiseerde verpleegkundige voor dialysebehandelingen.",
+      "requirements": ["example"],
+      "salary": "FWG 50"
+    },
+    {
+      "id": "endoscopie-verpleegkundige-fwg50",
+      "label": "Endoscopie verpleegkundige",
+      "department": "Verpleging",
+      "level": "Specialistisch verpleegkundige B",
+      "description": "Gespecialiseerde verpleegkundige voor endoscopische procedures.",
+      "requirements": ["example"],
+      "salary": "FWG 50"
+    },
+    {
+      "id": "avond-nacht-coordinator-fwg50",
+      "label": "Avond/nacht coördinator",
+      "department": "Verpleging",
+      "level": "avond/nachtcoördinator",
+      "description": "Coördineert zorgverlening tijdens avond- en nachtdiensten.",
+      "requirements": ["example"],
+      "salary": "FWG 50"
+    },
+    {
+      "id": "pacu-verpleegkundige-fwg50",
+      "label": "PACU verpleegkundige",
+      "department": "Verpleging",
+      "level": "verpleegkundige bewaking B2",
+      "description": "Verpleegkundige werkzaam op de Post Anesthesia Care Unit.",
+      "requirements": ["example"],
+      "salary": "FWG 50"
+    },
+    {
+      "id": "operatieassistent-fwg50",
+      "label": "Operatieassistent",
+      "department": "Operatie",
+      "level": "Operatieassistent B",
+      "description": "Assisteert bij operatieve ingrepen.",
+      "requirements": ["example"],
+      "salary": "FWG 50"
+    },
+    {
+      "id": "anesthesiemedewerker-fwg50",
+      "label": "Anesthesiemedewerker",
+      "department": "Anesthesie",
+      "level": "Anesthesiemedewerker B",
+      "description": "Ondersteunt bij anesthesieprocedures.",
+      "requirements": ["example"],
+      "salary": "FWG 50"
+    },
+    {
+      "id": "radiologisch-laborant-specialisatie-fwg50",
+      "label": "Radiologisch laborant met specialisatie",
+      "department": "Radiologie",
+      "level": "Laborant beeldvormende technieken A - MBRT",
+      "description": "Gespecialiseerde radiologisch laborant.",
+      "requirements": ["example"],
+      "salary": "FWG 50"
+    },
+    {
+      "id": "teamleider-c-fwg50",
+      "label": "Teamleider C",
+      "department": "Management",
+      "level": "generiek",
+      "description": "Teamleider op basis niveau.",
+      "requirements": ["example"],
+      "salary": "FWG 50"
+    },
+    {
+      "id": "ic-verpleegkundige-fwg55",
+      "label": "IC verpleegkundige",
+      "department": "Verpleging",
+      "level": "Verpleegkundige bewaking A",
+      "description": "Gespecialiseerde verpleegkundige op de Intensive Care.",
+      "requirements": ["example"],
+      "salary": "FWG 55"
+    },
+    {
+      "id": "seh-verpleegkundige-fwg55",
+      "label": "SEH verpleegkundige",
+      "department": "Verpleging",
+      "level": "verpleegkundige spoedeisende zorg A",
+      "description": "Gespecialiseerde verpleegkundige op de Spoedeisende Hulp.",
+      "requirements": ["example"],
+      "salary": "FWG 55"
+    },
+    {
+      "id": "ccu-verpleegkundige-fwg55",
+      "label": "CCU verpleegkundige",
+      "department": "Verpleging",
+      "level": "verpleegkundige bewaking A",
+      "description": "Gespecialiseerde verpleegkundige op de Coronary Care Unit.",
+      "requirements": ["example"],
+      "salary": "FWG 55"
+    },
+    {
+      "id": "seh-verpleegkundige-ambulance-fwg55",
+      "label": "SEH verpleegkundige + Ambulance",
+      "department": "Verpleging",
+      "level": "verpleegkundige spoedeisende zorg A = ambulance",
+      "description": "SEH verpleegkundige met ambulance-ervaring.",
+      "requirements": ["example"],
+      "salary": "FWG 55"
+    },
+    {
+      "id": "ventilation-renal-neural-practitioner-fwg55",
+      "label": "Ventilation, Renal of Neural practitioner",
+      "department": "Verpleging",
+      "level": "Verpleegkundige bewaking A",
+      "description": "Gespecialiseerde practitioner voor beademing, nier- of neurologische zorg.",
+      "requirements": ["example"],
+      "salary": "FWG 55"
+    },
+    {
+      "id": "medisch-hulpverlener-fwg55",
+      "label": "Medisch hulpverlener",
+      "department": "Medisch",
+      "level": "Medisch hulpverlener",
+      "description": "Verleent medische hulp en ondersteuning.",
+      "requirements": ["example"],
+      "salary": "FWG 55"
+    },
+    {
+      "id": "fysiotherapeut-fwg55",
+      "label": "Fysiotherapeut",
+      "department": "Paramedisch",
+      "level": "Fysiotherapeut",
+      "description": "Verleent fysiotherapeutische behandelingen.",
+      "requirements": ["example"],
+      "salary": "FWG 55"
+    },
+    {
+      "id": "teamleider-kliniek-fwg55",
+      "label": "Teamleider kliniek",
+      "department": "Management",
+      "level": "Teamleider zorg B",
+      "description": "Leidt team in klinische omgeving.",
+      "requirements": ["example"],
+      "salary": "FWG 55"
+    },
+    {
+      "id": "gipsverbandmeester-fwg55",
+      "label": "Gipsverbandmeester",
+      "department": "Paramedisch",
+      "level": "vakman vormende techniek A",
+      "description": "Gespecialiseerd in het aanleggen van gipsverbanden.",
+      "requirements": ["example"],
+      "salary": "FWG 55"
+    },
+    {
+      "id": "interventielaborant-fwg55",
+      "label": "Interventielaborant",
+      "department": "Radiologie",
+      "level": "Laborant functieonderzoek A1",
+      "description": "Gespecialiseerde laborant voor interventionele procedures.",
+      "requirements": ["example"],
+      "salary": "FWG 55"
+    },
+    {
+      "id": "radiologisch-laborant-echo-gyn-fwg55",
+      "label": "Radiologisch laborant met specialisatie (echo gyn)",
+      "department": "Radiologie",
+      "level": "Laborant functieonderzoek A2",
+      "description": "Gespecialiseerde laborant voor gynecologische echografie.",
+      "requirements": ["example"],
+      "salary": "FWG 55"
+    },
+    {
+      "id": "operatieassistent-fwg55",
+      "label": "Operatieassistent",
+      "department": "Operatie",
+      "level": "Operatieassistent A",
+      "description": "Senior operatieassistent.",
+      "requirements": ["example"],
+      "salary": "FWG 55"
+    },
+    {
+      "id": "anesthesiemedewerker-fwg55",
+      "label": "Anesthesiemedewerker",
+      "department": "Anesthesie",
+      "level": "Anesthesiemedewerker A",
+      "description": "Senior anesthesiemedewerker.",
+      "requirements": ["example"],
+      "salary": "FWG 55"
+    },
+    {
+      "id": "interventielaborant-specialisatie-fwg55",
+      "label": "Interventielaborant met specialisatie",
+      "department": "Radiologie",
+      "level": "Laborant functieonderzoek A1",
+      "description": "Gespecialiseerde interventielaborant.",
+      "requirements": ["example"],
+      "salary": "FWG 55"
+    },
+    {
+      "id": "teamleider-b-fwg55",
+      "label": "Teamleider B",
+      "department": "Management",
+      "level": "generiek",
+      "description": "Teamleider op middenniveau.",
+      "requirements": ["example"],
+      "salary": "FWG 55"
+    },
+    {
+      "id": "physician-assistant-fwg60",
+      "label": "Physician assistant",
+      "department": "Medisch",
+      "level": "Physician assistant",
+      "description": "Assisteert artsen bij diagnose en behandeling van patiënten.",
+      "requirements": ["example"],
+      "salary": "FWG 60"
+    },
+    {
+      "id": "verpleegkundig-specialist-fwg60",
+      "label": "Verpleegkundig specialist",
+      "department": "Verpleging",
+      "level": "verpleegkundige specialist",
+      "description": "Hooggespecialiseerde verpleegkundige met uitgebreide bevoegdheden.",
+      "requirements": ["example"],
+      "salary": "FWG 60"
+    },
+    {
+      "id": "teamleider-acute-as-fwg60",
+      "label": "Teamleider acute as",
+      "department": "Management",
+      "level": "Teamleider zorg A",
+      "description": "Leidt team in acute zorgomgeving.",
+      "requirements": ["example"],
+      "salary": "FWG 60"
+    },
+    {
+      "id": "deskundige-infectiepreventie-fwg60",
+      "label": "Deskundige infectiepreventie",
+      "department": "Infectiepreventie",
+      "level": "Deskundige infectiepreventie",
+      "description": "Expert in infectiepreventie en -controle.",
+      "requirements": ["example"],
+      "salary": "FWG 60"
+    },
+    {
+      "id": "sedatiepraktijk-specialist-fwg60",
+      "label": "Sedatiepraktijk-specialist",
+      "department": "Anesthesie",
+      "level": "Sedatie praktijk specialist",
+      "description": "Gespecialiseerd in sedatieprocedures.",
+      "requirements": ["example"],
+      "salary": "FWG 60"
+    },
+    {
+      "id": "teamleider-a-fwg60",
+      "label": "Teamleider A",
+      "department": "Management",
+      "level": "generiek",
+      "description": "Senior teamleider.",
+      "requirements": ["example"],
+      "salary": "FWG 60"
+    },
+    {
+      "id": "organisatorisch-hoofd-klinieken-fwg65",
+      "label": "Organisatorisch hoofd klinieken",
+      "department": "Management",
+      "level": "Organisatorisch hoofd B1",
+      "description": "Hoofd van klinische afdelingen.",
+      "requirements": ["example"],
+      "salary": "FWG 65"
+    },
+    {
+      "id": "organisatorisch-hoofd-acute-as-fwg70",
+      "label": "Organisatorisch hoofd acute as",
+      "department": "Management",
+      "level": "Organisatorisch hoofd A",
+      "description": "Hoofd van acute zorgafdelingen.",
+      "requirements": ["example"],
+      "salary": "FWG 70"
     }
   ]
 }
