@@ -5,18 +5,17 @@
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-4">
           <h1 class="text-2xl font-bold text-blue-600">Loopbaanpaden Verkenner</h1>
-          <select 
-            (change)="changeLayout($event)"
+          <select (change)="changeLayout($event)"
             class="px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
             <option value="breadthfirst">Hierarchisch</option>
+            <option value="cose">CoSE (Force-directed)</option>
             <option value="circle">Cirkel</option>
             <option value="concentric">Concentrisch</option>
             <option value="grid">Grid</option>
             <option value="random">Willekeurig</option>
           </select>
         </div>
-        <button 
-          routerLink="/landing" 
+        <button routerLink="/landing"
           class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
           Terug naar Home
         </button>
@@ -32,41 +31,31 @@
       <div class="p-4 border-b border-gray-200 space-y-4">
         <!-- Search box -->
         <div class="relative">
-          <input 
-            type="text" 
-            [(ngModel)]="searchQuery" 
-            (input)="onSearch($event)"
-            placeholder="Zoek een functie..." 
-            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
+          <input type="text" [(ngModel)]="searchQuery" (input)="onSearch($event)" placeholder="Zoek een functie..."
+            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
           @if (searchResults.length > 0) {
-            <div class="absolute z-10 w-full mt-1 bg-white border rounded-lg shadow-lg">
-              @for (result of searchResults; track result.id) {
-                <button 
-                  (click)="selectSearchResult(result)"
-                  class="w-full px-4 py-2 text-left hover:bg-gray-50 text-sm">
-                  {{ result.label }}
-                </button>
-              }
-            </div>
+          <div class="absolute z-10 w-full mt-1 bg-white border rounded-lg shadow-lg">
+            @for (result of searchResults; track result.id) {
+            <button (click)="selectSearchResult(result)" class="w-full px-4 py-2 text-left hover:bg-gray-50 text-sm">
+              {{ result.label }}
+            </button>
+            }
+          </div>
           }
         </div>
 
         <!-- Filters -->
         <div class="space-y-3">
           <h3 class="font-medium text-gray-700">Filters</h3>
-          
+
           <!-- Department filter -->
           <div>
             <label for="department" class="block text-sm text-gray-600 mb-1">Afdeling</label>
-            <select 
-              id="department"
-              [(ngModel)]="selectedDepartment"
-              (change)="applyFilters()"
+            <select id="department" [(ngModel)]="selectedDepartment" (change)="applyFilters()"
               class="w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
               <option value="">Alle afdelingen</option>
               @for (dept of departments; track dept) {
-                <option [value]="dept">{{ dept }}</option>
+              <option [value]="dept">{{ dept }}</option>
               }
             </select>
           </div>
@@ -74,86 +63,81 @@
           <!-- Salary filter -->
           <div>
             <label for="salary" class="block text-sm text-gray-600 mb-1">Salarisschaal</label>
-            <select 
-              id="salary"
-              [(ngModel)]="selectedSalaryLevel"
-              (change)="applyFilters()"
+            <select id="salary" [(ngModel)]="selectedSalaryLevel" (change)="applyFilters()"
               class="w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
               <option value="">Alle salarisschalen</option>
               @for (salary of salaryLevels; track salary) {
-                <option [value]="salary">{{ salary }}</option>
+              <option [value]="salary">{{ salary }}</option>
               }
             </select>
           </div>
 
           <!-- Reset filters button -->
           @if (selectedDepartment || selectedSalaryLevel) {
-            <button 
-              (click)="resetFilters()"
-              class="w-full px-3 py-2 text-sm text-blue-600 bg-blue-50 rounded-md hover:bg-blue-100 transition-colors">
-              Filters wissen
-            </button>
+          <button (click)="resetFilters()"
+            class="w-full px-3 py-2 text-sm text-blue-600 bg-blue-50 rounded-md hover:bg-blue-100 transition-colors">
+            Filters wissen
+          </button>
           }
         </div>
       </div>
 
       <div class="p-6">
         <h2 class="text-xl font-semibold mb-4 text-gray-800">Functiedetails</h2>
-        
+
         @if (!selectedNode) {
-          <div class="text-center py-8">
-            <div class="text-gray-400 text-5xl mb-4">👆</div>
-            <p class="text-gray-600">Klik op een knop in de grafiek om gedetailleerde informatie te bekijken.</p>
-          </div>
+        <div class="text-center py-8">
+          <div class="text-gray-400 text-5xl mb-4">👆</div>
+          <p class="text-gray-600">Klik op een knop in de grafiek om gedetailleerde informatie te bekijken.</p>
+        </div>
         } @else {
-          <div class="space-y-4">
-            <div class="bg-blue-50 rounded-lg p-4">
-              <h3 class="text-lg font-semibold text-blue-600 mb-2">
-                {{ selectedNode.label }}
-              </h3>
-              <div class="space-y-2 text-sm">
-                <p><span class="font-medium">Afdeling:</span> {{ selectedNode.department }}</p>
-                <p><span class="font-medium">Niveau:</span> {{ selectedNode.level }}</p>
-              </div>
+        <div class="space-y-4">
+          <div class="bg-blue-50 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-blue-600 mb-2">
+              {{ selectedNode.label }}
+            </h3>
+            <div class="space-y-2 text-sm">
+              <p><span class="font-medium">Afdeling:</span> {{ selectedNode.department }}</p>
+              <p><span class="font-medium">Niveau:</span> {{ selectedNode.level }}</p>
             </div>
-            
-            <div>
-              <h4 class="font-medium text-gray-800 mb-2">Omschrijving</h4>
-              <p class="text-gray-600 text-sm">{{ selectedNode.description }}</p>
-            </div>
-            
-            <div>
-              <h4 class="font-medium text-gray-800 mb-2">Vereisten</h4>
-              <ul class="space-y-1">
-                @for (req of selectedNode.requirements; track req) {
-                  <li class="text-sm text-gray-600 flex items-start">
-                    <span class="text-green-600 mr-2">•</span>
-                    {{ req }}
-                  </li>
-                }
-              </ul>
-            </div>
-            
-            <!-- Career paths section -->
-            @if (selectedNodePaths.length > 0) {
-              <div>
-                <h4 class="font-medium text-gray-800 mb-2">Loopbaanmogelijkheden</h4>
-                <div class="space-y-3">
-                  @for (path of selectedNodePaths; track path.to) {
-                    <div 
-                      (click)="selectNodeById(path.to)"
-                      class="bg-gray-50 p-3 rounded-lg text-sm cursor-pointer hover:bg-gray-100 transition-colors">
-                      <div class="flex items-center justify-between mb-1">
-                        <span class="font-medium text-blue-600">{{ getNodeLabel(path.to) }}</span>
-                        <span class="text-gray-500 text-xs">{{ path.timeframe }}</span>
-                      </div>
-                      <p class="text-gray-600">Mogelijke vervolgstap</p>
-                    </div>
-                  }
-                </div>
-              </div>
-            }
           </div>
+
+          <div>
+            <h4 class="font-medium text-gray-800 mb-2">Omschrijving</h4>
+            <p class="text-gray-600 text-sm">{{ selectedNode.description }}</p>
+          </div>
+
+          <div>
+            <h4 class="font-medium text-gray-800 mb-2">Vereisten</h4>
+            <ul class="space-y-1">
+              @for (req of selectedNode.requirements; track req) {
+              <li class="text-sm text-gray-600 flex items-start">
+                <span class="text-green-600 mr-2">•</span>
+                {{ req }}
+              </li>
+              }
+            </ul>
+          </div>
+
+          <!-- Career paths section -->
+          @if (selectedNodePaths.length > 0) {
+          <div>
+            <h4 class="font-medium text-gray-800 mb-2">Loopbaanmogelijkheden</h4>
+            <div class="space-y-3">
+              @for (path of selectedNodePaths; track path.to) {
+              <div (click)="selectNodeById(path.to)"
+                class="bg-gray-50 p-3 rounded-lg text-sm cursor-pointer hover:bg-gray-100 transition-colors">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="font-medium text-blue-600">{{ getNodeLabel(path.to) }}</span>
+                  <span class="text-gray-500 text-xs">{{ path.timeframe }}</span>
+                </div>
+                <p class="text-gray-600">Mogelijke vervolgstap</p>
+              </div>
+              }
+            </div>
+          </div>
+          }
+        </div>
         }
       </div>
     </div>
@@ -162,26 +146,21 @@
     <div class="w-[70%] relative overflow-hidden">
       <!-- Cytoscape Container -->
       <div #cytoscapeContainer class="w-full h-full" style="overflow: hidden;"></div>
-      
+
       <!-- Control buttons -->
       <div class="absolute top-4 right-4 space-y-2">
-        <button 
-          (click)="resetView()"
-          class="bg-white shadow-md px-3 py-2 rounded-lg text-sm hover:bg-gray-50 w-full">
+        <button (click)="resetView()" class="bg-white shadow-md px-3 py-2 rounded-lg text-sm hover:bg-gray-50 w-full">
           Herstel Weergave
         </button>
-        <button 
-          (click)="toggleNodeLabels()"
+        <button (click)="toggleNodeLabels()"
           class="bg-white shadow-md px-3 py-2 rounded-lg text-sm hover:bg-gray-50 w-full">
           {{ showLabels ? 'Verberg' : 'Toon' }} Labels
         </button>
       </div>
-      
+
       <!-- Zoom Controls -->
       <div class="absolute bottom-4 right-4 bg-white shadow-md rounded-lg p-2 space-y-2">
-        <button 
-          (click)="zoomIn()"
-          title="Zoom in (+ toets)"
+        <button (click)="zoomIn()" title="Zoom in (+ toets)"
           class="w-10 h-10 flex items-center justify-center hover:bg-gray-100 rounded">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
@@ -190,9 +169,7 @@
         <div class="text-center text-sm text-gray-600">
           {{ currentZoomLevel }}%
         </div>
-        <button 
-          (click)="zoomOut()"
-          title="Zoom uit (- toets)"
+        <button (click)="zoomOut()" title="Zoom uit (- toets)"
           class="w-10 h-10 flex items-center justify-center hover:bg-gray-100 rounded">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
@@ -213,121 +190,112 @@
       </div>
 
       <!-- Zoom notification -->
-      @if (currentZoomLevel < 50) {
-        <div class="absolute top-20 left-1/2 transform -translate-x-1/2 bg-yellow-100 border border-yellow-400 rounded-lg px-4 py-2 text-sm text-yellow-800 zoom-notification">
+      @if (currentZoomLevel < 50) { <div
+        class="absolute top-20 left-1/2 transform -translate-x-1/2 bg-yellow-100 border border-yellow-400 rounded-lg px-4 py-2 text-sm text-yellow-800 zoom-notification">
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span>Zoom in of hover over knoppen om labels te lezen</span>
+        </div>
+    </div>
+    }
+
+    <!-- Hover Tooltip -->
+    @if (showTooltip && hoveredNode) {
+    <div class="absolute bg-white rounded-lg shadow-xl border border-gray-200 p-4 z-40 pointer-events-none"
+      [style.left.px]="tooltipPosition.x" [style.top.px]="tooltipPosition.y"
+      style="max-width: 300px; transform: translate(-50%, calc(-100% - 10px));">
+      <div class="space-y-2">
+        <h4 class="font-semibold text-blue-600">{{ hoveredNode.label }}</h4>
+        <div class="text-sm text-gray-600 space-y-1">
+          <p><span class="font-medium">Afdeling:</span> {{ hoveredNode.department }}</p>
+          <p><span class="font-medium">Niveau:</span> {{ hoveredNode.level }}</p>
+          <p><span class="font-medium">Salaris:</span> {{ hoveredNode.salary }}</p>
+        </div>
+        <p class="text-sm text-gray-700 mt-2">{{ hoveredNode.description }}</p>
+        <p class="text-xs text-gray-500 mt-2 italic">Klik voor meer details</p>
+      </div>
+    </div>
+    }
+
+    <!-- Welcome Screen Overlay -->
+    @if (showWelcome) {
+    <div class="absolute inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+      <div class="bg-white rounded-xl shadow-xl max-w-xl w-full p-8">
+        <h2 class="text-2xl font-bold text-blue-600 mb-6">Welkom bij de Loopbaanpaden Verkenner</h2>
+
+        @if (!welcomeChoice) {
+        <div class="space-y-6">
+          <p class="text-gray-600">Waar staat u in uw carrière? Kies een optie die het beste bij u past:</p>
+
+          <div class="grid grid-cols-2 gap-4">
+            <button (click)="setWelcomeChoice('starter')"
+              class="p-6 border rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all group">
+              <h3 class="text-lg font-semibold text-blue-600 mb-2 group-hover:text-blue-700">Starter</h3>
+              <p class="text-sm text-gray-600">Ik ben net begonnen of zoek een eerste stap in de zorg</p>
+            </button>
+
+            <button (click)="setWelcomeChoice('experienced')"
+              class="p-6 border rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all group">
+              <h3 class="text-lg font-semibold text-blue-600 mb-2 group-hover:text-blue-700">Ervaren</h3>
+              <p class="text-sm text-gray-600">Ik heb al ervaring en zoek nieuwe mogelijkheden</p>
+            </button>
+
+            <button (click)="setWelcomeChoice('specialized')"
+              class="p-6 border rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all group">
+              <h3 class="text-lg font-semibold text-blue-600 mb-2 group-hover:text-blue-700">Specialisatie</h3>
+              <p class="text-sm text-gray-600">Ik wil me specialiseren in een specifiek vakgebied</p>
+            </button>
+
+            <button (click)="setWelcomeChoice('management')"
+              class="p-6 border rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all group">
+              <h3 class="text-lg font-semibold text-blue-600 mb-2 group-hover:text-blue-700">Management</h3>
+              <p class="text-sm text-gray-600">Ik wil doorgroeien naar een leidinggevende functie</p>
+            </button>
+          </div>
+        </div>
+        } @else {
+        <div class="space-y-6">
           <div class="flex items-center gap-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            <span>Zoom in of hover over knoppen om labels te lezen</span>
+            <button (click)="welcomeChoice = ''" class="text-blue-600 hover:text-blue-700">
+              ← Terug
+            </button>
+            <h3 class="text-lg font-semibold">Kies uw afdeling</h3>
           </div>
-        </div>
-      }
 
-      <!-- Hover Tooltip -->
-      @if (showTooltip && hoveredNode) {
-        <div 
-          class="absolute bg-white rounded-lg shadow-xl border border-gray-200 p-4 z-40 pointer-events-none"
-          [style.left.px]="tooltipPosition.x"
-          [style.top.px]="tooltipPosition.y"
-          style="max-width: 300px; transform: translate(-50%, calc(-100% - 10px));">
-          <div class="space-y-2">
-            <h4 class="font-semibold text-blue-600">{{ hoveredNode.label }}</h4>
-            <div class="text-sm text-gray-600 space-y-1">
-              <p><span class="font-medium">Afdeling:</span> {{ hoveredNode.department }}</p>
-              <p><span class="font-medium">Niveau:</span> {{ hoveredNode.level }}</p>
-              <p><span class="font-medium">Salaris:</span> {{ hoveredNode.salary }}</p>
+          <div class="space-y-4">
+            <p class="text-gray-600">Selecteer de afdeling waarin u geïnteresseerd bent:</p>
+
+            <div class="grid grid-cols-1 gap-2 max-h-[400px] overflow-y-auto">
+              @for (dept of getRelevantDepartments(); track dept) {
+              <button (click)="selectDepartment(dept)"
+                class="p-4 border rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all"
+                [class.border-blue-500]="selectedDepartment === dept">
+                {{ dept }}
+              </button>
+              }
             </div>
-            <p class="text-sm text-gray-700 mt-2">{{ hoveredNode.description }}</p>
-            <p class="text-xs text-gray-500 mt-2 italic">Klik voor meer details</p>
-          </div>
-        </div>
-      }
 
-      <!-- Welcome Screen Overlay -->
-      @if (showWelcome) {
-        <div class="absolute inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div class="bg-white rounded-xl shadow-xl max-w-xl w-full p-8">
-            <h2 class="text-2xl font-bold text-blue-600 mb-6">Welkom bij de Loopbaanpaden Verkenner</h2>
-
-            @if (!welcomeChoice) {
-              <div class="space-y-6">
-                <p class="text-gray-600">Waar staat u in uw carrière? Kies een optie die het beste bij u past:</p>
-                
-                <div class="grid grid-cols-2 gap-4">
-                  <button 
-                    (click)="setWelcomeChoice('starter')"
-                    class="p-6 border rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all group">
-                    <h3 class="text-lg font-semibold text-blue-600 mb-2 group-hover:text-blue-700">Starter</h3>
-                    <p class="text-sm text-gray-600">Ik ben net begonnen of zoek een eerste stap in de zorg</p>
-                  </button>
-                  
-                  <button 
-                    (click)="setWelcomeChoice('experienced')"
-                    class="p-6 border rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all group">
-                    <h3 class="text-lg font-semibold text-blue-600 mb-2 group-hover:text-blue-700">Ervaren</h3>
-                    <p class="text-sm text-gray-600">Ik heb al ervaring en zoek nieuwe mogelijkheden</p>
-                  </button>
-                  
-                  <button 
-                    (click)="setWelcomeChoice('specialized')"
-                    class="p-6 border rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all group">
-                    <h3 class="text-lg font-semibold text-blue-600 mb-2 group-hover:text-blue-700">Specialisatie</h3>
-                    <p class="text-sm text-gray-600">Ik wil me specialiseren in een specifiek vakgebied</p>
-                  </button>
-                  
-                  <button 
-                    (click)="setWelcomeChoice('management')"
-                    class="p-6 border rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all group">
-                    <h3 class="text-lg font-semibold text-blue-600 mb-2 group-hover:text-blue-700">Management</h3>
-                    <p class="text-sm text-gray-600">Ik wil doorgroeien naar een leidinggevende functie</p>
-                  </button>
-                </div>
-              </div>
-            } @else {
-              <div class="space-y-6">
-                <div class="flex items-center gap-2">
-                  <button 
-                    (click)="welcomeChoice = ''"
-                    class="text-blue-600 hover:text-blue-700">
-                    ← Terug
-                  </button>
-                  <h3 class="text-lg font-semibold">Kies uw afdeling</h3>
-                </div>
-                
-                <div class="space-y-4">
-                  <p class="text-gray-600">Selecteer de afdeling waarin u geïnteresseerd bent:</p>
-                  
-                  <div class="grid grid-cols-1 gap-2 max-h-[400px] overflow-y-auto">
-                    @for (dept of getRelevantDepartments(); track dept) {
-                      <button 
-                        (click)="selectDepartment(dept)"
-                        class="p-4 border rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all"
-                        [class.border-blue-500]="selectedDepartment === dept">
-                        {{ dept }}
-                      </button>
-                    }
-                  </div>
-                  
-                  @if (selectedStartNode) {
-                    <div class="pt-4">
-                      <p class="text-sm text-gray-600 mb-4">
-                        We raden aan te beginnen met de functie:
-                        <span class="font-semibold text-blue-600">{{ selectedStartNode.label }}</span>
-                      </p>
-                      <button 
-                        (click)="startExploring()"
-                        class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors">
-                        Start Verkenning
-                      </button>
-                    </div>
-                  }
-                </div>
-              </div>
+            @if (selectedStartNode) {
+            <div class="pt-4">
+              <p class="text-sm text-gray-600 mb-4">
+                We raden aan te beginnen met de functie:
+                <span class="font-semibold text-blue-600">{{ selectedStartNode.label }}</span>
+              </p>
+              <button (click)="startExploring()"
+                class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                Start Verkenning
+              </button>
+            </div>
             }
           </div>
         </div>
-      }
+        }
+      </div>
     </div>
+    }
   </div>
+</div>
 </div>
