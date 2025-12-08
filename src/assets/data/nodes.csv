@@ -1,0 +1,51 @@
+id,label,department,level,salary,description,requirements
+afdelingsassistent-fwg20,Afdelingsassistent,Zorg,Medewerker zorg C,FWG 20,Ondersteunt bij administratieve en organisatorische taken op de afdeling.,example
+zorgassistent-fwg30,Zorgassistent,Zorg,Medewerker zorg A - helpende zorg en welzijn niv 2,FWG 30,Biedt basiszorg aan patiënten onder toezicht van gediplomeerde verpleegkundigen.,example
+spreekuurassistent-fwg30,Spreekuurassistent,Medisch,medisch assistent D,FWG 30,Assisteert artsen tijdens spreekuren en ondersteunt patiënten.,example
+polikliniek-assistent-fwg35,Polikliniek assistent,Medisch,medisch assistent C,FWG 35,Ondersteunt medische processen in de polikliniek.,example
+medisch-assistent-fwg40,Medisch assistent,Medisch,medisch assistent B,FWG 40,Voert medisch-administratieve taken uit en ondersteunt artsen.,example
+dialyse-assistent-fwg40,Dialyse assistent,Verpleging,Medewerker verpleging en verzorging,FWG 40,Assisteert bij dialysebehandelingen van patiënten.,example
+mbo-verpleegkundige-fwg45,Mbo-Verpleegkundige,Verpleging,verpleegkundige B,FWG 45,Verleent directe patiëntenzorg op MBO-niveau.,example
+mbo-verpleegkundige-baz-fwg45,Mbo-Verpleegkundige met BAZ,Verpleging,verpleegkundige B (BAZ),FWG 45,MBO-verpleegkundige met Beperkt Aangepaste Zorg specialisatie.,example
+polikliniek-verpleegkundige-fwg45,Polikliniek verpleegkundige,Verpleging,medisch assistent A,FWG 45,Verpleegkundige werkzaam in de polikliniek.,example
+radiologisch-laborant-allround-fwg45,Radiologisch laborant all round,Radiologie,Laborant beeldvormende technieken B - MBRT aangevuld met aandachtsgebied,FWG 45,All-round radiologisch laborant voor verschillende beeldvormende technieken.,example
+hbo-verpleegkundige-fwg50,Hbo-Verpleegkundige,Verpleging,Verpleegkundige A,FWG 50,Verleent directe patiëntenzorg op HBO-niveau.,example
+hbo-verpleegkundige-baz-fwg50,Hbo-Verpleegkundige met BAZ,Verpleging,Verpleegkundige A (BAZ),FWG 50,HBO-verpleegkundige met Beperkt Aangepaste Zorg specialisatie.,example
+oncologie-verpleegkundige-fwg50,Oncologie verpleegkundige,Verpleging,Specialistisch verpleegkundige B,FWG 50,Gespecialiseerde verpleegkundige in de oncologie.,example
+kinderverpleegkundige-fwg50,Kinderverpleegkundige,Verpleging,Specialistisch verpleegkundige B,FWG 50,Gespecialiseerde verpleegkundige voor pediatrische zorg.,example
+verpleegkundige-obstetrie-fwg50,Verpleegkundige obstetrie,Verpleging,Specialistisch verpleegkundige B,FWG 50,Gespecialiseerde verpleegkundige in de verloskunde.,example
+neuro-verpleegkundige-fwg50,Neuro verpleegkundige,Verpleging,Specialistisch verpleegkundige B,FWG 50,Gespecialiseerde verpleegkundige in de neurologie.,example
+geriatrie-verpleegkundige-fwg50,Geriatrie verpleegkundige,Verpleging,Specialistisch verpleegkundige B,FWG 50,Gespecialiseerde verpleegkundige in de geriatrie.,example
+psychiatrisch-verpleegkundige-fwg50,Psychiatrisch verpleegkundige,Verpleging,Psychiatrisch verpleegkundige,FWG 50,Gespecialiseerde verpleegkundige in de psychiatrie.,example
+neonatologie-verpleegkundige-fwg50,Neonatologie verpleegkundige,Verpleging,Specialistisch verpleegkundige B,FWG 50,Gespecialiseerde verpleegkundige in de neonatologie.,example
+dialyse-verpleegkundige-fwg50,Dialyse verpleegkundige,Verpleging,Specialistisch verpleegkundige B,FWG 50,Gespecialiseerde verpleegkundige voor dialysebehandelingen.,example
+endoscopie-verpleegkundige-fwg50,Endoscopie verpleegkundige,Verpleging,Specialistisch verpleegkundige B,FWG 50,Gespecialiseerde verpleegkundige voor endoscopische procedures.,example
+avond-nacht-coordinator-fwg50,Avond/nacht coördinator,Verpleging,avond/nachtcoördinator,FWG 50,Coördineert zorgverlening tijdens avond- en nachtdiensten.,example
+pacu-verpleegkundige-fwg50,PACU verpleegkundige,Verpleging,verpleegkundige bewaking B2,FWG 50,Verpleegkundige werkzaam op de Post Anesthesia Care Unit.,example
+operatieassistent-fwg50,Operatieassistent,Operatie,Operatieassistent B,FWG 50,Assisteert bij operatieve ingrepen.,example
+anesthesiemedewerker-fwg50,Anesthesiemedewerker,Anesthesie,Anesthesiemedewerker B,FWG 50,Ondersteunt bij anesthesieprocedures.,example
+radiologisch-laborant-specialisatie-fwg50,Radiologisch laborant met specialisatie,Radiologie,Laborant beeldvormende technieken A - MBRT,FWG 50,Gespecialiseerde radiologisch laborant.,example
+teamleider-c-fwg50,Teamleider C,Management,generiek,FWG 50,Teamleider op basis niveau.,example
+ic-verpleegkundige-fwg55,IC verpleegkundige,Verpleging,Verpleegkundige bewaking A,FWG 55,Gespecialiseerde verpleegkundige op de Intensive Care.,example
+seh-verpleegkundige-fwg55,SEH verpleegkundige,Verpleging,verpleegkundige spoedeisende zorg A,FWG 55,Gespecialiseerde verpleegkundige op de Spoedeisende Hulp.,example
+ccu-verpleegkundige-fwg55,CCU verpleegkundige,Verpleging,verpleegkundige bewaking A,FWG 55,Gespecialiseerde verpleegkundige op de Coronary Care Unit.,example
+seh-verpleegkundige-ambulance-fwg55,SEH verpleegkundige + Ambulance,Verpleging,verpleegkundige spoedeisende zorg A = ambulance,FWG 55,SEH verpleegkundige met ambulance-ervaring.,example
+ventilation-renal-neural-practitioner-fwg55,"Ventilation, Renal of Neural practitioner",Verpleging,Verpleegkundige bewaking A,FWG 55,"Gespecialiseerde practitioner voor beademing, nier- of neurologische zorg.",example
+medisch-hulpverlener-fwg55,Medisch hulpverlener,Medisch,Medisch hulpverlener,FWG 55,Verleent medische hulp en ondersteuning.,example
+fysiotherapeut-fwg55,Fysiotherapeut,Paramedisch,Fysiotherapeut,FWG 55,Verleent fysiotherapeutische behandelingen.,example
+teamleider-kliniek-fwg55,Teamleider kliniek,Management,Teamleider zorg B,FWG 55,Leidt team in klinische omgeving.,example
+gipsverbandmeester-fwg55,Gipsverbandmeester,Paramedisch,vakman vormende techniek A,FWG 55,Gespecialiseerd in het aanleggen van gipsverbanden.,example
+interventielaborant-fwg55,Interventielaborant,Radiologie,Laborant functieonderzoek A1,FWG 55,Gespecialiseerde laborant voor interventionele procedures.,example
+radiologisch-laborant-echo-gyn-fwg55,Radiologisch laborant met specialisatie (echo gyn),Radiologie,Laborant functieonderzoek A2,FWG 55,Gespecialiseerde laborant voor gynecologische echografie.,example
+operatieassistent-fwg55,Operatieassistent,Operatie,Operatieassistent A,FWG 55,Senior operatieassistent.,example
+anesthesiemedewerker-fwg55,Anesthesiemedewerker,Anesthesie,Anesthesiemedewerker A,FWG 55,Senior anesthesiemedewerker.,example
+interventielaborant-specialisatie-fwg55,Interventielaborant met specialisatie,Radiologie,Laborant functieonderzoek A1,FWG 55,Gespecialiseerde interventielaborant.,example
+teamleider-b-fwg55,Teamleider B,Management,generiek,FWG 55,Teamleider op middenniveau.,example
+physician-assistant-fwg60,Physician assistant,Medisch,Physician assistant,FWG 60,Assisteert artsen bij diagnose en behandeling van patiënten.,example
+verpleegkundig-specialist-fwg60,Verpleegkundig specialist,Verpleging,verpleegkundige specialist,FWG 60,Hooggespecialiseerde verpleegkundige met uitgebreide bevoegdheden.,example
+teamleider-acute-as-fwg60,Teamleider acute as,Management,Teamleider zorg A,FWG 60,Leidt team in acute zorgomgeving.,example
+deskundige-infectiepreventie-fwg60,Deskundige infectiepreventie,Infectiepreventie,Deskundige infectiepreventie,FWG 60,Expert in infectiepreventie en -controle.,example
+sedatiepraktijk-specialist-fwg60,Sedatiepraktijk-specialist,Anesthesie,Sedatie praktijk specialist,FWG 60,Gespecialiseerd in sedatieprocedures.,example
+teamleider-a-fwg60,Teamleider A,Management,generiek,FWG 60,Senior teamleider.,example
+organisatorisch-hoofd-klinieken-fwg65,Organisatorisch hoofd klinieken,Management,Organisatorisch hoofd B1,FWG 65,Hoofd van klinische afdelingen.,example
+organisatorisch-hoofd-acute-as-fwg70,Organisatorisch hoofd acute as,Management,Organisatorisch hoofd A,FWG 70,Hoofd van acute zorgafdelingen.,example

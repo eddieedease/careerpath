@@ -6,7 +6,9 @@
       "department": "Zorg",
       "level": "Medewerker zorg C",
       "description": "Ondersteunt bij administratieve en organisatorische taken op de afdeling.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 20"
     },
     {
@@ -15,7 +17,9 @@
       "department": "Zorg",
       "level": "Medewerker zorg A - helpende zorg en welzijn niv 2",
       "description": "Biedt basiszorg aan patiënten onder toezicht van gediplomeerde verpleegkundigen.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 30"
     },
     {
@@ -24,7 +28,9 @@
       "department": "Medisch",
       "level": "medisch assistent D",
       "description": "Assisteert artsen tijdens spreekuren en ondersteunt patiënten.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 30"
     },
     {
@@ -33,7 +39,9 @@
       "department": "Medisch",
       "level": "medisch assistent C",
       "description": "Ondersteunt medische processen in de polikliniek.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 35"
     },
     {
@@ -42,7 +50,9 @@
       "department": "Medisch",
       "level": "medisch assistent B",
       "description": "Voert medisch-administratieve taken uit en ondersteunt artsen.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 40"
     },
     {
@@ -51,7 +61,9 @@
       "department": "Verpleging",
       "level": "Medewerker verpleging en verzorging",
       "description": "Assisteert bij dialysebehandelingen van patiënten.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 40"
     },
     {
@@ -60,7 +72,9 @@
       "department": "Verpleging",
       "level": "verpleegkundige B",
       "description": "Verleent directe patiëntenzorg op MBO-niveau.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 45"
     },
     {
@@ -69,7 +83,9 @@
       "department": "Verpleging",
       "level": "verpleegkundige B (BAZ)",
       "description": "MBO-verpleegkundige met Beperkt Aangepaste Zorg specialisatie.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 45"
     },
     {
@@ -78,7 +94,9 @@
       "department": "Verpleging",
       "level": "medisch assistent A",
       "description": "Verpleegkundige werkzaam in de polikliniek.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 45"
     },
     {
@@ -87,7 +105,9 @@
       "department": "Radiologie",
       "level": "Laborant beeldvormende technieken B - MBRT aangevuld met aandachtsgebied",
       "description": "All-round radiologisch laborant voor verschillende beeldvormende technieken.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 45"
     },
     {
@@ -96,7 +116,9 @@
       "department": "Verpleging",
       "level": "Verpleegkundige A",
       "description": "Verleent directe patiëntenzorg op HBO-niveau.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 50"
     },
     {
@@ -105,7 +127,9 @@
       "department": "Verpleging",
       "level": "Verpleegkundige A (BAZ)",
       "description": "HBO-verpleegkundige met Beperkt Aangepaste Zorg specialisatie.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 50"
     },
     {
@@ -114,7 +138,9 @@
       "department": "Verpleging",
       "level": "Specialistisch verpleegkundige B",
       "description": "Gespecialiseerde verpleegkundige in de oncologie.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 50"
     },
     {
@@ -123,7 +149,9 @@
       "department": "Verpleging",
       "level": "Specialistisch verpleegkundige B",
       "description": "Gespecialiseerde verpleegkundige voor pediatrische zorg.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 50"
     },
     {
@@ -132,7 +160,9 @@
       "department": "Verpleging",
       "level": "Specialistisch verpleegkundige B",
       "description": "Gespecialiseerde verpleegkundige in de verloskunde.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 50"
     },
     {
@@ -141,7 +171,9 @@
       "department": "Verpleging",
       "level": "Specialistisch verpleegkundige B",
       "description": "Gespecialiseerde verpleegkundige in de neurologie.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 50"
     },
     {
@@ -150,7 +182,9 @@
       "department": "Verpleging",
       "level": "Specialistisch verpleegkundige B",
       "description": "Gespecialiseerde verpleegkundige in de geriatrie.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 50"
     },
     {
@@ -159,7 +193,9 @@
       "department": "Verpleging",
       "level": "Psychiatrisch verpleegkundige",
       "description": "Gespecialiseerde verpleegkundige in de psychiatrie.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 50"
     },
     {
@@ -168,7 +204,9 @@
       "department": "Verpleging",
       "level": "Specialistisch verpleegkundige B",
       "description": "Gespecialiseerde verpleegkundige in de neonatologie.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 50"
     },
     {
@@ -177,7 +215,9 @@
       "department": "Verpleging",
       "level": "Specialistisch verpleegkundige B",
       "description": "Gespecialiseerde verpleegkundige voor dialysebehandelingen.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 50"
     },
     {
@@ -186,7 +226,9 @@
       "department": "Verpleging",
       "level": "Specialistisch verpleegkundige B",
       "description": "Gespecialiseerde verpleegkundige voor endoscopische procedures.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 50"
     },
     {
@@ -195,7 +237,9 @@
       "department": "Verpleging",
       "level": "avond/nachtcoördinator",
       "description": "Coördineert zorgverlening tijdens avond- en nachtdiensten.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 50"
     },
     {
@@ -204,7 +248,9 @@
       "department": "Verpleging",
       "level": "verpleegkundige bewaking B2",
       "description": "Verpleegkundige werkzaam op de Post Anesthesia Care Unit.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 50"
     },
     {
@@ -213,7 +259,9 @@
       "department": "Operatie",
       "level": "Operatieassistent B",
       "description": "Assisteert bij operatieve ingrepen.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 50"
     },
     {
@@ -222,7 +270,9 @@
       "department": "Anesthesie",
       "level": "Anesthesiemedewerker B",
       "description": "Ondersteunt bij anesthesieprocedures.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 50"
     },
     {
@@ -231,7 +281,9 @@
       "department": "Radiologie",
       "level": "Laborant beeldvormende technieken A - MBRT",
       "description": "Gespecialiseerde radiologisch laborant.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 50"
     },
     {
@@ -240,7 +292,9 @@
       "department": "Management",
       "level": "generiek",
       "description": "Teamleider op basis niveau.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 50"
     },
     {
@@ -249,7 +303,9 @@
       "department": "Verpleging",
       "level": "Verpleegkundige bewaking A",
       "description": "Gespecialiseerde verpleegkundige op de Intensive Care.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 55"
     },
     {
@@ -258,7 +314,9 @@
       "department": "Verpleging",
       "level": "verpleegkundige spoedeisende zorg A",
       "description": "Gespecialiseerde verpleegkundige op de Spoedeisende Hulp.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 55"
     },
     {
@@ -267,7 +325,9 @@
       "department": "Verpleging",
       "level": "verpleegkundige bewaking A",
       "description": "Gespecialiseerde verpleegkundige op de Coronary Care Unit.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 55"
     },
     {
@@ -276,7 +336,9 @@
       "department": "Verpleging",
       "level": "verpleegkundige spoedeisende zorg A = ambulance",
       "description": "SEH verpleegkundige met ambulance-ervaring.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 55"
     },
     {
@@ -285,7 +347,9 @@
       "department": "Verpleging",
       "level": "Verpleegkundige bewaking A",
       "description": "Gespecialiseerde practitioner voor beademing, nier- of neurologische zorg.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 55"
     },
     {
@@ -294,7 +358,9 @@
       "department": "Medisch",
       "level": "Medisch hulpverlener",
       "description": "Verleent medische hulp en ondersteuning.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 55"
     },
     {
@@ -303,7 +369,9 @@
       "department": "Paramedisch",
       "level": "Fysiotherapeut",
       "description": "Verleent fysiotherapeutische behandelingen.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 55"
     },
     {
@@ -312,7 +380,9 @@
       "department": "Management",
       "level": "Teamleider zorg B",
       "description": "Leidt team in klinische omgeving.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 55"
     },
     {
@@ -321,7 +391,9 @@
       "department": "Paramedisch",
       "level": "vakman vormende techniek A",
       "description": "Gespecialiseerd in het aanleggen van gipsverbanden.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 55"
     },
     {
@@ -330,7 +402,9 @@
       "department": "Radiologie",
       "level": "Laborant functieonderzoek A1",
       "description": "Gespecialiseerde laborant voor interventionele procedures.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 55"
     },
     {
@@ -339,7 +413,9 @@
       "department": "Radiologie",
       "level": "Laborant functieonderzoek A2",
       "description": "Gespecialiseerde laborant voor gynecologische echografie.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 55"
     },
     {
@@ -348,7 +424,9 @@
       "department": "Operatie",
       "level": "Operatieassistent A",
       "description": "Senior operatieassistent.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 55"
     },
     {
@@ -357,7 +435,9 @@
       "department": "Anesthesie",
       "level": "Anesthesiemedewerker A",
       "description": "Senior anesthesiemedewerker.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 55"
     },
     {
@@ -366,7 +446,9 @@
       "department": "Radiologie",
       "level": "Laborant functieonderzoek A1",
       "description": "Gespecialiseerde interventielaborant.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 55"
     },
     {
@@ -375,7 +457,9 @@
       "department": "Management",
       "level": "generiek",
       "description": "Teamleider op middenniveau.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 55"
     },
     {
@@ -384,7 +468,9 @@
       "department": "Medisch",
       "level": "Physician assistant",
       "description": "Assisteert artsen bij diagnose en behandeling van patiënten.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 60"
     },
     {
@@ -393,7 +479,9 @@
       "department": "Verpleging",
       "level": "verpleegkundige specialist",
       "description": "Hooggespecialiseerde verpleegkundige met uitgebreide bevoegdheden.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 60"
     },
     {
@@ -402,7 +490,9 @@
       "department": "Management",
       "level": "Teamleider zorg A",
       "description": "Leidt team in acute zorgomgeving.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 60"
     },
     {
@@ -411,7 +501,9 @@
       "department": "Infectiepreventie",
       "level": "Deskundige infectiepreventie",
       "description": "Expert in infectiepreventie en -controle.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 60"
     },
     {
@@ -420,7 +512,9 @@
       "department": "Anesthesie",
       "level": "Sedatie praktijk specialist",
       "description": "Gespecialiseerd in sedatieprocedures.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 60"
     },
     {
@@ -429,7 +523,9 @@
       "department": "Management",
       "level": "generiek",
       "description": "Senior teamleider.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 60"
     },
     {
@@ -438,7 +534,9 @@
       "department": "Management",
       "level": "Organisatorisch hoofd B1",
       "description": "Hoofd van klinische afdelingen.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 65"
     },
     {
@@ -447,7 +545,9 @@
       "department": "Management",
       "level": "Organisatorisch hoofd A",
       "description": "Hoofd van acute zorgafdelingen.",
-      "requirements": ["example"],
+      "requirements": [
+        "example"
+      ],
       "salary": "FWG 70"
     }
   ]

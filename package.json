@@ -6,7 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "data:update": "node scripts/update-career-data.js",
+    "data:export": "node scripts/json-to-csv.js"
   },
   "prettier": {
     "overrides": [
