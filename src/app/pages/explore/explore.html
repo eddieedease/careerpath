@@ -8,11 +8,9 @@
           <select (change)="changeLayout($event)"
             class="px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
             <option value="breadthfirst">Hierarchisch</option>
-            <option value="cose">CoSE (Force-directed)</option>
-            <option value="circle">Cirkel</option>
-            <option value="concentric">Concentrisch</option>
             <option value="grid">Grid</option>
-            <option value="random">Willekeurig</option>
+            <option value="cose">Relatief</option>
+
           </select>
         </div>
         <button routerLink="/landing"
@@ -232,25 +230,25 @@
 
           <div class="grid grid-cols-2 gap-4">
             <button (click)="setWelcomeChoice('starter')"
-              class="p-6 border rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all group">
+              class="p-6 border rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all group cursor-pointer">
               <h3 class="text-lg font-semibold text-blue-600 mb-2 group-hover:text-blue-700">Starter</h3>
               <p class="text-sm text-gray-600">Ik ben net begonnen of zoek een eerste stap in de zorg</p>
             </button>
 
             <button (click)="setWelcomeChoice('experienced')"
-              class="p-6 border rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all group">
+              class="p-6 border rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all group cursor-pointer">
               <h3 class="text-lg font-semibold text-blue-600 mb-2 group-hover:text-blue-700">Ervaren</h3>
               <p class="text-sm text-gray-600">Ik heb al ervaring en zoek nieuwe mogelijkheden</p>
             </button>
 
             <button (click)="setWelcomeChoice('specialized')"
-              class="p-6 border rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all group">
+              class="p-6 border rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all group cursor-pointer">
               <h3 class="text-lg font-semibold text-blue-600 mb-2 group-hover:text-blue-700">Specialisatie</h3>
               <p class="text-sm text-gray-600">Ik wil me specialiseren in een specifiek vakgebied</p>
             </button>
 
             <button (click)="setWelcomeChoice('management')"
-              class="p-6 border rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all group">
+              class="p-6 border rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all group cursor-pointer">
               <h3 class="text-lg font-semibold text-blue-600 mb-2 group-hover:text-blue-700">Management</h3>
               <p class="text-sm text-gray-600">Ik wil doorgroeien naar een leidinggevende functie</p>
             </button>
@@ -271,7 +269,7 @@
             <div class="grid grid-cols-1 gap-2 max-h-[400px] overflow-y-auto">
               @for (dept of getRelevantDepartments(); track dept) {
               <button (click)="selectDepartment(dept)"
-                class="p-4 border rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all"
+                class="p-4 border rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer"
                 [class.border-blue-500]="selectedDepartment === dept">
                 {{ dept }}
               </button>
@@ -285,7 +283,7 @@
                 <span class="font-semibold text-blue-600">{{ selectedStartNode.label }}</span>
               </p>
               <button (click)="startExploring()"
-                class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer">
                 Start Verkenning
               </button>
             </div>

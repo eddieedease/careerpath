@@ -35,12 +35,13 @@ interface PathsResponse {
   providedIn: 'root'
 })
 export class CareerDataService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getCareerData(): Observable<CareerData> {
+    const timestamp = new Date().getTime();
     return forkJoin({
-      nodes: this.http.get<NodesResponse>('assets/data/career-nodes.json'),
-      paths: this.http.get<PathsResponse>('assets/data/career-paths.json')
+      nodes: this.http.get<NodesResponse>(`assets/data/career-nodes.json?v=${timestamp}`),
+      paths: this.http.get<PathsResponse>(`assets/data/career-paths.json?v=${timestamp}`)
     }).pipe(
       map(response => ({
         nodes: response.nodes.nodes,

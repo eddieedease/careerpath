@@ -1,40 +1,111 @@
-<div class="min-h-screen bg-gradient-to-br from-blue-600 to-green-600">
-  <div class="container mx-auto px-4 py-16">
-    <div class="text-center text-white">
-      <h1 class="text-5xl font-bold mb-6">
+<div class="min-h-screen bg-gray-50">
+  <!-- Hero Section -->
+  <div class="bg-gradient-to-br from-blue-600 to-green-600 text-white py-20">
+    <div class="container mx-auto px-4 text-center">
+      <h1 class="text-4xl md:text-5xl font-bold mb-6">
         Ziekenhuis Loopbaanontwikkeling
       </h1>
-      <p class="text-xl mb-8 max-w-2xl mx-auto">
+      <p class="text-xl mb-8 max-w-3xl mx-auto opacity-90">
         Ontdek je loopbaanpad in de gezondheidszorg. Verken verschillende functies,
         begrijp loopbaanontwikkeling, en vind je volgende carrièrestap.
       </p>
-      <div class="space-y-4">
-        <button 
-          routerLink="/explore" 
-          class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-          Verken Loopbaanpaden
-        </button>
-      </div>
+      <button routerLink="/explore"
+        class="bg-white text-blue-600 px-8 py-3 rounded-lg font-bold text-lg hover:bg-gray-100 transition-transform hover:scale-105 shadow-lg">
+        Start de Verkenner
+      </button>
     </div>
-    
-    <div class="mt-16 grid md:grid-cols-3 gap-8">
-      <div class="bg-white bg-opacity-20 backdrop-blur-lg rounded-lg p-6 text-blue-900">
-        <div class="text-3xl mb-4">🏥</div>
-        <h3 class="text-xl font-semibold mb-2">Klinische Functies</h3>
-        <p>Verken verpleegkundige, medische en paramedische posities</p>
+  </div>
+
+  <!-- Content Section -->
+  <div class="container mx-auto px-4 py-12">
+    <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-sm p-8 md:p-12 space-y-12">
+
+      <!-- Intro -->
+      <section>
+        <h2 class="text-3xl font-bold text-blue-800 mb-6">Waarom deze tool?</h2>
+        <p class="text-gray-700 leading-relaxed mb-4">
+          Binnen onze organisatie bruist het van de mogelijkheden. Maar eerlijk is eerlijk: soms is het lastig om door
+          de bomen het bos te zien. Welke functies zijn er allemaal? Welke richtingen kun je op? En bij wie moet je zijn
+          voor meer informatie?
+        </p>
+        <p class="text-gray-700 leading-relaxed">
+          Met onze nieuwe tool brengen we alles samen in één overzicht. Zo ontdek jij snel en eenvoudig hoe jouw
+          loopbaanlijn eruit kan zien.
+        </p>
+      </section>
+
+      <!-- Features Grid -->
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="bg-blue-50 p-6 rounded-lg">
+          <h3 class="text-xl font-semibold text-blue-700 mb-3">Een wereld vol functies</h3>
+          <p class="text-gray-700 text-sm">
+            Onze organisatie is groot en veelzijdig. Deze tool maakt inzichtelijk wat er te vinden is. Zie in één
+            oogopslag welke functies er bestaan, hoe ze verbonden zijn en wie de teamleiders zijn.
+          </p>
+        </div>
+        <div class="bg-green-50 p-6 rounded-lg">
+          <h3 class="text-xl font-semibold text-green-700 mb-3">Onafhankelijk verkennen</h3>
+          <p class="text-gray-700 text-sm">
+            Soms is het lastig om het gesprek aan te gaan. Deze tool biedt je de mogelijkheid om onafhankelijk en op
+            eigen initiatief te verkennen welke richtingen je op kunt gaan.
+          </p>
+        </div>
       </div>
-      
-      <div class="bg-white bg-opacity-20 backdrop-blur-lg rounded-lg p-6 text-blue-900">
-        <div class="text-3xl mb-4">💼</div>
-        <h3 class="text-xl font-semibold mb-2">Administratief</h3>
-        <p>Ontdek management- en ondersteunende functies</p>
-      </div>
-      
-      <div class="bg-white bg-opacity-20 backdrop-blur-lg rounded-lg p-6 text-blue-900">
-        <div class="text-3xl mb-4">🔬</div>
-        <h3 class="text-xl font-semibold mb-2">Technisch</h3>
-        <p>Vind gespecialiseerde technische en onderzoeksfuncties</p>
-      </div>
+
+      <!-- Usage Scenarios -->
+      <section>
+        <h3 class="text-2xl font-bold text-gray-800 mb-4">Wanneer te gebruiken?</h3>
+        <ul class="space-y-3">
+          <li class="flex items-start">
+            <span class="text-green-500 mr-3 text-xl">✓</span>
+            <span class="text-gray-700">Als je vragen hebt over je huidige loopbaan n.a.v. een FIT dialoog.</span>
+          </li>
+          <li class="flex items-start">
+            <span class="text-green-500 mr-3 text-xl">✓</span>
+            <span class="text-gray-700">Als je net bent afgestudeerd en je eerste stappen wilt zetten.</span>
+          </li>
+          <li class="flex items-start">
+            <span class="text-green-500 mr-3 text-xl">✓</span>
+            <span class="text-gray-700">Als je nieuwsgierig bent naar andere mogelijkheden binnen ons ziekenhuis.</span>
+          </li>
+        </ul>
+      </section>
+
+      <!-- FIT Dialogue -->
+      <section class="border-l-4 border-blue-500 pl-6 py-2 bg-gray-50 rounded-r-lg">
+        <h3 class="text-xl font-bold text-blue-800 mb-2">Aanvulling op de FIT-dialoog</h3>
+        <p class="text-gray-700">
+          De FIT-dialoog is een belangrijk moment om stil te staan bij je ontwikkeling. Deze tool sluit hier mooi op
+          aan. Gebruik de informatie als voorbereiding of als vervolg om verder te onderzoeken welke stappen je kunt
+          zetten.
+        </p>
+      </section>
+
+      <!-- Next Steps -->
+      <section>
+        <h2 class="text-3xl font-bold text-blue-800 mb-6">Klaar voor de volgende stap?</h2>
+        <p class="text-gray-700 mb-6">
+          Een nieuwe stap in je loopbaan zetten begint bij een aantal belangrijke vragen:
+        </p>
+        <div class="grid md:grid-cols-3 gap-4 text-center">
+          <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+            <div class="text-2xl mb-2">📍</div>
+            <div class="font-semibold text-gray-800">Waar sta ik nu?</div>
+          </div>
+          <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+            <div class="text-2xl mb-2">🎯</div>
+            <div class="font-semibold text-gray-800">Waar wil ik heen?</div>
+          </div>
+          <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+            <div class="text-2xl mb-2">🚀</div>
+            <div class="font-semibold text-gray-800">Wat kan ik nu doen?</div>
+          </div>
+        </div>
+        <p class="text-gray-600 mt-6 text-sm italic text-center">
+          Een gesprek met je teamleider kan je helpen om helder te krijgen wat jouw mogelijkheden zijn.
+        </p>
+      </section>
+
     </div>
   </div>
 </div>

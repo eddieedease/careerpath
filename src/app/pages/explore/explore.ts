@@ -125,7 +125,7 @@ export class Explore implements OnInit, AfterViewInit {
       const node = this.cy.getElementById(this.selectedStartNode.id);
       if (node) {
         this.selectNodeById(this.selectedStartNode.id);
-        this.cy.center(node);
+
       }
     }
   }
@@ -176,7 +176,8 @@ export class Explore implements OnInit, AfterViewInit {
           id: node.id,
           label: node.label,
           department: node.department,
-          level: node.level
+          level: node.level,
+          salary: node.salary
         }
       })),
       ...this.careerPaths.map(path => ({
@@ -476,6 +477,12 @@ export class Explore implements OnInit, AfterViewInit {
   selectSearchResult(node: NodeData) {
     this.searchQuery = '';
     this.searchResults = [];
+
+    // Reset filters
+    this.selectedDepartment = '';
+    this.selectedSalaryLevel = '';
+    this.applyFilters(); // Apply reset filters (shows all nodes)
+
     const cyNode = this.cy.getElementById(node.id);
     if (cyNode) {
       cyNode.trigger('tap');
@@ -568,7 +575,7 @@ export class Explore implements OnInit, AfterViewInit {
       node.trigger('tap');
 
       // Use setTimeout to ensure zoom happens after tap event completes
-      setTimeout(() => {
+      if (false) setTimeout(() => {
         // Get outgoing edges and their target nodes for better zoom
         const outgoingEdges = node.outgoers('edge');
         const outgoingNodes = outgoingEdges.targets();
@@ -595,16 +602,21 @@ export class Explore implements OnInit, AfterViewInit {
   }
 
   // Filter nodes based on selected department and salary
+
   applyFilters() {
-    // Reset all nodes to visible first
-    this.cy.nodes().style({ 'display': 'element' });
+    // Reset all nodes to fully visible first
+    this.cy.nodes().style({
+      'opacity': 1,
+      'display': 'element'
+    });
+    this.cy.edges().style({ 'opacity': 1 });
 
     // Apply department filter
     if (this.selectedDepartment) {
       this.showWelcome = false; // Hide welcome screen when a department is selected
       this.cy.nodes().filter((node: any) =>
         node.data('department') !== this.selectedDepartment
-      ).style({ 'display': 'none' });
+      ).style({ 'opacity': 0.1 });
     }
 
     // Apply salary filter
@@ -612,11 +624,20 @@ export class Explore implements OnInit, AfterViewInit {
       this.showWelcome = false; // Hide welcome screen when a salary level is selected
       this.cy.nodes().filter((node: any) =>
         node.data('salary') !== this.selectedSalaryLevel
-      ).style({ 'display': 'none' });
+      ).style({ 'opacity': 0.1 });
     }
 
-    // Fit the view to show visible nodes
-    this.cy.fit();
+    // Also dim edges connected to dimmed nodes
+    this.cy.nodes().filter((node: any) => node.style('opacity') < 1).connectedEdges().style({ 'opacity': 0.05 });
+
+    // Smart fit: only fit if we don't have a selected node that is still visible
+    const selectedNodeStillVisible = this.selectedNode &&
+      this.cy.getElementById(this.selectedNode.id).style('opacity') === 1;
+
+    if (!selectedNodeStillVisible) {
+      // Fit the view to show visible nodes only if we lost our focus point
+      this.cy.fit();
+    }
   }
 
   // Reset all filters
