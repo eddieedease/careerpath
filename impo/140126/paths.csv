@@ -1,0 +1,184 @@
+from,to,timeframe
+afdelingsassistent-fwg20,zorgassistent-fwg30,1-2 jaar
+zorgassistent-fwg30,dialyse-assistent-fwg40,2-3 jaar
+zorgassistent-fwg30,mbo-verpleegkundige-fwg45,
+dialyse-assistent-fwg40,mbo-verpleegkundige-fwg45,1-2 jaar
+spreekuurassistent-fwg30,polikliniek-assistent-fwg35,1-2 jaar
+polikliniek-assistent-fwg35,medisch-assistent-fwg40,1-2 jaar
+medisch-assistent-fwg40,polikliniek-verpleegkundige-fwg45,2-3 jaar
+medisch-assistent-fwg40,mbo-verpleegkundige-fwg45,
+mbo-verpleegkundige-fwg45,hbo-verpleegkundige-fwg50,2-4 jaar
+mbo-verpleegkundige-baz-fwg45,hbo-verpleegkundige-baz-fwg50,2-4 jaar
+mbo-verpleegkundige-fwg45,oncologie-verpleegkundige-fwg50,
+mbo-verpleegkundige-fwg45,kinderverpleegkundige-fwg50,
+mbo-verpleegkundige-fwg45,verpleegkundige-obstetrie-fwg50,
+mbo-verpleegkundige-fwg45,neuro-verpleegkundige-fwg50,
+mbo-verpleegkundige-fwg45,geriatrie-verpleegkundige-fwg50,
+mbo-verpleegkundige-fwg45,psychiatrisch-verpleegkundige-fwg50,
+mbo-verpleegkundige-fwg45,neonatologie-verpleegkundige-fwg50,
+mbo-verpleegkundige-fwg45,dialyse-verpleegkundige-fwg50,
+mbo-verpleegkundige-fwg45,endoscopie-verpleegkundige-fwg50,
+mbo-verpleegkundige-fwg45,avond-nacht-coordinator-fwg50,
+mbo-verpleegkundige-fwg45,pacu-verpleegkundige-fwg50,
+mbo-verpleegkundige-fwg45,ic-verpleegkundige-fwg55,
+mbo-verpleegkundige-fwg45,seh-verpleegkundige-fwg55,
+mbo-verpleegkundige-fwg45,ccu-verpleegkundige-fwg55,
+mbo-verpleegkundige-fwg45,operatieassistent-fwg55,
+mbo-verpleegkundige-fwg45,anesthesiemedewerker-fwg55,
+mbo-verpleegkundige-fwg45,gipsverbandmeester-fwg55,
+mbo-verpleegkundige-fwg45,interventielaborant-fwg55,
+mbo-verpleegkundige-baz-fwg45,oncologie-verpleegkundige-fwg50,
+mbo-verpleegkundige-baz-fwg45,kinderverpleegkundige-fwg50,
+mbo-verpleegkundige-baz-fwg45,verpleegkundige-obstetrie-fwg50,
+mbo-verpleegkundige-baz-fwg45,neuro-verpleegkundige-fwg50,
+mbo-verpleegkundige-baz-fwg45,geriatrie-verpleegkundige-fwg50,
+mbo-verpleegkundige-baz-fwg45,psychiatrisch-verpleegkundige-fwg50,
+mbo-verpleegkundige-baz-fwg45,neonatologie-verpleegkundige-fwg50,
+mbo-verpleegkundige-baz-fwg45,dialyse-verpleegkundige-fwg50,
+mbo-verpleegkundige-baz-fwg45,endoscopie-verpleegkundige-fwg50,
+mbo-verpleegkundige-baz-fwg45,avond-nacht-coordinator-fwg50,
+mbo-verpleegkundige-baz-fwg45,pacu-verpleegkundige-fwg50,
+mbo-verpleegkundige-baz-fwg45,ic-verpleegkundige-fwg55,
+mbo-verpleegkundige-baz-fwg45,seh-verpleegkundige-fwg55,
+mbo-verpleegkundige-baz-fwg45,ccu-verpleegkundige-fwg55,
+mbo-verpleegkundige-baz-fwg45,operatieassistent-fwg55,2-3 jaar
+mbo-verpleegkundige-baz-fwg45,anesthesiemedewerker-fwg55,2-3 jaar
+mbo-verpleegkundige-baz-fwg45,interventielaborant-fwg55,
+mbo-verpleegkundige-baz-fwg45,gipsverbandmeester-fwg55,
+hbo-verpleegkundige-fwg50,oncologie-verpleegkundige-fwg50,1-2 jaar
+hbo-verpleegkundige-fwg50,kinderverpleegkundige-fwg50,1-2 jaar
+hbo-verpleegkundige-fwg50,verpleegkundige-obstetrie-fwg50,1-2 jaar
+hbo-verpleegkundige-fwg50,neuro-verpleegkundige-fwg50,1-2 jaar
+hbo-verpleegkundige-fwg50,geriatrie-verpleegkundige-fwg50,1-2 jaar
+hbo-verpleegkundige-fwg50,psychiatrisch-verpleegkundige-fwg50,1-2 jaar
+hbo-verpleegkundige-fwg50,neonatologie-verpleegkundige-fwg50,1-2 jaar
+hbo-verpleegkundige-fwg50,dialyse-verpleegkundige-fwg50,1-2 jaar
+hbo-verpleegkundige-fwg50,endoscopie-verpleegkundige-fwg50,1-2 jaar
+hbo-verpleegkundige-fwg50,avond-nacht-coordinator-fwg50,2-3 jaar
+hbo-verpleegkundige-fwg50,pacu-verpleegkundige-fwg50,1-2 jaar
+hbo-verpleegkundige-fwg50,ic-verpleegkundige-fwg55,2-3 jaar
+hbo-verpleegkundige-fwg50,seh-verpleegkundige-fwg55,2-3 jaar
+hbo-verpleegkundige-fwg50,ccu-verpleegkundige-fwg55,2-3 jaar
+hbo-verpleegkundige-fwg50,operatieassistent-fwg55,
+hbo-verpleegkundige-fwg50,anesthesiemedewerker-fwg55,
+hbo-verpleegkundige-fwg50,interventielaborant-fwg55,
+hbo-verpleegkundige-fwg50,gipsverbandmeester-fwg55,
+hbo-verpleegkundige-fwg50,deskundige-infectiepreventie-fwg60,
+hbo-verpleegkundige-fwg50,physician-assistant-fwg60,
+hbo-verpleegkundige-fwg50,verpleegkundig-specialist-fwg60,
+hbo-verpleegkundige-fwg50,teamleider-kliniek-fwg55,
+hbo-verpleegkundige-fwg50,teamleider-a-fwg60,
+hbo-verpleegkundige-fwg50,teamleider-acute-as-fwg60,
+hbo-verpleegkundige-fwg50,Praktijkopleider-fwg50,
+hbo-verpleegkundige-fwg50,Kwaliteitsfunctionaris-fwg50,
+hbo-verpleegkundige-fwg50,medisch-hulpverlener-fwg55,2-3 jaar
+hbo-verpleegkundige-baz-fwg50,oncologie-verpleegkundige-fwg50,
+hbo-verpleegkundige-baz-fwg50,kinderverpleegkundige-fwg50,
+hbo-verpleegkundige-baz-fwg50,verpleegkundige-obstetrie-fwg50,
+hbo-verpleegkundige-baz-fwg50,neuro-verpleegkundige-fwg50,
+hbo-verpleegkundige-baz-fwg50,geriatrie-verpleegkundige-fwg50,
+hbo-verpleegkundige-baz-fwg50,psychiatrisch-verpleegkundige-fwg50,
+hbo-verpleegkundige-baz-fwg50,neonatologie-verpleegkundige-fwg50,
+hbo-verpleegkundige-baz-fwg50,dialyse-verpleegkundige-fwg50,
+hbo-verpleegkundige-baz-fwg50,endoscopie-verpleegkundige-fwg50,
+hbo-verpleegkundige-baz-fwg50,avond-nacht-coordinator-fwg50,
+hbo-verpleegkundige-baz-fwg50,pacu-verpleegkundige-fwg50,
+hbo-verpleegkundige-baz-fwg50,ic-verpleegkundige-fwg55,
+hbo-verpleegkundige-baz-fwg50,seh-verpleegkundige-fwg55,
+hbo-verpleegkundige-baz-fwg50,ccu-verpleegkundige-fwg55,
+hbo-verpleegkundige-baz-fwg50,operatieassistent-fwg55,
+hbo-verpleegkundige-baz-fwg50,anesthesiemedewerker-fwg55,
+hbo-verpleegkundige-baz-fwg50,interventielaborant-fwg55,
+hbo-verpleegkundige-baz-fwg50,gipsverbandmeester-fwg55,
+hbo-verpleegkundige-baz-fwg50,deskundige-infectiepreventie-fwg60,
+hbo-verpleegkundige-baz-fwg50,physician-assistant-fwg60,
+hbo-verpleegkundige-baz-fwg50,verpleegkundig-specialist-fwg60,
+hbo-verpleegkundige-baz-fwg50,teamleider-kliniek-fwg55,
+hbo-verpleegkundige-baz-fwg50,teamleider-a-fwg60,
+hbo-verpleegkundige-baz-fwg50,teamleider-acute-as-fwg60,
+hbo-verpleegkundige-baz-fwg50,Praktijkopleider-fwg50,
+hbo-verpleegkundige-baz-fwg50,Kwaliteitsfunctionaris-fwg50,
+hbo-verpleegkundige-baz-fwg50,medisch-hulpverlener-fwg55,
+seh-verpleegkundige-fwg55,seh-verpleegkundige-ambulance-fwg55,1-2 jaar
+seh-verpleegkundige-fwg55,ic-verpleegkundige-fwg55,
+seh-verpleegkundige-fwg55,anesthesiemedewerker-fwg55,
+seh-verpleegkundige-fwg55,ccu-verpleegkundige-fwg55,
+seh-verpleegkundige-fwg55,operatieassistent-fwg55,
+seh-verpleegkundige-fwg55,interventielaborant-fwg55,
+seh-verpleegkundige-fwg55,gipsverbandmeester-fwg55,
+seh-verpleegkundige-fwg55,deskundige-infectiepreventie-fwg60,
+seh-verpleegkundige-fwg55,physician-assistant-fwg60,
+seh-verpleegkundige-fwg55,verpleegkundig-specialist-fwg60,
+seh-verpleegkundige-fwg55,teamleider-kliniek-fwg55,
+seh-verpleegkundige-fwg55,teamleider-acute-as-fwg60,
+seh-verpleegkundige-fwg55,teamleider-a-fwg60,
+seh-verpleegkundige-fwg55,Praktijkopleider acuut-fwg55,
+seh-verpleegkundige-fwg55,kwaliteitsfunctionarit-fwg55,
+ic-verpleegkundige-fwg55,ventilation-renal-neural-practitioner-fwg55,1-2 jaar
+ic-verpleegkundige-fwg55,seh-verpleegkundige-fwg55,
+ic-verpleegkundige-fwg55,anesthesiemedewerker-fwg55,
+ic-verpleegkundige-fwg55,ccu-verpleegkundige-fwg55,
+ic-verpleegkundige-fwg55,operatieassistent-fwg55,
+ic-verpleegkundige-fwg55,interventielaborant-fwg55,
+ic-verpleegkundige-fwg55,gipsverbandmeester-fwg55,
+ic-verpleegkundige-fwg55,deskundige-infectiepreventie-fwg60,
+ic-verpleegkundige-fwg55,physician-assistant-fwg60,
+ic-verpleegkundige-fwg55,verpleegkundig-specialist-fwg60,
+ic-verpleegkundige-fwg55,teamleider-kliniek-fwg55,
+ic-verpleegkundige-fwg55,teamleider-acute-as-fwg60,
+ic-verpleegkundige-fwg55,teamleider-a-fwg60,
+ic-verpleegkundige-fwg55,Praktijkopleider acuut-fwg55,
+ic-verpleegkundige-fwg55,kwaliteitsfunctionarit-fwg55,
+ccu-verpleegkundige-fwg55,seh-verpleegkundige-fwg55,
+ccu-verpleegkundige-fwg55,anesthesiemedewerker-fwg55,
+ccu-verpleegkundige-fwg55,ic-verpleegkundige-fwg55,
+ccu-verpleegkundige-fwg55,operatieassistent-fwg55,
+ccu-verpleegkundige-fwg55,interventielaborant-fwg55,
+ccu-verpleegkundige-fwg55,gipsverbandmeester-fwg55,
+ccu-verpleegkundige-fwg55,deskundige-infectiepreventie-fwg60,
+ccu-verpleegkundige-fwg55,physician-assistant-fwg60,
+ccu-verpleegkundige-fwg55,verpleegkundig-specialist-fwg60,
+ccu-verpleegkundige-fwg55,teamleider-kliniek-fwg55,
+ccu-verpleegkundige-fwg55,teamleider-acute-as-fwg60,
+ccu-verpleegkundige-fwg55,teamleider-a-fwg60,
+ccu-verpleegkundige-fwg55,Praktijkopleider acuut-fwg55,
+ccu-verpleegkundige-fwg55,kwaliteitsfunctionarit-fwg55,
+pacu-verpleegkundige-fwg50,seh-verpleegkundige-fwg55,
+pacu-verpleegkundige-fwg50,anesthesiemedewerker-fwg55,
+pacu-verpleegkundige-fwg50,ic-verpleegkundige-fwg55,
+pacu-verpleegkundige-fwg50,operatieassistent-fwg55,
+pacu-verpleegkundige-fwg50,interventielaborant-fwg55,
+pacu-verpleegkundige-fwg50,gipsverbandmeester-fwg55,
+pacu-verpleegkundige-fwg50,deskundige-infectiepreventie-fwg60,mits hbo geschoold
+pacu-verpleegkundige-fwg50,physician-assistant-fwg60,mits hbo geschoold
+pacu-verpleegkundige-fwg50,verpleegkundig-specialist-fwg60,mits hbo geschoold
+pacu-verpleegkundige-fwg50,teamleider-kliniek-fwg55,mits hbo geschoold
+pacu-verpleegkundige-fwg50,teamleider-acute-as-fwg60,mits hbo geschoold
+pacu-verpleegkundige-fwg50,teamleider-a-fwg60,mits hbo geschoold
+pacu-verpleegkundige-fwg50,Praktijkopleider acuut-fwg55,mits hbo geschoold
+pacu-verpleegkundige-fwg50,kwaliteitsfunctionarit-fwg55,mits hbo geschoold
+operatieassistent-fwg50,operatieassistent-fwg55,2-3 jaar
+operatieassistent-fwg55,anesthesiemedewerker-fwg55,
+operatieassistent-fwg55,teamleider-a-fwg60,
+operatieassistent-fwg55,Praktijkopleider acuut-fwg55,
+operatieassistent-fwg55,kwaliteitsfunctionarit-fwg55,
+operatieassistent-fwg55,physician-assistant-fwg60,mits hbo geschoold
+operatieassistent-fwg55,verpleegkundig-specialist-fwg60,mits hbo geschoold en big geregisteerd
+anesthesiemedewerker-fwg50,anesthesiemedewerker-fwg55,2-3 jaar
+anesthesiemedewerker-fwg55,sedatiepraktijk-specialist-fwg60,2-3 jaar
+anesthesiemedewerker-fwg55,operatieassistent-fwg55,1-2 jaar
+anesthesiemedewerker-fwg55,teamleider-a-fwg60,
+anesthesiemedewerker-fwg55,Praktijkopleider acuut-fwg55,
+anesthesiemedewerker-fwg55,kwaliteitsfunctionarit-fwg55,
+anesthesiemedewerker-fwg55,physician-assistant-fwg60,mits hbo geschoold
+anesthesiemedewerker-fwg55,verpleegkundig-specialist-fwg60,mits hbo geschoold en big geregisteerd
+radiologisch-laborant-allround-fwg45,radiologisch-laborant-specialisatie-fwg50,2-3 jaar
+radiologisch-laborant-specialisatie-fwg50,radiologisch-laborant-echo-gyn-fwg55,1-2 jaar
+radiologisch-laborant-allround-fwg45,teamleider-a-fwg60,
+radiologisch-laborant-allround-fwg45,Praktijkopleider acuut-fwg55,
+radiologisch-laborant-allround-fwg45,kwaliteitsfunctionarit-fwg55,
+radiologisch-laborant-allround-fwg45,interventielaborant-fwg55,
+interventielaborant-fwg55,interventielaborant-specialisatie-fwg55,1-2 jaar
+interventielaborant-fwg55,teamleider-a-fwg60,
+interventielaborant-fwg55,physician-assistant-fwg60,mits hbo geschoold
+interventielaborant-fwg55,verpleegkundig-specialist-fwg60,mits hbo geschoold en big geregisteerd
