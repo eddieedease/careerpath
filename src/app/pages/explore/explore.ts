@@ -50,6 +50,10 @@ export class Explore implements OnInit, AfterViewInit {
   private initialPositions: Map<string, any> = new Map();
   private hasStoredInitialLayout = false;
 
+  // Navigation history
+  navigationHistory: NodeData[] = [];
+  maxHistorySize: number = 5;
+
   constructor(private dataService: CareerDataService) {
     // data will be loaded in ngOnInit; departments and salaryLevels are populated after load
   }
@@ -57,6 +61,57 @@ export class Explore implements OnInit, AfterViewInit {
   setWelcomeChoice(choice: 'starter' | 'experienced' | 'specialized' | 'management') {
     this.welcomeChoice = choice;
     this.selectedStartNode = null;
+  }
+
+  selectQuickStartFunction(functionName: string) {
+    // Find the node by label (case-insensitive partial match)
+    const node = this.careerData.find(n =>
+      n.label.toLowerCase().includes(functionName.toLowerCase())
+    );
+
+    if (node) {
+      this.showWelcome = false;
+      // Select and focus on the node
+      setTimeout(() => {
+        this.selectNodeById(node.id);
+      }, 100);
+    }
+  }
+
+  // Navigation history methods
+  addToHistory(node: NodeData) {
+    // Don't add if it's the same as the last item
+    if (this.navigationHistory.length > 0 &&
+      this.navigationHistory[this.navigationHistory.length - 1].id === node.id) {
+      return;
+    }
+
+    this.navigationHistory.push(node);
+
+    // Keep only last 5 items
+    if (this.navigationHistory.length > this.maxHistorySize) {
+      this.navigationHistory.shift();
+    }
+  }
+
+  goBack() {
+    if (this.navigationHistory.length > 1) {
+      // Remove current node
+      this.navigationHistory.pop();
+      // Get previous node
+      const previousNode = this.navigationHistory[this.navigationHistory.length - 1];
+      // Select it by triggering tap event
+      const cyNode = this.cy.getElementById(previousNode.id);
+      if (cyNode) {
+        cyNode.trigger('tap');
+        // Remove the duplicate entry that tap will add
+        this.navigationHistory.pop();
+      }
+    }
+  }
+
+  canGoBack(): boolean {
+    return this.navigationHistory.length > 1;
   }
 
   getRelevantDepartments(): string[] {
@@ -203,7 +258,7 @@ export class Explore implements OnInit, AfterViewInit {
         {
           selector: 'node',
           style: {
-            'background-color': '#94a3b8', // Default gray for nvt/unknown
+            'background-color': '#9333ea', // Default purple for nvt/unknown
             'label': 'data(label)',
             'color': '#ffffff',
             'text-valign': 'center',
@@ -222,32 +277,32 @@ export class Explore implements OnInit, AfterViewInit {
             'opacity': 1
           }
         },
-        // Color by Care Cluster
-        // Acute zorg (red/orange)
+        // Color by Care Cluster - Using ETZ Hospital Logo Colors
+        // Acute zorg (ETZ red)
         {
           selector: 'node[careCluster="acute zorg"]',
           style: {
-            'background-color': '#dc2626', // Red
+            'background-color': '#dd1334', // ETZ Red
             'opacity': 1
           }
         },
-        // Langdurige zorg (blue)
+        // Langdurige zorg (ETZ light blue)
         {
           selector: 'node[careCluster="langdurige zorg"]',
           style: {
-            'background-color': '#2563eb', // Blue
+            'background-color': '#41b8ee', // ETZ Light Blue
             'opacity': 1
           }
         },
-        // Medisch ondersteunend (purple)
+        // Medisch ondersteunend (ETZ navy)
         {
           selector: 'node[careCluster="Medisch ondersteunend"]',
           style: {
-            'background-color': '#7e22ce', // Purple
+            'background-color': '#00273e', // ETZ Navy
             'opacity': 1
           }
         },
-        // Moeder en kind (pink)
+        // Moeder en kind (pink - complementary)
         {
           selector: 'node[careCluster="moeder en kind"]',
           style: {
@@ -255,19 +310,19 @@ export class Explore implements OnInit, AfterViewInit {
             'opacity': 1
           }
         },
-        // Paramedische zorg (green)
+        // Paramedische zorg (ETZ green)
         {
           selector: 'node[careCluster="paramedische zorg"]',
           style: {
-            'background-color': '#16a34a', // Green
+            'background-color': '#a4c047', // ETZ Green
             'opacity': 1
           }
         },
-        // nvt (gray)
+        // nvt (purple)
         {
           selector: 'node[careCluster="nvt"]',
           style: {
-            'background-color': '#64748b', // Slate gray
+            'background-color': '#9333ea', // Purple
             'opacity': 1
           }
         },
@@ -344,7 +399,7 @@ export class Explore implements OnInit, AfterViewInit {
       this.updateZoomLevel();
 
       // Adjust text visibility based on zoom level
-      if (currentZoom < 0.5) {
+      if (currentZoom < 0.3) {
         // Hide labels when zoomed out too much
         this.cy.style()
           .selector('node')
@@ -353,7 +408,7 @@ export class Explore implements OnInit, AfterViewInit {
             'text-opacity': 0
           })
           .update();
-      } else if (currentZoom < 0.8) {
+      } else if (currentZoom < 0.6) {
         // Show abbreviated labels
         this.cy.style()
           .selector('node')
@@ -425,6 +480,12 @@ export class Explore implements OnInit, AfterViewInit {
       node.addClass('selected');
 
       this.selectedNode = this.careerData.find(node => node.id === nodeId) || null;
+
+      // Add to navigation history
+      if (this.selectedNode) {
+        this.addToHistory(this.selectedNode);
+      }
+
       this.updateSelectedNodePaths(nodeId);
 
       // Hide all edges first (make them nearly invisible)
@@ -518,21 +579,21 @@ export class Explore implements OnInit, AfterViewInit {
       // Reset all nodes to be visible with proper colors based on their care cluster
       this.cy.nodes().forEach((node: any) => {
         const careCluster = node.data('careCluster');
-        let backgroundColor = '#94a3b8'; // Default gray for nvt/unknown
+        let backgroundColor = '#9333ea'; // Default purple for nvt/unknown
 
-        // Determine color based on care cluster
+        // Determine color based on care cluster - Using ETZ Hospital Logo Colors
         if (careCluster === 'acute zorg') {
-          backgroundColor = '#dc2626'; // Red
+          backgroundColor = '#dd1334'; // ETZ Red
         } else if (careCluster === 'langdurige zorg') {
-          backgroundColor = '#2563eb'; // Blue
+          backgroundColor = '#41b8ee'; // ETZ Light Blue
         } else if (careCluster === 'Medisch ondersteunend') {
-          backgroundColor = '#7e22ce'; // Purple
+          backgroundColor = '#00273e'; // ETZ Navy
         } else if (careCluster === 'moeder en kind') {
           backgroundColor = '#db2777'; // Pink
         } else if (careCluster === 'paramedische zorg') {
-          backgroundColor = '#16a34a'; // Green
+          backgroundColor = '#a4c047'; // ETZ Green
         } else if (careCluster === 'nvt') {
-          backgroundColor = '#64748b'; // Slate gray
+          backgroundColor = '#9333ea'; // Purple
         }
 
         node.style({
@@ -694,34 +755,19 @@ export class Explore implements OnInit, AfterViewInit {
     const select = event.target as HTMLSelectElement;
     const layoutName = select.value;
 
-    // If switching back to breadthfirst and we have stored positions, restore them
-    if (layoutName === 'breadthfirst' && this.hasStoredInitialLayout) {
-      this.cy.nodes().forEach((node: any) => {
-        const pos = this.initialPositions.get(node.id());
-        if (pos) {
-          node.position(pos);
-        }
-        // Ensure node styles are correct
-        node.style({
-          'width': '150px',
-          'height': '80px',
-          'font-size': '14px',
-          'text-max-width': '140px'
-        });
-      });
-
-      // Fit to the restored layout
-      this.cy.fit(undefined, 80);
-      this.updateZoomLevel();
-      return; // Don't run the layout algorithm
-    }
+    // Note: Removed position restoration for breadthfirst to allow proper hierarchical layout
 
     const layoutOptions: any = {
       breadthfirst: {
         name: 'breadthfirst',
         directed: true,
-        spacingFactor: 1.5,  // Reduced from 2.2
+        spacingFactor: 2.0,  // Increased spacing for hierarchical view
         avoidOverlap: true,
+        circle: false,
+        grid: false,
+        roots: undefined,  // Auto-detect roots
+        maximal: false,
+        animate: true
       },
       circle: {
         name: 'circle',
@@ -769,11 +815,11 @@ export class Explore implements OnInit, AfterViewInit {
     const currentZoom = this.cy.zoom();
     const currentPan = this.cy.pan();
 
-    // Disable auto-fit to prevent node resizing
+    // Disable auto-fit to prevent node resizing (except for breadthfirst which needs it)
     const layoutConfig = {
       ...layoutOptions[layoutName],
       ...commonOptions,
-      fit: false  // Don't auto-fit during layout
+      fit: layoutName === 'breadthfirst' ? true : false  // breadthfirst needs fit to work properly
     };
 
     const layout = this.cy.layout(layoutConfig);

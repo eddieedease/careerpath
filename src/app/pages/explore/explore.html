@@ -4,6 +4,7 @@
     <div class="container mx-auto px-4 py-4">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-4">
+          <img src="/logo.svg" alt="ETZ Logo" class="h-12">
           <h1 class="text-2xl font-bold text-blue-600">Loopbaanpaden Verkenner</h1>
           <select (change)="changeLayout($event)"
             class="px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -28,18 +29,24 @@
       <!-- Search and Filter Section -->
       <div class="p-4 border-b border-gray-200 space-y-4">
         <!-- Search box -->
-        <div class="relative">
-          <input type="text" [(ngModel)]="searchQuery" (input)="onSearch($event)" placeholder="Zoek een functie..."
-            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-          @if (searchResults.length > 0) {
-          <div class="absolute z-10 w-full mt-1 bg-white border rounded-lg shadow-lg">
-            @for (result of searchResults; track result.id) {
-            <button (click)="selectSearchResult(result)" class="w-full px-4 py-2 text-left hover:bg-gray-50 text-sm">
-              {{ result.label }}
-            </button>
+        <div class="bg-white p-4 rounded-lg border-2 border-blue-400 shadow-lg">
+          <label class="block text-sm font-semibold text-blue-900 mb-2">
+            🔍 Start hier je verkenning
+          </label>
+          <div class="relative">
+            <input type="text" [(ngModel)]="searchQuery" (input)="onSearch($event)" placeholder="Zoek een functie..."
+              class="w-full px-4 py-3 border-2 border-blue-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base font-medium">
+            @if (searchResults.length > 0) {
+            <div class="absolute z-10 w-full mt-1 bg-white border-2 border-blue-300 rounded-lg shadow-xl">
+              @for (result of searchResults; track result.id) {
+              <button (click)="selectSearchResult(result)"
+                class="w-full px-4 py-3 text-left hover:bg-blue-50 text-sm font-medium border-b last:border-b-0">
+                {{ result.label }}
+              </button>
+              }
+            </div>
             }
           </div>
-          }
         </div>
 
         <!-- Filters -->
@@ -54,18 +61,6 @@
               <option value="">Alle afdelingen</option>
               @for (dept of departments; track dept) {
               <option [value]="dept">{{ dept }}</option>
-              }
-            </select>
-          </div>
-
-          <!-- Salary filter -->
-          <div>
-            <label for="salary" class="block text-sm text-gray-600 mb-1">Salarisschaal</label>
-            <select id="salary" [(ngModel)]="selectedSalaryLevel" (change)="applyFilters()"
-              class="w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-              <option value="">Alle salarisschalen</option>
-              @for (salary of salaryLevels; track salary) {
-              <option [value]="salary">{{ salary }}</option>
               }
             </select>
           </div>
@@ -90,6 +85,18 @@
               <option value="">Alle clusters</option>
               @for (cluster of careClusters; track cluster) {
               <option [value]="cluster">{{ cluster }}</option>
+              }
+            </select>
+          </div>
+
+          <!-- Salary filter - moved to bottom -->
+          <div>
+            <label for="salary" class="block text-sm text-gray-600 mb-1">Salarisschaal</label>
+            <select id="salary" [(ngModel)]="selectedSalaryLevel" (change)="applyFilters()"
+              class="w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="">Alle salarisschalen</option>
+              @for (salary of salaryLevels; track salary) {
+              <option [value]="salary">{{ salary }}</option>
               }
             </select>
           </div>
@@ -219,6 +226,16 @@
         </button>
       </div>
 
+      <!-- Back Navigation Button -->
+      @if (canGoBack()) {
+      <button (click)="goBack()"
+        class="absolute top-4 left-4 bg-white hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg shadow-md border border-gray-300 transition-all flex items-center gap-2 cursor-pointer">
+        <span class="text-lg">←</span>
+        <span class="font-medium">Vorige</span>
+        <span class="text-xs text-gray-500">({{ navigationHistory.length - 1 }})</span>
+      </button>
+      }
+
       <!-- Zoom Controls -->
       <div class="absolute bottom-4 right-4 bg-white shadow-md rounded-lg p-2 space-y-2">
         <button (click)="zoomIn()" title="Zoom in (+ toets)"
@@ -284,79 +301,75 @@
     <!-- Welcome Screen Overlay -->
     @if (showWelcome) {
     <div class="absolute inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-      <div class="bg-white rounded-xl shadow-xl max-w-xl w-full p-8">
-        <h2 class="text-2xl font-bold text-blue-600 mb-6">Welkom bij de Loopbaanpaden Verkenner</h2>
+      <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full p-8">
+        <h2 class="text-2xl font-bold text-blue-600 mb-4">Welkom bij de Loopbaanpaden Verkenner</h2>
 
-        @if (!welcomeChoice) {
         <div class="space-y-6">
-          <p class="text-gray-600">Waar staat u in uw carrière? Kies een optie die het beste bij u past:</p>
+          <!-- Usage Instructions -->
+          <div class="bg-blue-50 p-4 rounded-lg">
+            <h3 class="font-semibold text-blue-900 mb-2">Hoe te gebruiken:</h3>
+            <ul class="text-sm text-gray-700 space-y-2">
+              <li class="flex items-start">
+                <span class="text-blue-600 mr-2">•</span>
+                <span>Gebruik de <strong>zoekfunctie</strong> bovenaan om een specifieke functie te vinden</span>
+              </li>
+              <li class="flex items-start">
+                <span class="text-blue-600 mr-2">•</span>
+                <span>Gebruik de <strong>filters</strong> om functies te filteren op afdeling, care cluster, etc.</span>
+              </li>
+              <li class="flex items-start">
+                <span class="text-blue-600 mr-2">•</span>
+                <span><strong>Klik op een functie</strong> in de grafiek om details te zien en loopbaanpaden te
+                  ontdekken</span>
+              </li>
+            </ul>
+          </div>
 
-          <div class="grid grid-cols-2 gap-4">
-            <button (click)="setWelcomeChoice('starter')"
-              class="p-6 border rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all group cursor-pointer">
-              <h3 class="text-lg font-semibold text-blue-600 mb-2 group-hover:text-blue-700">Starter</h3>
-              <p class="text-sm text-gray-600">Ik ben net begonnen of zoek een eerste stap in de zorg</p>
-            </button>
+          <!-- Quick Start Examples -->
+          <div>
+            <p class="text-gray-700 mb-3">Of klik op onderstaande functies voor een startpunt:</p>
 
-            <button (click)="setWelcomeChoice('experienced')"
-              class="p-6 border rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all group cursor-pointer">
-              <h3 class="text-lg font-semibold text-blue-600 mb-2 group-hover:text-blue-700">Ervaren</h3>
-              <p class="text-sm text-gray-600">Ik heb al ervaring en zoek nieuwe mogelijkheden</p>
-            </button>
+            <div class="grid grid-cols-2 gap-3">
+              <button (click)="selectQuickStartFunction('MBO-verpleegkundige')"
+                class="p-4 border-2 border-blue-200 rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer group">
+                <h4 class="font-semibold text-blue-700 group-hover:text-blue-800">MBO-verpleegkundige</h4>
+                <p class="text-xs text-gray-600 mt-1">Zorg niveau C/B</p>
+              </button>
 
-            <button (click)="setWelcomeChoice('specialized')"
-              class="p-6 border rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all group cursor-pointer">
-              <h3 class="text-lg font-semibold text-blue-600 mb-2 group-hover:text-blue-700">Specialisatie</h3>
-              <p class="text-sm text-gray-600">Ik wil me specialiseren in een specifiek vakgebied</p>
-            </button>
+              <button (click)="selectQuickStartFunction('HBO-verpleegkundige')"
+                class="p-4 border-2 border-blue-200 rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer group">
+                <h4 class="font-semibold text-blue-700 group-hover:text-blue-800">HBO-verpleegkundige</h4>
+                <p class="text-xs text-gray-600 mt-1">Verpleegkundige A</p>
+              </button>
 
-            <button (click)="setWelcomeChoice('management')"
-              class="p-6 border rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all group cursor-pointer">
-              <h3 class="text-lg font-semibold text-blue-600 mb-2 group-hover:text-blue-700">Management</h3>
-              <p class="text-sm text-gray-600">Ik wil doorgroeien naar een leidinggevende functie</p>
-            </button>
+              <button (click)="selectQuickStartFunction('IC-verpleegkundige')"
+                class="p-4 border-2 border-blue-200 rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer group">
+                <h4 class="font-semibold text-blue-700 group-hover:text-blue-800">IC-verpleegkundige</h4>
+                <p class="text-xs text-gray-600 mt-1">Intensive Care</p>
+              </button>
+
+              <button (click)="selectQuickStartFunction('Afdelingsassistent')"
+                class="p-4 border-2 border-blue-200 rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer group">
+                <h4 class="font-semibold text-blue-700 group-hover:text-blue-800">Afdelingsassistent</h4>
+                <p class="text-xs text-gray-600 mt-1">Ondersteunende zorg</p>
+              </button>
+
+              <button (click)="selectQuickStartFunction('Zorgassistent')"
+                class="p-4 border-2 border-blue-200 rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer group">
+                <h4 class="font-semibold text-blue-700 group-hover:text-blue-800">Zorgassistent</h4>
+                <p class="text-xs text-gray-600 mt-1">Basis zorgverlening</p>
+              </button>
+
+              <button (click)="showWelcome = false"
+                class="p-4 border-2 border-gray-200 rounded-lg text-left hover:border-gray-400 hover:bg-gray-50 transition-all cursor-pointer group">
+                <h4 class="font-semibold text-gray-700 group-hover:text-gray-800">Zelf verkennen</h4>
+                <p class="text-xs text-gray-600 mt-1">Start zonder voorbeeld</p>
+              </button>
+            </div>
           </div>
         </div>
-        } @else {
-        <div class="space-y-6">
-          <div class="flex items-center gap-2">
-            <button (click)="welcomeChoice = ''" class="text-blue-600 hover:text-blue-700">
-              ← Terug
-            </button>
-            <h3 class="text-lg font-semibold">Kies uw afdeling</h3>
-          </div>
-
-          <div class="space-y-4">
-            <p class="text-gray-600">Selecteer de afdeling waarin u geïnteresseerd bent:</p>
-
-            <div class="grid grid-cols-1 gap-2 max-h-[400px] overflow-y-auto">
-              @for (dept of getRelevantDepartments(); track dept) {
-              <button (click)="selectDepartment(dept)"
-                class="p-4 border rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer"
-                [class.border-blue-500]="selectedDepartment === dept">
-                {{ dept }}
-              </button>
-              }
-            </div>
-
-            @if (selectedStartNode) {
-            <div class="pt-4">
-              <p class="text-sm text-gray-600 mb-4">
-                We raden aan te beginnen met de functie:
-                <span class="font-semibold text-blue-600">{{ selectedStartNode.label }}</span>
-              </p>
-              <button (click)="startExploring()"
-                class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer">
-                Start Verkenning
-              </button>
-            </div>
-            }
-          </div>
-        </div>
-        }
       </div>
     </div>
     }
   </div>
-</div>
 </div>
