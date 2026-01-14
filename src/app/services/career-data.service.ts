@@ -45,9 +45,15 @@ export class CareerDataService {
 
   getCareerData(): Observable<CareerData> {
     const timestamp = new Date().getTime();
+    const headers = {
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    };
+
     return forkJoin({
-      nodes: this.http.get<any>(`assets/data/career-nodes.json?v=${timestamp}`),
-      paths: this.http.get<PathsResponse>(`assets/data/career-paths.json?v=${timestamp}`)
+      nodes: this.http.get<any>(`assets/data/career-nodes.json?v=${timestamp}`, { headers }),
+      paths: this.http.get<PathsResponse>(`assets/data/career-paths.json?v=${timestamp}`, { headers })
     }).pipe(
       map(response => ({
         nodes: response.nodes.nodes.map((node: any) => ({

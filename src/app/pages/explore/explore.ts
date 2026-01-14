@@ -73,7 +73,10 @@ export class Explore implements OnInit, AfterViewInit {
       this.showWelcome = false;
       // Select and focus on the node
       setTimeout(() => {
-        this.selectNodeById(node.id);
+        const cyNode = this.cy.getElementById(node.id);
+        if (cyNode) {
+          cyNode.trigger('tap');
+        }
       }, 100);
     }
   }
