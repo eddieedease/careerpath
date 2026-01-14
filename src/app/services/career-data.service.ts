@@ -8,8 +8,14 @@ export interface NodeData {
   department: string;
   level: string;
   description: string;
-  requirements: string[];
+  requirements: string; // Fixed: changed from string[] to string
   salary: string;
+  irregularity?: string;
+  roles?: string;
+  werkenbijlink?: string;
+  careNonCare?: string; // Maps to "Care/non care" from JSON
+  careCluster?: string; // Maps to "Care cluster" from JSON
+  pioLink?: string; // Maps to "Link naar PIO werkenbij (ter bespreking)" from JSON
 }
 
 export interface CareerPath {
@@ -40,11 +46,16 @@ export class CareerDataService {
   getCareerData(): Observable<CareerData> {
     const timestamp = new Date().getTime();
     return forkJoin({
-      nodes: this.http.get<NodesResponse>(`assets/data/career-nodes.json?v=${timestamp}`),
+      nodes: this.http.get<any>(`assets/data/career-nodes.json?v=${timestamp}`),
       paths: this.http.get<PathsResponse>(`assets/data/career-paths.json?v=${timestamp}`)
     }).pipe(
       map(response => ({
-        nodes: response.nodes.nodes,
+        nodes: response.nodes.nodes.map((node: any) => ({
+          ...node,
+          careNonCare: node['Care/non care'],
+          careCluster: node['Care cluster'],
+          pioLink: node['Link naar PIO werkenbij (ter bespreking)']
+        })),
         paths: response.paths.paths
       }))
     );

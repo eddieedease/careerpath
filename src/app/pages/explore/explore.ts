@@ -27,6 +27,10 @@ export class Explore implements OnInit, AfterViewInit {
   selectedDepartment: string = '';
   salaryLevels: string[] = [];
   selectedSalaryLevel: string = '';
+  careTypes: string[] = [];
+  selectedCareType: string = '';
+  careClusters: string[] = [];
+  selectedCareCluster: string = '';
 
   // Welcome screen properties
   showWelcome: boolean = true;
@@ -144,6 +148,8 @@ export class Explore implements OnInit, AfterViewInit {
         // Populate filters
         this.departments = [...new Set(this.careerData.map(node => node.department))].sort();
         this.salaryLevels = [...new Set(this.careerData.map(node => node.salary))].sort();
+        this.careTypes = [...new Set(this.careerData.map(node => node.careNonCare).filter(Boolean) as string[])].sort();
+        this.careClusters = [...new Set(this.careerData.map(node => node.careCluster).filter(Boolean) as string[])].sort();
 
         // Initialize cytoscape once data is available
         // Delay initialization until view is ready
@@ -177,7 +183,8 @@ export class Explore implements OnInit, AfterViewInit {
           label: node.label,
           department: node.department,
           level: node.level,
-          salary: node.salary
+          salary: node.salary,
+          careCluster: node.careCluster || 'nvt' // Add care cluster to node data
         }
       })),
       ...this.careerPaths.map(path => ({
@@ -196,7 +203,7 @@ export class Explore implements OnInit, AfterViewInit {
         {
           selector: 'node',
           style: {
-            'background-color': '#1e40af', // Default blue
+            'background-color': '#94a3b8', // Default gray for nvt/unknown
             'label': 'data(label)',
             'color': '#ffffff',
             'text-valign': 'center',
@@ -215,43 +222,52 @@ export class Explore implements OnInit, AfterViewInit {
             'opacity': 1
           }
         },
-        // Entry level positions (green)
+        // Color by Care Cluster
+        // Acute zorg (red/orange)
         {
-          selector: 'node[level="Medewerker zorg C"], node[level="Medewerker zorg A - helpende zorg en welzijn niv 2"], node[level="medisch assistent D"], node[level="medisch assistent C"]',
+          selector: 'node[careCluster="acute zorg"]',
           style: {
-            'background-color': '#16a34a',
+            'background-color': '#dc2626', // Red
             'opacity': 1
           }
         },
-        // Standard healthcare roles (blue)
+        // Langdurige zorg (blue)
         {
-          selector: 'node[level="verpleegkundige B"], node[level="Verpleegkundige A"], node[level="medisch assistent B"], node[level="medisch assistent A"], node[level="Specialistisch verpleegkundige B"]',
+          selector: 'node[careCluster="langdurige zorg"]',
           style: {
-            'background-color': '#2563eb',
+            'background-color': '#2563eb', // Blue
             'opacity': 1
           }
         },
-        // Management roles (red)
+        // Medisch ondersteunend (purple)
         {
-          selector: 'node[level="Teamleider zorg A"], node[level="Teamleider zorg B"], node[level="Organisatorisch hoofd A"], node[level="Organisatorisch hoofd B1"], node[level="generiek"]',
+          selector: 'node[careCluster="Medisch ondersteunend"]',
           style: {
-            'background-color': '#dc2626',
+            'background-color': '#7e22ce', // Purple
             'opacity': 1
           }
         },
-        // High specialized roles (purple)
+        // Moeder en kind (pink)
         {
-          selector: 'node[level="verpleegkundige specialist"], node[level="Physician assistant"], node[level="Sedatie praktijk specialist"], node[level="Deskundige infectiepreventie"], node[level="verpleegkundige bewaking A"], node[level="verpleegkundige spoedeisende zorg A"], node[level="verpleegkundige spoedeisende zorg A = ambulance"]',
+          selector: 'node[careCluster="moeder en kind"]',
           style: {
-            'background-color': '#7e22ce',
+            'background-color': '#db2777', // Pink
             'opacity': 1
           }
         },
-        // Support/technical roles (orange) 
+        // Paramedische zorg (green)
         {
-          selector: 'node[level="vakman vormende techniek A"], node[level="Fysiotherapeut"], node[level="Laborant functieonderzoek A1"], node[level="Laborant functieonderzoek A2"], node[level="Laborant beeldvormende technieken A"], node[level="Laborant beeldvormende technieken B"], node[level="Operatieassistent A"], node[level="Operatieassistent B"], node[level="Anesthesiemedewerker A"], node[level="Anesthesiemedewerker B"]',
+          selector: 'node[careCluster="paramedische zorg"]',
           style: {
-            'background-color': '#f97316',
+            'background-color': '#16a34a', // Green
+            'opacity': 1
+          }
+        },
+        // nvt (gray)
+        {
+          selector: 'node[careCluster="nvt"]',
+          style: {
+            'background-color': '#64748b', // Slate gray
             'opacity': 1
           }
         },
@@ -275,9 +291,8 @@ export class Explore implements OnInit, AfterViewInit {
         }
       ],
       layout: {
-        name: 'breadthfirst',
-        directed: true,
-        spacingFactor: 1.5,
+        name: 'grid',
+        spacingFactor: 1.3,
         avoidOverlap: true,
         // Add more default layout options
         padding: 80,
@@ -500,22 +515,24 @@ export class Explore implements OnInit, AfterViewInit {
       this.selectedNode = null;
       this.selectedNodePaths = [];
 
-      // Reset all nodes to be visible with proper colors based on their level
+      // Reset all nodes to be visible with proper colors based on their care cluster
       this.cy.nodes().forEach((node: any) => {
-        const level = node.data('level');
-        let backgroundColor = '#1e40af'; // Default blue
+        const careCluster = node.data('careCluster');
+        let backgroundColor = '#94a3b8'; // Default gray for nvt/unknown
 
-        // Determine color based on level
-        if (['Medewerker zorg C', 'Medewerker zorg A - helpende zorg en welzijn niv 2', 'medisch assistent D', 'medisch assistent C'].includes(level)) {
-          backgroundColor = '#16a34a'; // Green for entry level
-        } else if (['verpleegkundige B', 'Verpleegkundige A', 'medisch assistent B', 'medisch assistent A', 'Specialistisch verpleegkundige B'].includes(level)) {
-          backgroundColor = '#2563eb'; // Blue for standard roles
-        } else if (['Teamleider zorg A', 'Teamleider zorg B', 'Organisatorisch hoofd A', 'Organisatorisch hoofd B1', 'generiek'].includes(level)) {
-          backgroundColor = '#dc2626'; // Red for management
-        } else if (['verpleegkundige specialist', 'Physician assistant', 'Sedatie praktijk specialist', 'Deskundige infectiepreventie', 'verpleegkundige bewaking A', 'verpleegkundige spoedeisende zorg A', 'verpleegkundige spoedeisende zorg A = ambulance'].includes(level)) {
-          backgroundColor = '#7e22ce'; // Purple for specialized
-        } else if (['vakman vormende techniek A', 'Fysiotherapeut', 'Laborant functieonderzoek A1', 'Laborant functieonderzoek A2', 'Laborant beeldvormende technieken A', 'Laborant beeldvormende technieken B', 'Operatieassistent A', 'Operatieassistent B', 'Anesthesiemedewerker A', 'Anesthesiemedewerker B'].includes(level)) {
-          backgroundColor = '#f97316'; // Orange for support/technical
+        // Determine color based on care cluster
+        if (careCluster === 'acute zorg') {
+          backgroundColor = '#dc2626'; // Red
+        } else if (careCluster === 'langdurige zorg') {
+          backgroundColor = '#2563eb'; // Blue
+        } else if (careCluster === 'Medisch ondersteunend') {
+          backgroundColor = '#7e22ce'; // Purple
+        } else if (careCluster === 'moeder en kind') {
+          backgroundColor = '#db2777'; // Pink
+        } else if (careCluster === 'paramedische zorg') {
+          backgroundColor = '#16a34a'; // Green
+        } else if (careCluster === 'nvt') {
+          backgroundColor = '#64748b'; // Slate gray
         }
 
         node.style({
@@ -627,6 +644,28 @@ export class Explore implements OnInit, AfterViewInit {
       ).style({ 'opacity': 0.1 });
     }
 
+    // Apply care type filter
+    if (this.selectedCareType) {
+      this.showWelcome = false;
+      const filteredNodes = this.careerData
+        .filter(node => node.careNonCare !== this.selectedCareType)
+        .map(node => node.id);
+      filteredNodes.forEach(id => {
+        this.cy.getElementById(id).style({ 'opacity': 0.1 });
+      });
+    }
+
+    // Apply care cluster filter
+    if (this.selectedCareCluster) {
+      this.showWelcome = false;
+      const filteredNodes = this.careerData
+        .filter(node => node.careCluster !== this.selectedCareCluster)
+        .map(node => node.id);
+      filteredNodes.forEach(id => {
+        this.cy.getElementById(id).style({ 'opacity': 0.1 });
+      });
+    }
+
     // Also dim edges connected to dimmed nodes
     this.cy.nodes().filter((node: any) => node.style('opacity') < 1).connectedEdges().style({ 'opacity': 0.05 });
 
@@ -644,6 +683,8 @@ export class Explore implements OnInit, AfterViewInit {
   resetFilters() {
     this.selectedDepartment = '';
     this.selectedSalaryLevel = '';
+    this.selectedCareType = '';
+    this.selectedCareCluster = '';
     this.cy.nodes().style({ 'display': 'element' });
     this.cy.fit();
   }

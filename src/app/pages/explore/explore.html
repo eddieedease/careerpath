@@ -7,8 +7,8 @@
           <h1 class="text-2xl font-bold text-blue-600">Loopbaanpaden Verkenner</h1>
           <select (change)="changeLayout($event)"
             class="px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <option value="breadthfirst">Hierarchisch</option>
             <option value="grid">Grid</option>
+            <option value="breadthfirst">Hierarchisch</option>
             <option value="cose">Relatief</option>
 
           </select>
@@ -70,8 +70,32 @@
             </select>
           </div>
 
+          <!-- Care/non care filter -->
+          <div>
+            <label for="careType" class="block text-sm text-gray-600 mb-1">Care/non care</label>
+            <select id="careType" [(ngModel)]="selectedCareType" (change)="applyFilters()"
+              class="w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="">Alle types</option>
+              @for (careType of careTypes; track careType) {
+              <option [value]="careType">{{ careType }}</option>
+              }
+            </select>
+          </div>
+
+          <!-- Care cluster filter -->
+          <div>
+            <label for="careCluster" class="block text-sm text-gray-600 mb-1">Care cluster</label>
+            <select id="careCluster" [(ngModel)]="selectedCareCluster" (change)="applyFilters()"
+              class="w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="">Alle clusters</option>
+              @for (cluster of careClusters; track cluster) {
+              <option [value]="cluster">{{ cluster }}</option>
+              }
+            </select>
+          </div>
+
           <!-- Reset filters button -->
-          @if (selectedDepartment || selectedSalaryLevel) {
+          @if (selectedDepartment || selectedSalaryLevel || selectedCareType || selectedCareCluster) {
           <button (click)="resetFilters()"
             class="w-full px-3 py-2 text-sm text-blue-600 bg-blue-50 rounded-md hover:bg-blue-100 transition-colors">
             Filters wissen
@@ -107,15 +131,54 @@
 
           <div>
             <h4 class="font-medium text-gray-800 mb-2">Vereisten</h4>
-            <ul class="space-y-1">
-              @for (req of selectedNode.requirements; track req) {
-              <li class="text-sm text-gray-600 flex items-start">
-                <span class="text-green-600 mr-2">•</span>
-                {{ req }}
-              </li>
-              }
-            </ul>
+            <p class="text-sm text-gray-600">{{ selectedNode.requirements }}</p>
           </div>
+
+          <!-- Care/non care -->
+          @if (selectedNode.careNonCare) {
+          <div>
+            <h4 class="font-medium text-gray-800 mb-2">Care/non care</h4>
+            <p class="text-sm text-gray-600">{{ selectedNode.careNonCare }}</p>
+          </div>
+          }
+
+          <!-- Care cluster -->
+          @if (selectedNode.careCluster) {
+          <div>
+            <h4 class="font-medium text-gray-800 mb-2">Care cluster</h4>
+            <p class="text-sm text-gray-600">{{ selectedNode.careCluster }}</p>
+          </div>
+          }
+
+          <!-- Werkenbij link -->
+          @if (selectedNode.werkenbijlink) {
+          <div>
+            <h4 class="font-medium text-gray-800 mb-2">Meer informatie</h4>
+            <a [href]="selectedNode.werkenbijlink" target="_blank" rel="noopener noreferrer"
+              class="text-sm text-blue-600 hover:text-blue-800 underline flex items-center gap-1">
+              Bekijk vacature op werkenbij.etz.nl
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+              </svg>
+            </a>
+          </div>
+          }
+
+          <!-- PIO link -->
+          @if (selectedNode.pioLink) {
+          <div>
+            <h4 class="font-medium text-gray-800 mb-2">PIO informatie</h4>
+            <a [href]="selectedNode.pioLink" target="_blank" rel="noopener noreferrer"
+              class="text-sm text-blue-600 hover:text-blue-800 underline flex items-center gap-1">
+              Werken en leren als PIO
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+              </svg>
+            </a>
+          </div>
+          }
 
           <!-- Career paths section -->
           @if (selectedNodePaths.length > 0) {
