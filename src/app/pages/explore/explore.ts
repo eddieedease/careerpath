@@ -45,6 +45,7 @@ export class Explore implements OnInit, AfterViewInit {
 
   // Additional UI state
   showLabels = true;
+  showFilters = false;
   currentZoomLevel = 100;
 
   // Store initial layout state
@@ -585,6 +586,21 @@ export class Explore implements OnInit, AfterViewInit {
 
       this.cy.fit(cyNode.neighborhood().add(cyNode), 100);
     }
+
+    // Auto-scroll on mobile
+    this.scrollToDetails();
+  }
+
+  private scrollToDetails() {
+    // Check if we are on mobile (using a simple width check)
+    if (window.innerWidth < 768) {
+      setTimeout(() => {
+        const detailsElement = document.getElementById('function-details');
+        if (detailsElement) {
+          detailsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
   }
 
   public resetView(): void {
@@ -671,6 +687,8 @@ export class Explore implements OnInit, AfterViewInit {
       this.showWelcome = false; // Hide welcome screen when a node is selected
       // Trigger the tap event to update selection
       node.trigger('tap');
+
+      this.scrollToDetails();
 
       // Use setTimeout to ensure zoom happens after tap event completes
       if (false) setTimeout(() => {
@@ -760,7 +778,6 @@ export class Explore implements OnInit, AfterViewInit {
     }
   }
 
-  // Reset all filters
   resetFilters() {
     this.selectedDepartment = '';
     this.selectedSalaryLevel = '';
@@ -768,6 +785,10 @@ export class Explore implements OnInit, AfterViewInit {
     this.selectedCareCluster = '';
     this.cy.nodes().style({ 'display': 'element' });
     this.cy.fit();
+  }
+
+  toggleFilters() {
+    this.showFilters = !this.showFilters;
   }
 
   // Add new method to handle layout changes
