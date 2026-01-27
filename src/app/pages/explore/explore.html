@@ -15,7 +15,7 @@
           </select>
         </div>
         <button routerLink="/landing"
-          class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+          class="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
           Terug naar Home
         </button>
       </div>
@@ -330,6 +330,7 @@
             <p class="text-gray-700 mb-3">Of klik op onderstaande functies voor een startpunt:</p>
 
             <div class="grid grid-cols-2 gap-3">
+              @if (currentFamily === 'care') {
               <button (click)="selectQuickStartFunction('MBO-verpleegkundige')"
                 class="p-4 border-2 border-blue-200 rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer group">
                 <h4 class="font-semibold text-blue-700 group-hover:text-blue-800">MBO-verpleegkundige</h4>
@@ -359,6 +360,7 @@
                 <h4 class="font-semibold text-blue-700 group-hover:text-blue-800">Zorgassistent</h4>
                 <p class="text-xs text-gray-600 mt-1">Basis zorgverlening</p>
               </button>
+              }
 
               <button (click)="showWelcome = false"
                 class="p-4 border-2 border-gray-200 rounded-lg text-left hover:border-gray-400 hover:bg-gray-50 transition-all cursor-pointer group">

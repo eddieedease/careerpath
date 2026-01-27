@@ -1,0 +1,14 @@
+{
+  "paths": [
+    {
+      "from": "afdelingsassistent-fwg20",
+      "to": "zorgassistent-fwg30",
+      "timeframe": "1-2 jaar"
+    },
+    {
+      "from": "zorgassistent-fwg30",
+      "to": "afdelingsassistent-fwg20",
+      "timeframe": "2-3 jaar"
+    }
+  ]
+}

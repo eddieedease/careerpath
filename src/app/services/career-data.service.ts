@@ -43,7 +43,7 @@ interface PathsResponse {
 export class CareerDataService {
   constructor(private http: HttpClient) { }
 
-  getCareerData(): Observable<CareerData> {
+  getCareerData(family: 'care' | 'facility' = 'care'): Observable<CareerData> {
     const timestamp = new Date().getTime();
     const headers = {
       'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -51,9 +51,12 @@ export class CareerDataService {
       'Expires': '0'
     };
 
+    const nodesFile = family === 'facility' ? 'career-nodes_fac.json' : 'career-nodes.json';
+    const pathsFile = family === 'facility' ? 'career-paths_fac.json' : 'career-paths.json';
+
     return forkJoin({
-      nodes: this.http.get<any>(`assets/data/career-nodes.json?v=${timestamp}`, { headers }),
-      paths: this.http.get<PathsResponse>(`assets/data/career-paths.json?v=${timestamp}`, { headers })
+      nodes: this.http.get<any>(`assets/data/${nodesFile}?v=${timestamp}`, { headers }),
+      paths: this.http.get<PathsResponse>(`assets/data/${pathsFile}?v=${timestamp}`, { headers })
     }).pipe(
       map(response => ({
         nodes: response.nodes.nodes.map((node: any) => ({

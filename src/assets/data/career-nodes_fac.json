@@ -1,0 +1,34 @@
+﻿{
+  "nodes": [
+    {
+      "id": "afdelingsassistent-fwg20",
+      "label": "Afdelingsassistent",
+      "department": "Zorg",
+      "level": "Medewerker zorg C",
+      "salary": "FWG 20",
+      "description": "Ondersteunt bij administratieve en organisatorische taken op de afdeling.",
+      "requirements": "Geen opleiding vereist",
+      "irregularity": "Semi-regelmatig",
+      "roles": "nee",
+      "werkenbijlink": "",
+      "Care/non care": "Care",
+      "Care cluster": "nvt",
+      "Link naar PIO werkenbij (ter bespreking)": ""
+    },
+    {
+      "id": "zorgassistent-fwg30",
+      "label": "Zorgassistent",
+      "department": "Zorg",
+      "level": "Medewerker zorg A - helpende zorg en welzijn niv 2",
+      "salary": "FWG 30",
+      "description": "Biedt basiszorg aan patiënten onder toezicht van gediplomeerde verpleegkundigen.",
+      "requirements": "Opleiding vereist",
+      "irregularity": "Semi-regelmatig",
+      "roles": "nee",
+      "werkenbijlink": "",
+      "Care/non care": "Care",
+      "Care cluster": "nvt",
+      "Link naar PIO werkenbij (ter bespreking)": ""
+    }
+  ]
+}

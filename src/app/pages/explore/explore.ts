@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import cytoscape from 'cytoscape';
 import { CareerDataService, NodeData, CareerPath } from '../../services/career-data.service';
@@ -16,6 +16,7 @@ export class Explore implements OnInit, AfterViewInit {
 
   cy: any;
   selectedNode: NodeData | null = null;
+  currentFamily: 'care' | 'facility' = 'care';
 
   // Add new properties
   searchQuery: string = '';
@@ -54,7 +55,10 @@ export class Explore implements OnInit, AfterViewInit {
   navigationHistory: NodeData[] = [];
   maxHistorySize: number = 5;
 
-  constructor(private dataService: CareerDataService) {
+  constructor(
+    private dataService: CareerDataService,
+    private route: ActivatedRoute
+  ) {
     // data will be loaded in ngOnInit; departments and salaryLevels are populated after load
   }
 
@@ -197,8 +201,21 @@ export class Explore implements OnInit, AfterViewInit {
   private careerPaths: CareerPath[] = [];
 
   ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      this.currentFamily = params['family'] === 'facility' ? 'facility' : 'care';
+      // Reset data and reload
+      this.careerData = [];
+      this.careerPaths = [];
+      if (this.cy) {
+        this.cy.destroy(); // Optional: destroy existing graph to prevent conflicts
+      }
+      this.loadCareerData();
+    });
+  }
+
+  loadCareerData() {
     // Load career data from service
-    this.dataService.getCareerData().subscribe({
+    this.dataService.getCareerData(this.currentFamily).subscribe({
       next: (data) => {
         this.careerData = data.nodes || [];
         this.careerPaths = data.paths || [];
