@@ -381,10 +381,36 @@
                 <p class="text-xs text-gray-600 mt-1">Ondersteunende zorg</p>
               </button>
 
-              <button (click)="selectQuickStartFunction('Zorgassistent')"
+              <button (click)="selectQuickStartFunction('Radiologisch laborant all round')"
                 class="p-4 border-2 border-blue-200 rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer group">
-                <h4 class="font-semibold text-blue-700 group-hover:text-blue-800">Zorgassistent</h4>
-                <p class="text-xs text-gray-600 mt-1">Basis zorgverlening</p>
+                <h4 class="font-semibold text-blue-700 group-hover:text-blue-800">Radiologisch laborant</h4>
+                <p class="text-xs text-gray-600 mt-1">Medisch ondersteunend</p>
+              </button>
+              }
+
+              @if (currentFamily === 'facility') {
+              <button (click)="selectQuickStartFunction('logistiek medewerker E')"
+                class="p-4 border-2 border-blue-200 rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer group">
+                <h4 class="font-semibold text-blue-700 group-hover:text-blue-800">Logistiek medewerker E</h4>
+                <p class="text-xs text-gray-600 mt-1">Logistiek & Transport</p>
+              </button>
+
+              <button (click)="selectQuickStartFunction('Medewerker restaurant')"
+                class="p-4 border-2 border-blue-200 rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer group">
+                <h4 class="font-semibold text-blue-700 group-hover:text-blue-800">Medewerker restaurant</h4>
+                <p class="text-xs text-gray-600 mt-1">Catering & Horeca</p>
+              </button>
+
+              <button (click)="selectQuickStartFunction('medewerker algemene schoonmaak')"
+                class="p-4 border-2 border-blue-200 rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer group">
+                <h4 class="font-semibold text-blue-700 group-hover:text-blue-800">Medewerker schoonmaak</h4>
+                <p class="text-xs text-gray-600 mt-1">Schoonmaakdienst</p>
+              </button>
+
+              <button (click)="selectQuickStartFunction('medewerker Receptie & Registratie')"
+                class="p-4 border-2 border-blue-200 rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer group">
+                <h4 class="font-semibold text-blue-700 group-hover:text-blue-800">Receptie & Registratie</h4>
+                <p class="text-xs text-gray-600 mt-1">Veiligheid & Ontvangst</p>
               </button>
               }
 

@@ -1,14 +1,194 @@
 {
   "paths": [
     {
-      "from": "afdelingsassistent-fwg20",
-      "to": "zorgassistent-fwg30",
-      "timeframe": "1-2 jaar"
+      "from": "Medewerker inkoopadministratie-fwg40",
+      "to": "Gegevensbeheerder-fwg50",
+      "timeframe": ""
     },
     {
-      "from": "zorgassistent-fwg30",
-      "to": "afdelingsassistent-fwg20",
-      "timeframe": "2-3 jaar"
+      "from": "Gegevensbeheerder-fwg50",
+      "to": "Junior Inkoper-fwg50",
+      "timeframe": ""
+    },
+    {
+      "from": "Junior Inkoper-fwg50",
+      "to": "Assortimentsspecialist-fwg55",
+      "timeframe": ""
+    },
+    {
+      "from": "Junior Inkoper-fwg50",
+      "to": "Inkoper-fwg60",
+      "timeframe": ""
+    },
+    {
+      "from": "Inkoper-fwg60",
+      "to": "Beleidsadviseur-fwg60",
+      "timeframe": ""
+    },
+    {
+      "from": "Inkoper-fwg60",
+      "to": "Teamleider-fwg60",
+      "timeframe": ""
+    },
+    {
+      "from": "Inkoper-fwg60",
+      "to": "Contractmanager-fwg60",
+      "timeframe": ""
+    },
+    {
+      "from": "Contractmanager-fwg60",
+      "to": "Inkoper-fwg60",
+      "timeframe": ""
+    },
+    {
+      "from": "Contractmanager-fwg60",
+      "to": "Teamleider-fwg60",
+      "timeframe": ""
+    },
+    {
+      "from": "Contractmanager-fwg60",
+      "to": "Beleidsadviseur-fwg60",
+      "timeframe": ""
+    },
+    {
+      "from": "Beleidsadviseur-fwg60",
+      "to": "Contractmanager-fwg60",
+      "timeframe": ""
+    },
+    {
+      "from": "Beleidsadviseur-fwg60",
+      "to": "Teamleider-fwg60",
+      "timeframe": ""
+    },
+    {
+      "from": "Beleidsadviseur-fwg60",
+      "to": "Inkoper-fwg60",
+      "timeframe": ""
+    },
+    {
+      "from": "Teamleider-fwg60",
+      "to": "Inkoper-fwg60",
+      "timeframe": ""
+    },
+    {
+      "from": "Teamleider-fwg60",
+      "to": "Beleidsadviseur-fwg60",
+      "timeframe": ""
+    },
+    {
+      "from": "Teamleider-fwg60",
+      "to": "Contractmanager-fwg60",
+      "timeframe": ""
+    },
+    {
+      "from": "Assortimentsspecialist-fwg55",
+      "to": "Inkoper-fwg60",
+      "timeframe": ""
+    },
+    {
+      "from": "Assortimentsspecialist-fwg55",
+      "to": "Contractmanager-fwg60",
+      "timeframe": ""
+    },
+    {
+      "from": "Assortimentsspecialist-fwg55",
+      "to": "Teamleider-fwg60",
+      "timeframe": ""
+    },
+    {
+      "from": "Logistiek medewerker E-fwg20",
+      "to": "Logistiek medewerker D-fwg25",
+      "timeframe": ""
+    },
+    {
+      "from": "Logistiek medewerker E-fwg20",
+      "to": "chauffeur-fwg25",
+      "timeframe": ""
+    },
+    {
+      "from": "medewerker afdelingslogistiek-fwg20",
+      "to": "Logistiek medewerker E-fwg20",
+      "timeframe": ""
+    },
+    {
+      "from": "Logistiek medewerker D-fwg25",
+      "to": "Logistiek medewerker C1-fwg30",
+      "timeframe": ""
+    },
+    {
+      "from": "Logistiek medewerker D-fwg25",
+      "to": "chauffeur-fwg25",
+      "timeframe": ""
+    },
+    {
+      "from": "Logistiek medewerker D-fwg25",
+      "to": "Logistiek medewerker C1-fwg30",
+      "timeframe": ""
+    },
+    {
+      "from": "Logistiek medewerker C1-fwg30",
+      "to": "coordinator logistiek-fwg35",
+      "timeframe": ""
+    },
+    {
+      "from": "medewerker Post/Reprografie-fwg25",
+      "to": "Logistiek medewerker D-fwg25",
+      "timeframe": ""
+    },
+    {
+      "from": "medewerker Post/Reprografie-fwg25",
+      "to": "chauffeur-fwg25",
+      "timeframe": ""
+    },
+    {
+      "from": "medewerker Post/Reprografie-fwg25",
+      "to": "Logistiek medewerker C1-fwg30",
+      "timeframe": ""
+    },
+    {
+      "from": "coordinator logistiek-fwg35",
+      "to": "Teamleider-fwg50",
+      "timeframe": "mits HBO"
+    },
+    {
+      "from": "Teamleider-fwg50",
+      "to": "Teamleider-fwg55",
+      "timeframe": "mits HBO"
+    },
+    {
+      "from": "Teamleider-fwg55",
+      "to": "Teamleider-fwg60",
+      "timeframe": "mits HBO en ervaring inkoop"
+    },
+    {
+      "from": "chauffeur-fwg25",
+      "to": "Logistiek medewerker D-fwg25",
+      "timeframe": ""
+    },
+    {
+      "from": "chauffeur-fwg25",
+      "to": "medewerker Post/Reprografie-fwg25",
+      "timeframe": ""
+    },
+    {
+      "from": "chauffeur-fwg25",
+      "to": "Logistiek medewerker C1-fwg30",
+      "timeframe": ""
+    },
+    {
+      "from": "Medewerker Receptie & Registratie-fwg35",
+      "to": "Medewerker inkoopadministratie-fwg40",
+      "timeframe": ""
+    },
+    {
+      "from": "Medewerker Receptie & Registratie-fwg35",
+      "to": "Coordinator vrijwilligerswerk-fwg45",
+      "timeframe": ""
+    },
+    {
+      "from": "Coordinator vrijwilligerswerk-fwg45",
+      "to": "Teamleider-fwg50",
+      "timeframe": "mits HBO"
     }
   ]
 }

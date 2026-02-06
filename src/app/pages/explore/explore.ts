@@ -511,7 +511,7 @@ export class Explore implements OnInit, AfterViewInit {
 
       // Hide all edges first (make them nearly invisible)
       this.cy.edges().style({
-        'opacity': 0.05,
+        'opacity': 0.01,
         'line-color': '#6b7280',
         'target-arrow-color': '#6b7280',
         'width': 1
@@ -519,7 +519,7 @@ export class Explore implements OnInit, AfterViewInit {
 
       // Hide all nodes (make them nearly invisible)
       this.cy.nodes().style({
-        'opacity': 0.05
+        'opacity': 0.1
       });
 
       // Get only outgoing edges and their target nodes
