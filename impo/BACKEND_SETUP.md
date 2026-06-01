@@ -85,26 +85,22 @@ CREATE TABLE paths (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```
 
-### Stap B: Uploaden van de API Bestanden
-1. Upload de inhoud van de lokale `api/` map naar een submap op je server (b.v. `https://jedomein.nl/api/`).
-2. Pas in `api/db.php` de database inloggegevens aan:
-```php
-$host = 'localhost'; // Vaak 'localhost' of het database host adres van je provider
-$dbname = 'naam_van_je_database';
-$username = 'je_database_gebruiker';
-$password = 'je_database_wachtwoord';
-```
+### Stap B: Bouw de Productie Bundel
+1. Voer het volgende commando uit in de root map op je lokale machine:
+   ```bash
+   npm run build
+   ```
+   Dit bouwt de Angular frontend én kopieert automatisch de complete `api/` map naar de output map `dist/hospital-career-development/browser/api/`.
 
-*(Tip: Verwijder `migrate.php` en `json_data` van je live server na de eerste installatie om veiligheidsredenen!)*
+### Stap C: Uploaden en Configureren op de Live Server
+1. Upload de gehele inhoud van de map `dist/hospital-career-development/browser/` (inclusief de `api` submap) naar de public root (`public_html` of `httpdocs`) van je shared hosting server.
+2. Pas op de live server in `api/db.php` de database inloggegevens aan:
+   ```php
+   $host = 'localhost'; // Vaak 'localhost' of het database host adres van je provider
+   $dbname = 'naam_van_je_database';
+   $username = 'je_database_gebruiker';
+   $password = 'je_database_wachtwoord';
+   ```
+3. De frontend is ontworpen om automatisch te schakelen tussen de lokale Docker poort `8000` (tijdens lokaal ontwikkelen op poort `4200`) en het relatieve `/api` pad op de live server. Je hoeft dus **geen** links of TypeScript code handmatig aan te passen voor publicatie!
 
-### Stap C: Frontend Verbinden met Live API
-1. Open lokaal `src/app/services/career-data.service.ts`.
-2. Verander de `apiBaseUrl` naar het adres van je live server:
-```typescript
-private apiBaseUrl = 'https://jedomein.nl/api';
-```
-3. Bouw de Angular productie bundel:
-```bash
-npm run build
-```
-4. Upload de bestanden uit de map `dist/hospital-career-development/browser/` naar de public root (`public_html` of `httpdocs`) van je shared hosting server.
+*(Tip: Verwijder `api/migrate.php` van je live server na de eerste installatie om veiligheidsredenen!)*

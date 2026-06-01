@@ -34,7 +34,10 @@ export interface CareerData {
   providedIn: 'root'
 })
 export class CareerDataService {
-  private apiBaseUrl = 'http://localhost:8000';
+  // Dynamically switch between local Docker API (port 8000) during development (port 4200) and relative path for production hosting
+  private apiBaseUrl = (window.location.port === '4200' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? 'http://localhost:8000'
+    : '/api';
 
   constructor(private http: HttpClient) { }
 

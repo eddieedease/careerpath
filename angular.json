@@ -24,6 +24,11 @@
                 "glob": "**/*",
                 "input": "public",
                 "output": "/"
+              },
+              {
+                "glob": "**/*",
+                "input": "api",
+                "output": "/api"
               }
             ],
             "styles": [
@@ -83,6 +88,11 @@
                 "glob": "**/*",
                 "input": "public",
                 "output": "/"
+              },
+              {
+                "glob": "**/*",
+                "input": "api",
+                "output": "/api"
               }
             ],
             "styles": [
