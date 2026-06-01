@@ -260,16 +260,22 @@ export class Explore implements OnInit, AfterViewInit {
           department: node.department,
           level: node.level,
           salary: node.salary,
-          careCluster: node.careCluster || 'nvt' // Add care cluster to node data
+          careCluster: node.careCluster || 'nvt', // Add care cluster to node data
+          isRole: node.isRole || undefined
         }
       })),
-      ...this.careerPaths.map(path => ({
-        data: {
-          source: path.from,
-          target: path.to,
-          timeframe: path.timeframe
-        }
-      }))
+      ...this.careerPaths.map(path => {
+        const targetNode = this.careerData.find(n => n.id === path.to);
+        const isToRole = targetNode ? !!targetNode.isRole : false;
+        return {
+          data: {
+            source: path.from,
+            target: path.to,
+            timeframe: path.timeframe,
+            isToRole: isToRole || undefined
+          }
+        };
+      })
     ];
 
     this.cy = cytoscape({
@@ -347,6 +353,21 @@ export class Explore implements OnInit, AfterViewInit {
             'opacity': 1
           }
         },
+        // Role nodes (triangle shape, dashed border)
+        {
+          selector: 'node[isRole]',
+          style: {
+            'shape': 'triangle',
+            'border-style': 'dashed',
+            'border-width': '3px',
+            'width': '140px',
+            'height': '125px',
+            'text-valign': 'center',
+            'text-margin-y': 12,
+            'text-max-width': '110px',
+            'font-size': '13px'
+          }
+        },
         {
           selector: 'node:selected',
           style: {
@@ -363,6 +384,14 @@ export class Explore implements OnInit, AfterViewInit {
             'target-arrow-color': '#6b7280',
             'target-arrow-shape': 'triangle',
             'curve-style': 'bezier'
+          }
+        },
+        // Paths leading to roles
+        {
+          selector: 'edge[isToRole]',
+          style: {
+            'line-style': 'dashed',
+            'line-dash-pattern': [6, 4]
           }
         }
       ],
@@ -872,11 +901,12 @@ export class Explore implements OnInit, AfterViewInit {
     layout.one('layoutstop', () => {
       // Force re-apply node dimensions and font sizes
       this.cy.nodes().forEach((node: any) => {
+        const isRole = node.data('isRole');
         node.style({
-          'width': '150px',
-          'height': '80px',
-          'font-size': '14px',
-          'text-max-width': '140px'
+          'width': isRole ? '140px' : '150px',
+          'height': isRole ? '125px' : '80px',
+          'font-size': isRole ? '13px' : '14px',
+          'text-max-width': isRole ? '110px' : '140px'
         });
       });
 

@@ -16,6 +16,7 @@ export interface NodeData {
   careNonCare?: string; // Maps to "Care/non care" from JSON
   careCluster?: string; // Maps to "Care cluster" from JSON
   pioLink?: string; // Maps to "Link naar PIO werkenbij (ter bespreking)" from JSON
+  isRole?: boolean;
 }
 
 export interface CareerPath {
@@ -63,7 +64,8 @@ export class CareerDataService {
           ...node,
           careNonCare: node['Care/non care'],
           careCluster: node['Care cluster'],
-          pioLink: node['Link naar PIO werkenbij (ter bespreking)']
+          pioLink: node['Link naar PIO werkenbij (ter bespreking)'],
+          isRole: node.isRole === true || node.isRole === 'ja' || node.isRole === 'true'
         })),
         paths: response.paths.paths
       }))
