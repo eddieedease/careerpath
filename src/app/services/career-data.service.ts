@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, forkJoin, map } from 'rxjs';
+import { Observable } from 'rxjs';
 
 export interface NodeData {
   id: string;
@@ -30,45 +30,44 @@ export interface CareerData {
   paths: CareerPath[];
 }
 
-interface NodesResponse {
-  nodes: NodeData[];
-}
-
-interface PathsResponse {
-  paths: CareerPath[];
-}
-
 @Injectable({
   providedIn: 'root'
 })
 export class CareerDataService {
+  private apiBaseUrl = 'http://localhost:8000';
+
   constructor(private http: HttpClient) { }
 
-  getCareerData(family: 'care' | 'facility' = 'care'): Observable<CareerData> {
-    const timestamp = new Date().getTime();
-    const headers = {
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
-      'Pragma': 'no-cache',
-      'Expires': '0'
+  private getHeaders(customPassword?: string) {
+    const password = customPassword !== undefined ? customPassword : (sessionStorage.getItem('admin_password') || '');
+    return {
+      headers: {
+        'X-Admin-Password': password
+      }
     };
+  }
 
-    const nodesFile = family === 'facility' ? 'career-nodes_fac.json' : 'career-nodes.json';
-    const pathsFile = family === 'facility' ? 'career-paths_fac.json' : 'career-paths.json';
+  verifyPassword(password: string): Observable<any> {
+    return this.http.post<any>(`${this.apiBaseUrl}/verify.php`, {}, this.getHeaders(password));
+  }
 
-    return forkJoin({
-      nodes: this.http.get<any>(`assets/data/${nodesFile}?v=${timestamp}`, { headers }),
-      paths: this.http.get<PathsResponse>(`assets/data/${pathsFile}?v=${timestamp}`, { headers })
-    }).pipe(
-      map(response => ({
-        nodes: response.nodes.nodes.map((node: any) => ({
-          ...node,
-          careNonCare: node['Care/non care'],
-          careCluster: node['Care cluster'],
-          pioLink: node['Link naar PIO werkenbij (ter bespreking)'],
-          isRole: node.isRole === true || node.isRole === 'ja' || node.isRole === 'true'
-        })),
-        paths: response.paths.paths
-      }))
-    );
+  getCareerData(family: 'care' | 'facility' = 'care'): Observable<CareerData> {
+    return this.http.get<CareerData>(`${this.apiBaseUrl}/get-data.php?family=${family}`);
+  }
+
+  saveNode(node: NodeData & { originalId?: string; family: string }): Observable<any> {
+    return this.http.post<any>(`${this.apiBaseUrl}/save-node.php`, node, this.getHeaders());
+  }
+
+  deleteNode(id: string, family: string): Observable<any> {
+    return this.http.post<any>(`${this.apiBaseUrl}/delete-node.php`, { id, family }, this.getHeaders());
+  }
+
+  savePath(path: { from: string; to: string; timeframe: string; family: string }): Observable<any> {
+    return this.http.post<any>(`${this.apiBaseUrl}/save-path.php`, path, this.getHeaders());
+  }
+
+  deletePath(from: string, to: string, family: string): Observable<any> {
+    return this.http.post<any>(`${this.apiBaseUrl}/delete-path.php`, { from, to, family }, this.getHeaders());
   }
 }

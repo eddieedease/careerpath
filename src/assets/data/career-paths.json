@@ -2602,11 +2602,6 @@
     },
     {
       "from": "polikliniek-verpleegkundige-fwg45",
-      "to": "hbo-verpleegkundige-fwg50",
-      "timeframe": "2-4 jaar"
-    },
-    {
-      "from": "polikliniek-verpleegkundige-fwg45",
       "to": "hbo-verpleegkundige-baz-fwg50",
       "timeframe": "2-4 jaar"
     },

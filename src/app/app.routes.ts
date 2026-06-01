@@ -10,5 +10,9 @@ export const routes: Routes = [
     path: 'explore', 
     loadComponent: () => import('./pages/explore/explore').then(c => c.Explore)
   },
+  { 
+    path: 'admin', 
+    loadComponent: () => import('./pages/admin/admin').then(c => c.Admin)
+  },
   { path: '**', redirectTo: '/landing' }
 ];

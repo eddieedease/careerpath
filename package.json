@@ -8,7 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "data:update": "node scripts/update-career-data.js",
-    "data:export": "node scripts/json-to-csv.js"
+    "data:export": "node scripts/json-to-csv.js",
+    "data:backup": "node scripts/backup-db-to-json.js"
   },
   "prettier": {
     "overrides": [

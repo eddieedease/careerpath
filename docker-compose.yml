@@ -1,0 +1,48 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: careerpath-db
+    restart: always
+    environment:
+      MYSQL_DATABASE: careerpath
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_USER: career_user
+      MYSQL_PASSWORD: career_pass
+    ports:
+      - "33060:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: careerpath-pma
+    restart: always
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: root_password
+    depends_on:
+      - db
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: careerpath-api
+    restart: always
+    ports:
+      - "8000:80"
+    volumes:
+      - ./api:/var/www/html
+      - ./src/assets/data:/var/www/html/json_data:ro
+    environment:
+      DB_HOST: db
+      DB_NAME: careerpath
+      DB_USER: career_user
+      DB_PASS: career_pass
+    depends_on:
+      - db
+
+volumes:
+  mysql-data:
