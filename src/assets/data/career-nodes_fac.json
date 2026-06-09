@@ -10,9 +10,9 @@
       "requirements": "MBO 4",
       "irregularity": "semi irregular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "patientenvoeding",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -25,9 +25,9 @@
       "requirements": "MBO3",
       "irregularity": "regular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "fsp & catering",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -40,9 +40,9 @@
       "requirements": "MBO 3",
       "irregularity": "semi irregular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "patientenvoeding",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -55,9 +55,9 @@
       "requirements": "MBO 2",
       "irregularity": "semi irregular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "patientenvoeding",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -70,9 +70,9 @@
       "requirements": "",
       "irregularity": "regular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "fsp & catering",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -85,9 +85,84 @@
       "requirements": "HBO / LNAG",
       "irregularity": "regular",
       "roles": "nee",
+      "werkenbijlink": "geen",
+      "Care/non care": "non care",
+      "Care cluster": "Inkoop & Logistiek",
+      "Link naar PIO werkenbij (ter bespreking)": ""
+    },
+    {
+      "id": "Beleidsadviseur Bereikbaarheid-fwg60",
+      "label": "Beleidsadviseur Bereikbaarheid",
+      "department": "Veiligheid & Ontvangst",
+      "level": "Beleidsadviseur C",
+      "salary": "FWG60",
+      "description": "Adviseur Bereikbaarheid",
+      "requirements": "",
+      "irregularity": "regular",
+      "roles": "nee",
       "werkenbijlink": "",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "Veiligheid & Ontvangst",
+      "Link naar PIO werkenbij (ter bespreking)": ""
+    },
+    {
+      "id": "Beleidsadviseur Beveiliging/Veiligheid-fwg55",
+      "label": "Beleidsadviseur Beveiliging/Veiligheid",
+      "department": "Veiligheid & Ontvangst",
+      "level": "Beleidsadviseur D1",
+      "salary": "FWG55",
+      "description": "Adviseur Beveiliging/Veiligheid",
+      "requirements": "",
+      "irregularity": "regular",
+      "roles": "nee",
+      "werkenbijlink": "",
+      "Care/non care": "non care",
+      "Care cluster": "Veiligheid & Ontvangst",
+      "Link naar PIO werkenbij (ter bespreking)": ""
+    },
+    {
+      "id": "Beleidsadviseur duurzaamheid-fwg60",
+      "label": "Beleidsadviseur duurzaamheid",
+      "department": "Fac Services alg",
+      "level": "Beleidsadviseur C",
+      "salary": "FWG60",
+      "description": "Opzet programma duurzaamheid ETZ breed, beheer MPZ-certificering, green teams, uitrol groene initiatieven",
+      "requirements": "HBO",
+      "irregularity": "regular",
+      "roles": "nee",
+      "werkenbijlink": "",
+      "Care/non care": "non care",
+      "Care cluster": "Fac Services alg",
+      "Link naar PIO werkenbij (ter bespreking)": ""
+    },
+    {
+      "id": "Beleidsadviseur ZIROP-fwg60",
+      "label": "Beleidsadviseur ZIROP",
+      "department": "Veiligheid & Ontvangst",
+      "level": "Beleidsadviseur C",
+      "salary": "FWG60",
+      "description": "Adviseur Crisisbeheersing",
+      "requirements": "",
+      "irregularity": "regular",
+      "roles": "nee",
+      "werkenbijlink": "",
+      "Care/non care": "non care",
+      "Care cluster": "Veiligheid & Ontvangst",
+      "Link naar PIO werkenbij (ter bespreking)": ""
+    },
+    {
+      "id": "Beleidsadviseur-fwg55",
+      "label": "Beleidsadviseur",
+      "department": "Hospitality",
+      "level": "Beleidsadviseur D1",
+      "salary": "FWG55",
+      "description": "Schrijven beleidsdocumenten (Zenya), vormgeven en bewerken van protocollen, projecten voor de afdeling hospitality",
+      "requirements": "HBO",
+      "irregularity": "regular",
+      "roles": "nee",
+      "werkenbijlink": "geen",
+      "Care/non care": "non care",
+      "Care cluster": "hospitality",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -100,9 +175,9 @@
       "requirements": "HBO",
       "irregularity": "regular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "Inkoop & Logistiek",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -115,9 +190,9 @@
       "requirements": "MBO 2 + Rijbewijs C + code 95",
       "irregularity": "regular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "Inkoop & Logistiek",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -130,9 +205,9 @@
       "requirements": "HBO",
       "irregularity": "regular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "Inkoop & Logistiek",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -145,9 +220,24 @@
       "requirements": "MBO 3",
       "irregularity": "semi irregular",
       "roles": "nee",
+      "werkenbijlink": "geen",
+      "Care/non care": "non care",
+      "Care cluster": "Veiligheid & Ontvangst",
+      "Link naar PIO werkenbij (ter bespreking)": ""
+    },
+    {
+      "id": "Coordinator BHV-fwg55",
+      "label": "Coordinator BHV",
+      "department": "Veiligheid & Ontvangst",
+      "level": "Beleidsadviseur D1",
+      "salary": "FWG55",
+      "description": "Coordinator BHV",
+      "requirements": "",
+      "irregularity": "regular",
+      "roles": "nee",
       "werkenbijlink": "",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "Veiligheid & Ontvangst",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -160,9 +250,9 @@
       "requirements": "",
       "irregularity": "regular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "fsp & catering",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -175,24 +265,24 @@
       "requirements": "MBO",
       "irregularity": "regular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "Inkoop & Logistiek",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
       "id": "coordinator meewerkend schoonmaak-fwg25",
       "label": "coordinator meewerkend schoonmaak",
       "department": "schoonmaak",
-      "level": "",
+      "level": "medewerker huishoudelijke dienst A1+add coordinator F",
       "salary": "FWG25",
       "description": "operationeel dagdagelijks verantwoordelijk voor de bedrijfsvoering",
       "requirements": "",
       "irregularity": "semi irregular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "schoonmaak",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -205,9 +295,9 @@
       "requirements": "MBO 3",
       "irregularity": "semi irregular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "schoonmaak",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -220,9 +310,9 @@
       "requirements": "MBO",
       "irregularity": "regular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "Veiligheid & Ontvangst",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -235,9 +325,24 @@
       "requirements": "MBO",
       "irregularity": "regular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "Inkoop & Logistiek",
+      "Link naar PIO werkenbij (ter bespreking)": ""
+    },
+    {
+      "id": "hoofd hospitality-fwg75",
+      "label": "hoofd hospitality",
+      "department": "hospitality",
+      "level": "hoofd",
+      "salary": "FWG75",
+      "description": "Verantwoordelijk voor algehele aansturing hospitality",
+      "requirements": "HBO",
+      "irregularity": "regular",
+      "roles": "nee",
+      "werkenbijlink": "geen",
+      "Care/non care": "non care",
+      "Care cluster": "hospitality",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -250,9 +355,24 @@
       "requirements": "HBO",
       "irregularity": "regular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "Inkoop & Logistiek",
+      "Link naar PIO werkenbij (ter bespreking)": ""
+    },
+    {
+      "id": "hoofd veiligheid en ontvangst-fwg65",
+      "label": "hoofd veiligheid en ontvangst",
+      "department": "Veiligheid & Ontvangst",
+      "level": "hoofd",
+      "salary": "FWG65",
+      "description": "Verantwoordelijk voor algehele aansturing veiligheid en ontvangst",
+      "requirements": "HBO",
+      "irregularity": "regular",
+      "roles": "nee",
+      "werkenbijlink": "geen",
+      "Care/non care": "non care",
+      "Care cluster": "Veiligheid & Ontvangst",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -265,9 +385,9 @@
       "requirements": "HBO / NEVI of vergelijkbaar",
       "irregularity": "regular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "Inkoop & Logistiek",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -280,24 +400,9 @@
       "requirements": "MBO / NEVI of vergelijkbaar",
       "irregularity": "regular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
-      "Link naar PIO werkenbij (ter bespreking)": ""
-    },
-    {
-      "id": "junior teamleider schoonmaak-fwg45",
-      "label": "junior teamleider schoonmaak",
-      "department": "schoonmaak",
-      "level": "Teamleider D",
-      "salary": "FWG45",
-      "description": "operationeel eindverantwoordelijk voor de bedrijfsvoering",
-      "requirements": "MBO 4",
-      "irregularity": "regular",
-      "roles": "nee",
-      "werkenbijlink": "",
-      "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "Inkoop & Logistiek",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -310,9 +415,9 @@
       "requirements": "VMBO",
       "irregularity": "regular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "fsp & catering",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -325,9 +430,9 @@
       "requirements": "",
       "irregularity": "semi irregular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "patientenvoeding",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -340,9 +445,9 @@
       "requirements": "",
       "irregularity": "regular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "fsp & catering",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -355,9 +460,9 @@
       "requirements": "MBO3",
       "irregularity": "regular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "Inkoop & Logistiek",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -370,9 +475,9 @@
       "requirements": "MBO3",
       "irregularity": "regular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "Inkoop & Logistiek",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -385,9 +490,24 @@
       "requirements": "VMBO",
       "irregularity": "regular",
       "roles": "nee",
+      "werkenbijlink": "geen",
+      "Care/non care": "non care",
+      "Care cluster": "Inkoop & Logistiek",
+      "Link naar PIO werkenbij (ter bespreking)": ""
+    },
+    {
+      "id": "Managementassistente-fwg45",
+      "label": "Managementassistente",
+      "department": "Fac Services alg",
+      "level": "Secretaresse B",
+      "salary": "FWG45",
+      "description": "Plannen afspraken, agendabeheer, notuleren, administratieve taken",
+      "requirements": "",
+      "irregularity": "regular",
+      "roles": "nee",
       "werkenbijlink": "",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "Fac Services alg",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -400,9 +520,9 @@
       "requirements": "VMBO",
       "irregularity": "regular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "Inkoop & Logistiek",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -415,9 +535,9 @@
       "requirements": "",
       "irregularity": "semi irregular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "schoonmaak",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -430,9 +550,9 @@
       "requirements": "MBO 2",
       "irregularity": "irregularity",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "Veiligheid & Ontvangst",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -447,7 +567,7 @@
       "roles": "nee",
       "werkenbijlink": "",
       "Care/non care": "",
-      "Care cluster": "",
+      "Care cluster": "fsp & catering",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -460,9 +580,9 @@
       "requirements": "MBO",
       "irregularity": "regular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "Inkoop & Logistiek",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -475,9 +595,39 @@
       "requirements": "VMBO",
       "irregularity": "regular",
       "roles": "nee",
+      "werkenbijlink": "geen",
+      "Care/non care": "non care",
+      "Care cluster": "fsp & catering",
+      "Link naar PIO werkenbij (ter bespreking)": ""
+    },
+    {
+      "id": "medewerker linnenvoorziening-FWG20",
+      "label": "medewerker linnenvoorziening",
+      "department": "schoonmaak",
+      "level": "medewerker huishoudelijke dienst A2",
+      "salary": "FWG20",
+      "description": "verantwoordelijk voor alle linnen binnen het ziekenhuis bedlinnen en kleding",
+      "requirements": "",
+      "irregularity": "regular",
+      "roles": "nee",
+      "werkenbijlink": "geen",
+      "Care/non care": "non care",
+      "Care cluster": "schoonmaak",
+      "Link naar PIO werkenbij (ter bespreking)": ""
+    },
+    {
+      "id": "Medewerker patiëntenvervoer-fwg20",
+      "label": "Medewerker patiëntenvervoer",
+      "department": "hospitality",
+      "level": "Medewerker logistiek E2",
+      "salary": "FWG20",
+      "description": "Vervoeren van patiënten",
+      "requirements": "",
+      "irregularity": "",
+      "roles": "nee",
       "werkenbijlink": "",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "hospitality",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -490,9 +640,9 @@
       "requirements": "MBO2",
       "irregularity": "regular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "Inkoop & Logistiek",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -505,9 +655,9 @@
       "requirements": "MBO",
       "irregularity": "semi irregular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "Veiligheid & Ontvangst",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -520,9 +670,9 @@
       "requirements": "VMBO",
       "irregularity": "regular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "fsp & catering",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -535,9 +685,9 @@
       "requirements": "",
       "irregularity": "semi irregular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "schoonmaak",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -550,9 +700,9 @@
       "requirements": "VMBO",
       "irregularity": "regular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "fsp & catering",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -565,9 +715,39 @@
       "requirements": "MBO",
       "irregularity": "regular",
       "roles": "nee",
+      "werkenbijlink": "geen",
+      "Care/non care": "non care",
+      "Care cluster": "fsp & catering",
+      "Link naar PIO werkenbij (ter bespreking)": ""
+    },
+    {
+      "id": "Operationeel teamleider schoonmaak-fwg45",
+      "label": "Operationeel teamleider schoonmaak",
+      "department": "schoonmaak",
+      "level": "Teamleider D",
+      "salary": "FWG45",
+      "description": "operationeel eindverantwoordelijk voor de bedrijfsvoering",
+      "requirements": "MBO 4",
+      "irregularity": "regular",
+      "roles": "nee",
+      "werkenbijlink": "geen",
+      "Care/non care": "non care",
+      "Care cluster": "schoonmaak",
+      "Link naar PIO werkenbij (ter bespreking)": ""
+    },
+    {
+      "id": "Projectleider-fwg55",
+      "label": "Projectleider",
+      "department": "Fac Services alg",
+      "level": "Projectleider C",
+      "salary": "FWG55",
+      "description": "Duurzaamheids/ Facilitaire projecten uitrollen, ziekenhuisbreed",
+      "requirements": "",
+      "irregularity": "regular",
+      "roles": "nee",
       "werkenbijlink": "",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "Fac Services alg",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -580,9 +760,54 @@
       "requirements": "MBO",
       "irregularity": "regular",
       "roles": "nee",
+      "werkenbijlink": "geen",
+      "Care/non care": "non care",
+      "Care cluster": "fsp & catering",
+      "Link naar PIO werkenbij (ter bespreking)": ""
+    },
+    {
+      "id": "senior facilitair medewerker-fwg30",
+      "label": "senior facilitair medewerker",
+      "department": "patientenvoeding",
+      "level": "facilitair medewerker A",
+      "salary": "FWG30",
+      "description": "operationeel verantwoordelijk voor de bedrijfsvoering",
+      "requirements": "MBO 3",
+      "irregularity": "semi irregular",
+      "roles": "nee",
+      "werkenbijlink": "geen",
+      "Care/non care": "non care",
+      "Care cluster": "patientenvoeding",
+      "Link naar PIO werkenbij (ter bespreking)": ""
+    },
+    {
+      "id": "Stafmedewerker-fwg45",
+      "label": "Stafmedewerker",
+      "department": "Fac Services alg",
+      "level": "Beleidsmedewerker F",
+      "salary": "FWG45",
+      "description": "Ondersteunende facilitaire taken uitvoeren",
+      "requirements": "",
+      "irregularity": "regular",
+      "roles": "nee",
       "werkenbijlink": "",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "Fac Services alg",
+      "Link naar PIO werkenbij (ter bespreking)": ""
+    },
+    {
+      "id": "Strategisch teamleider schoonmaak-fwg55",
+      "label": "Strategisch teamleider schoonmaak",
+      "department": "schoonmaak",
+      "level": "Teamleider B",
+      "salary": "FWG 55",
+      "description": "eindverantwoordelijk voor de uitvoering en op strategisch niveau",
+      "requirements": "HBO",
+      "irregularity": "regular",
+      "roles": "nee",
+      "werkenbijlink": "geen",
+      "Care/non care": "non care",
+      "Care cluster": "schoonmaak",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -595,9 +820,54 @@
       "requirements": "HBO",
       "irregularity": "regular",
       "roles": "nee",
+      "werkenbijlink": "geen",
+      "Care/non care": "non care",
+      "Care cluster": "Veiligheid & Ontvangst",
+      "Link naar PIO werkenbij (ter bespreking)": ""
+    },
+    {
+      "id": "Teamleider horeca-fwg50",
+      "label": "teamleider",
+      "department": "fsp & catering",
+      "level": "Teamleider C",
+      "salary": "FWG 50",
+      "description": "Teamleider voor afdeling catering.",
+      "requirements": "",
+      "irregularity": "",
+      "roles": "nee",
+      "werkenbijlink": "",
+      "Care/non care": "",
+      "Care cluster": "fsp & catering",
+      "Link naar PIO werkenbij (ter bespreking)": ""
+    },
+    {
+      "id": "Teamleider patiëntenvervoer-fwg55",
+      "label": "Teamleider patiëntenvervoer",
+      "department": "hospitality",
+      "level": "Teamleider B",
+      "salary": "FWG55",
+      "description": "eindverantwoordelijk voor de uitvoering en op strategisch niveau",
+      "requirements": "",
+      "irregularity": "regular",
+      "roles": "nee",
       "werkenbijlink": "",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "hospitality",
+      "Link naar PIO werkenbij (ter bespreking)": ""
+    },
+    {
+      "id": "teamleider patiëntenvoeding-fwg55",
+      "label": "teamleider",
+      "department": "patientenvoeding",
+      "level": "Teamleider B",
+      "salary": "FWG 55",
+      "description": "eindverantwoordelijk voor de uitvoering en op strategisch niveau",
+      "requirements": "HBO",
+      "irregularity": "regular",
+      "roles": "nee",
+      "werkenbijlink": "geen",
+      "Care/non care": "non care",
+      "Care cluster": "patientenvoeding",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -610,24 +880,9 @@
       "requirements": "HBO",
       "irregularity": "regular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
-      "Link naar PIO werkenbij (ter bespreking)": ""
-    },
-    {
-      "id": "teamleider schoonmaak-fwg55",
-      "label": "teamleider schoonmaak",
-      "department": "schoonmaak",
-      "level": "Teamleider B",
-      "salary": "FWG 55",
-      "description": "eindverantwoordelijk voor de uitvoering en op strategisch niveau",
-      "requirements": "HBO",
-      "irregularity": "regular",
-      "roles": "nee",
-      "werkenbijlink": "",
-      "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "Veiligheid & Ontvangst",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -640,9 +895,9 @@
       "requirements": "HBO",
       "irregularity": "regular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "Inkoop & Logistiek",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -655,9 +910,9 @@
       "requirements": "HBO",
       "irregularity": "regular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "Inkoop & Logistiek",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -670,9 +925,9 @@
       "requirements": "HBO",
       "irregularity": "regular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "Inkoop & Logistiek",
       "Link naar PIO werkenbij (ter bespreking)": ""
     },
     {
@@ -685,9 +940,9 @@
       "requirements": "MBO 3",
       "irregularity": "semi irregular",
       "roles": "nee",
-      "werkenbijlink": "",
+      "werkenbijlink": "geen",
       "Care/non care": "non care",
-      "Care cluster": "",
+      "Care cluster": "patientenvoeding",
       "Link naar PIO werkenbij (ter bespreking)": ""
     }
   ]

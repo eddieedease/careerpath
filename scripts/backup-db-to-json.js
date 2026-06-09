@@ -48,7 +48,9 @@ async function runBackup() {
       const data = await fetchJson(url);
       
       // Map node keys back to their original JSON names for backward compatibility
-      const mappedNodes = (data.nodes || []).map(node => {
+      const mappedNodes = (data.nodes || [])
+        .filter(node => node.family === family)
+        .map(node => {
         const item = {
           id: node.id,
           label: node.label,

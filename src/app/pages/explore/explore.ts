@@ -264,18 +264,24 @@ export class Explore implements OnInit, AfterViewInit {
           isRole: node.isRole || undefined
         }
       })),
-      ...this.careerPaths.map(path => {
-        const targetNode = this.careerData.find(n => n.id === path.to);
-        const isToRole = targetNode ? !!targetNode.isRole : false;
-        return {
-          data: {
-            source: path.from,
-            target: path.to,
-            timeframe: path.timeframe,
-            isToRole: isToRole || undefined
-          }
-        };
-      })
+      ...this.careerPaths
+        .filter(path => {
+          const sourceExists = this.careerData.some(n => n.id === path.from);
+          const targetExists = this.careerData.some(n => n.id === path.to);
+          return sourceExists && targetExists;
+        })
+        .map(path => {
+          const targetNode = this.careerData.find(n => n.id === path.to);
+          const isToRole = targetNode ? !!targetNode.isRole : false;
+          return {
+            data: {
+              source: path.from,
+              target: path.to,
+              timeframe: path.timeframe,
+              isToRole: isToRole || undefined
+            }
+          };
+        })
     ];
 
     this.cy = cytoscape({
@@ -301,10 +307,12 @@ export class Explore implements OnInit, AfterViewInit {
             'text-max-width': '140px',
             'text-outline-color': '#000000',
             'text-outline-width': '1px',
-            'opacity': 1
+            'opacity': 1,
+            'z-index': 1,
+            'z-index-compare': 'manual'
           }
         },
-        // Color by Care Cluster - Using ETZ Hospital Logo Colors
+        // Color by Cluster - Using ETZ Hospital Logo Colors & Harmonious Facility Colors
         // Acute zorg (ETZ red)
         {
           selector: 'node[careCluster="acute zorg"]',
@@ -342,6 +350,62 @@ export class Explore implements OnInit, AfterViewInit {
           selector: 'node[careCluster="paramedische zorg"]',
           style: {
             'background-color': '#a4c047', // ETZ Green
+            'opacity': 1
+          }
+        },
+        // Facility: Inkoop & Logistiek (Dark Teal)
+        {
+          selector: 'node[careCluster="Inkoop & Logistiek"]',
+          style: {
+            'background-color': '#0f766e',
+            'opacity': 1
+          }
+        },
+        // Facility: Veiligheid & Ontvangst (Orange-Amber)
+        {
+          selector: 'node[careCluster="Veiligheid & Ontvangst"]',
+          style: {
+            'background-color': '#d97706',
+            'opacity': 1
+          }
+        },
+        // Facility: fsp & catering (Warm Terracotta)
+        {
+          selector: 'node[careCluster="fsp & catering"]',
+          style: {
+            'background-color': '#b45309',
+            'opacity': 1
+          }
+        },
+        // Facility: patientenvoeding (Fresh Green)
+        {
+          selector: 'node[careCluster="patientenvoeding"]',
+          style: {
+            'background-color': '#15803d',
+            'opacity': 1
+          }
+        },
+        // Facility: schoonmaak (Sky Blue)
+        {
+          selector: 'node[careCluster="schoonmaak"]',
+          style: {
+            'background-color': '#0369a1',
+            'opacity': 1
+          }
+        },
+        // Facility: hospitality (Rose-Pink)
+        {
+          selector: 'node[careCluster="hospitality"]',
+          style: {
+            'background-color': '#be185d',
+            'opacity': 1
+          }
+        },
+        // Facility: Fac Services alg (Charcoal Gray)
+        {
+          selector: 'node[careCluster="Fac Services alg"]',
+          style: {
+            'background-color': '#4b5563',
             'opacity': 1
           }
         },
@@ -383,7 +447,10 @@ export class Explore implements OnInit, AfterViewInit {
             'line-color': '#6b7280',
             'target-arrow-color': '#6b7280',
             'target-arrow-shape': 'triangle',
-            'curve-style': 'bezier'
+            'curve-style': 'bezier',
+            'z-index': 10,
+            'z-index-compare': 'manual',
+            'events': 'no'
           }
         },
         // Paths leading to roles
@@ -538,12 +605,13 @@ export class Explore implements OnInit, AfterViewInit {
 
       this.updateSelectedNodePaths(nodeId);
 
-      // Hide all edges first (make them nearly invisible)
+      // Hide all edges first (make them nearly invisible and lower z-index)
       this.cy.edges().style({
         'opacity': 0.01,
         'line-color': '#6b7280',
         'target-arrow-color': '#6b7280',
-        'width': 1
+        'width': 1,
+        'z-index': 5
       });
 
       // Hide all nodes (make them nearly invisible)
@@ -555,12 +623,13 @@ export class Explore implements OnInit, AfterViewInit {
       const outgoingEdges = node.outgoers('edge');
       const outgoingNodes = outgoingEdges.targets();
 
-      // Show and highlight outgoing edges with brighter green
+      // Show and highlight outgoing edges with brighter green and draw them on top
       outgoingEdges.style({
         'line-color': '#22c55e',
         'target-arrow-color': '#22c55e',
         'width': 4,
-        'opacity': 1
+        'opacity': 1,
+        'z-index': 20
       });
 
       // Show target nodes (where you can go)
@@ -646,19 +715,24 @@ export class Explore implements OnInit, AfterViewInit {
         const careCluster = node.data('careCluster');
         let backgroundColor = '#9333ea'; // Default purple for nvt/unknown
 
-        // Determine color based on care cluster - Using ETZ Hospital Logo Colors
-        if (careCluster === 'acute zorg') {
-          backgroundColor = '#dd1334'; // ETZ Red
-        } else if (careCluster === 'langdurige zorg') {
-          backgroundColor = '#41b8ee'; // ETZ Light Blue
-        } else if (careCluster === 'Medisch ondersteunend') {
-          backgroundColor = '#00273e'; // ETZ Navy
-        } else if (careCluster === 'moeder en kind') {
-          backgroundColor = '#db2777'; // Pink
-        } else if (careCluster === 'paramedische zorg') {
-          backgroundColor = '#a4c047'; // ETZ Green
-        } else if (careCluster === 'nvt') {
-          backgroundColor = '#9333ea'; // Purple
+        const colors: Record<string, string> = {
+          'acute zorg': '#dd1334',
+          'langdurige zorg': '#41b8ee',
+          'Medisch ondersteunend': '#00273e',
+          'moeder en kind': '#db2777',
+          'paramedische zorg': '#a4c047',
+          'Inkoop & Logistiek': '#0f766e',
+          'Veiligheid & Ontvangst': '#d97706',
+          'fsp & catering': '#b45309',
+          'patientenvoeding': '#15803d',
+          'schoonmaak': '#0369a1',
+          'hospitality': '#be185d',
+          'Fac Services alg': '#4b5563',
+          'nvt': '#9333ea'
+        };
+
+        if (colors[careCluster]) {
+          backgroundColor = colors[careCluster];
         }
 
         node.style({
@@ -677,7 +751,8 @@ export class Explore implements OnInit, AfterViewInit {
         'opacity': 1,
         'line-color': '#6b7280',
         'target-arrow-color': '#6b7280',
-        'width': 3
+        'width': 3,
+        'z-index': 10
       });
 
       // Reset zoom and fit
@@ -754,7 +829,10 @@ export class Explore implements OnInit, AfterViewInit {
       'opacity': 1,
       'display': 'element'
     });
-    this.cy.edges().style({ 'opacity': 1 });
+    this.cy.edges().style({
+      'opacity': 1,
+      'z-index': 10
+    });
 
     // Apply department filter
     if (this.selectedDepartment) {
@@ -795,7 +873,10 @@ export class Explore implements OnInit, AfterViewInit {
     }
 
     // Also dim edges connected to dimmed nodes
-    this.cy.nodes().filter((node: any) => node.style('opacity') < 1).connectedEdges().style({ 'opacity': 0.05 });
+    this.cy.nodes().filter((node: any) => node.style('opacity') < 1).connectedEdges().style({
+      'opacity': 0.05,
+      'z-index': 5
+    });
 
     // Smart fit: only fit if we don't have a selected node that is still visible
     const selectedNodeStillVisible = this.selectedNode &&

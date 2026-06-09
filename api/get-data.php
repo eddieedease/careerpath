@@ -6,15 +6,40 @@ header('Content-Type: application/json');
 $family = isset($_GET['family']) && $_GET['family'] === 'facility' ? 'facility' : 'care';
 
 try {
-    // 1. Fetch nodes
+    // 1. Fetch paths of requested family
+    $pathStmt = $pdo->prepare("SELECT from_node_id AS `from`, to_node_id AS `to`, timeframe FROM paths WHERE family = ?");
+    $pathStmt->execute([$family]);
+    $paths = $pathStmt->fetchAll();
+
+    // 2. Fetch nodes of requested family
     $nodeStmt = $pdo->prepare("SELECT * FROM nodes WHERE family = ?");
     $nodeStmt->execute([$family]);
     $dbNodes = $nodeStmt->fetchAll();
+
+    // 3. Find referenced nodes that are not in the fetched nodes list
+    $fetchedNodeIds = array_column($dbNodes, 'id');
+    $referencedNodeIds = [];
+    foreach ($paths as $path) {
+        $referencedNodeIds[] = $path['from'];
+        $referencedNodeIds[] = $path['to'];
+    }
+    $referencedNodeIds = array_unique($referencedNodeIds);
+    $missingNodeIds = array_diff($referencedNodeIds, $fetchedNodeIds);
+
+    // 4. Fetch missing referenced nodes (cross-family)
+    if (!empty($missingNodeIds)) {
+        $placeholders = implode(',', array_fill(0, count($missingNodeIds), '?'));
+        $missingStmt = $pdo->prepare("SELECT * FROM nodes WHERE id IN ($placeholders)");
+        $missingStmt->execute(array_values($missingNodeIds));
+        $missingNodes = $missingStmt->fetchAll();
+        $dbNodes = array_merge($dbNodes, $missingNodes);
+    }
 
     $nodes = [];
     foreach ($dbNodes as $row) {
         $nodes[] = [
             'id' => $row['id'],
+            'family' => $row['family'],
             'label' => $row['label'],
             'department' => $row['department'],
             'level' => $row['level'],
@@ -30,11 +55,6 @@ try {
             'isRole' => (bool)$row['isRole']
         ];
     }
-
-    // 2. Fetch paths
-    $pathStmt = $pdo->prepare("SELECT from_node_id AS `from`, to_node_id AS `to`, timeframe FROM paths WHERE family = ?");
-    $pathStmt->execute([$family]);
-    $paths = $pathStmt->fetchAll();
 
     echo json_encode([
         'nodes' => $nodes,

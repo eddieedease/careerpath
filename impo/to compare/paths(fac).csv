@@ -1,0 +1,115 @@
+﻿from,to,timeframe
+Medewerker inkoopadministratie-fwg40,Gegevensbeheerder-fwg50,
+Gegevensbeheerder-fwg50,Junior Inkoper-fwg50,
+Gegevensbeheerder-fwg50,medewerker BIC,
+Junior Inkoper-fwg50,Assortimentsspecialist-fwg55,
+Junior Inkoper-fwg50,Inkoper-fwg60,
+Contractmanager-fwg60,hoofd Inkoop & logistiek-fwg70,
+Beleidsadviseur-fwg60,hoofd Inkoop & logistiek-fwg70,
+Inkoper-fwg60,hoofd Inkoop & logistiek-fwg70,
+Teamleider-fwg60,hoofd Inkoop & logistiek-fwg70,
+Inkoper-fwg60,Beleidsadviseur-fwg60,
+Inkoper-fwg60,Teamleider-fwg60,
+Inkoper-fwg60,Contractmanager-fwg60,
+Contractmanager-fwg60,Inkoper-fwg60,
+Contractmanager-fwg60,Teamleider-fwg60,
+Contractmanager-fwg60,Beleidsadviseur-fwg60,
+Beleidsadviseur-fwg60,Contractmanager-fwg60,
+Beleidsadviseur-fwg60,Teamleider-fwg60,
+Beleidsadviseur-fwg60,Inkoper-fwg60,
+Teamleider-fwg60,Inkoper-fwg60,
+Teamleider-fwg60,Beleidsadviseur-fwg60,
+Teamleider-fwg60,Contractmanager-fwg60,
+Assortimentsspecialist-fwg55,Inkoper-fwg60,
+Assortimentsspecialist-fwg55,Contractmanager-fwg60,
+Assortimentsspecialist-fwg55,Teamleider-fwg60,
+Logistiek medewerker E-fwg20,Logistiek medewerker D-fwg25,
+Logistiek medewerker E-fwg20,chauffeur-fwg25,
+Logistiek medewerker E-fwg20,coordinator meewerkend schoonmaak-fwg25,Is dit logisch?
+medewerker afdelingslogistiek-fwg20,Logistiek medewerker E-fwg20,
+medewerker afdelingslogistiek-fwg20,coordinator meewerkend schoonmaak-fwg25,Is dit logisch?
+Logistiek medewerker D-fwg25,chauffeur-fwg25,
+Logistiek medewerker D-fwg25,Logistiek medewerker C1-fwg30,
+Logistiek medewerker D-fwg25,coordinator meewerkend schoonmaak-fwg25,Is dit logisch?
+Logistiek medewerker C1-fwg30,coordinator logistiek-fwg35,
+Logistiek medewerker C1-fwg30,coordinator schoonmaak-fwg35,
+medewerker Post/Reprografie-fwg25,Logistiek medewerker D-fwg25,
+medewerker Post/Reprografie-fwg25,chauffeur-fwg25,
+medewerker Post/Reprografie-fwg25,Logistiek medewerker C1-fwg30,
+coordinator logistiek-fwg35,Teamleider-fwg50,mits HBO
+Teamleider-fwg50,Teamleider-fwg55,mits HBO
+Teamleider-fwg55,Teamleider-fwg60,mits HBO en ervaring inkoop
+coordinator logistiek-fwg35,Medewerker Receptie & Registratie-fwg35,
+coordinator logistiek-fwg35,medewerker beveiliging,Mits opleiding
+chauffeur-fwg25,Logistiek medewerker D-fwg25,
+chauffeur-fwg25,medewerker Post/Reprografie-fwg25,
+chauffeur-fwg25,Logistiek medewerker C1-fwg30,
+Medewerker Receptie & Registratie-fwg35,Medewerker inkoopadministratie-fwg40,
+Medewerker Receptie & Registratie-fwg35,Coordinator vrijwilligerswerk-fwg45,
+Medewerker Receptie & Registratie-fwg35,medewerker beveiliging,Mits opleiding
+Coordinator vrijwilligerswerk-fwg45,Teamleider-fwg50,mits HBO
+Teamleider Receptie & Registratie en Vrijwilligerwerk-fwg55,hoofd veiligheid en ontvangst-fwg65,mits HBO 
+medewerker beveiliging en bewaking-fwg35,coordinator beveiliging en bewaking-fwg40,
+coordinator beveiliging en bewaking-fwg40,teamleider beveiliging en bewaking-fwg55,
+teamleider beveiliging en bewaking-fwg55,hoofd veiligheid en ontvangst-fwg65,mits HBO 
+teamleider beveiliging en bewaking-fwg55,Teamleider Receptie & Registratie en Vrijwilligerwerk-fwg55,
+medewerker beveiliging en bewaking-fwg35,Medewerker Receptie & Registratie-fwg35,
+coordinator beveiliging en bewaking-fwg40,Coordinator vrijwilligerswerk-fwg45,
+keukenassistent-fwg15,assistent kok-fwg25,Mits opleiding
+assistent kok-fwg25,2e kok-fwg35,Mits opleiding
+assistent kok-fwg25,senior facilitair medewerker-fwg30,
+assistent kok-fwg25,voedingsadministratie-fwg40,
+2e kok-fwg35,1e kok + add coordinator -fwg40,
+2e kok-fwg35,voedingsadministratie-fwg40,
+1e kok + add coordinator -fwg40,teamleider patiëntenvoeding-fwg55,Mits opleiding
+1e kok + add coordinator -fwg40,Teamleider horeca-fwg50,Mits opleiding
+voedingsadministratie-fwg40,teamleider patiëntenvoeding-fwg55,Mits opleiding
+teamleider patiëntenvoeding-fwg55,hoofd hospitality-fwg75,Mits opleiding
+senior facilitair medewerker-fwg30,Coördinator catering-fwg35,
+medewerker algemene schoonmaak-fwg15,medewerker specialistische schoonmaak-fwg20,
+medewerker algemene schoonmaak-fwg15,medewerker linnenvoorziening-FWG20,
+medewerker linnenvoorziening-FWG20,coordinator meewerkend schoonmaak-fwg25,
+medewerker specialistische schoonmaak-fwg20,coordinator meewerkend schoonmaak-fwg25,mits ervaring
+coordinator meewerkend schoonmaak-fwg25,coordinator schoonmaak-fwg35,mits ervaring
+coordinator schoonmaak-fwg35,Operationeel teamleider schoonmaak-fwg45,mits ervaring
+teamleider schoonmaak-fwg55,hoofd hospitality-fwg75,mits opleiding
+junior teamleider schoonmaak-fwg45,teamleider schoonmaak-fwg55,mits opleiding
+Logistiek medewerker E-fwg20,zorgassistent-fwg30,
+medewerker afdelingslogistiek-fwg20,zorgassistent-fwg30,
+Logistiek medewerker D-fwg25,zorgassistent-fwg30,
+medewerker Post/Reprografie-fwg25,zorgassistent-fwg30,
+Medewerker restauratieve voorzieningen-fwg20,Medewerker fsp-fwg35,
+Medewerker restauratieve voorzieningen-fwg20,Medewerker vergaderservice-fwg20,
+Medewerker restauratieve voorzieningen-fwg20,Medewerker vergaderservice-fwg25,
+Medewerker restauratieve voorzieningen-fwg20,Medewerker koffievoorzieningen-fwg20,
+Medewerker restauratieve voorzieningen-fwg20,Coördinator catering-fwg35,
+Medewerker restauratieve voorzieningen-fwg20,zorgassistent-fwg30,
+Medewerker restauratieve voorzieningen-fwg20,Medewerker Receptie & Registratie-fwg35,
+Keuken assistent-fwg15,Medewerker restauratieve voorzieningen-fwg20,
+Keuken assistent-fwg15,Logistiek medewerker E-fwg20,
+Keuken assistent-fwg15,medewerker specialistische schoonmaak-fwg20,
+Keuken assistent-fwg15,Logistiek medewerker D-fwg25,
+Leerlingkok,Assistentkok-fwg25,
+Leerlingkok,Medewerker restauratieve voorzieningen-fwg20,
+Leerlingkok,Logistiek medewerker E-fwg20,
+Restaurantkok-fwg30,1e restarantkok-fwg40,
+Restaurantkok-fwg30,2e kok-fwg35,Mits opleiding
+Restaurantkok-fwg30,voedingsadministratie-fwg40,
+1e restarantkok-fwg40,teamleider patiëntenvoeding-fwg55,Mits opleiding
+1e restarantkok-fwg40,Teamleider horeca-fwg50,Mits opleiding
+1e restarantkok-fwg40,voedingsadministratie-fwg40,
+Medewerker vergaderservice-fwg20,Medewerker vergaderservice-fwg25,
+Medewerker vergaderservice-fwg25,Medewerker fsp-fwg35,
+Medewerker koffievoorzieningen-fwg20,Medewerker vergaderservice-fwg25,
+Coördinator catering-fwg35,voedingsadministratie-fwg40,
+Coördinator catering-fwg35,Teamleider horeca-fwg50,
+Coördinator catering-fwg35,teamleider patiëntenvoeding-fwg55,
+Teamleider horeca-fwg50,teamleider patiëntenvoeding-fwg55,
+Medewerker fsp-fwg35,Medewerker Receptie & Registratie-fwg35,
+Medewerker fsp-fwg35,voedingsadministratie-fwg40,
+Stafmedewerker-fwg45,Beleidsadviseur-fwg55,
+Beleidsadviseur-fwg55,Beleidsadviseur-fwg60,
+Teamleider-fwg55,Beleidsadviseur-fwg55,
+Teamleider-fwg55,Beleidsadviseur-fwg60,
+Beleidsadviseur-fwg55,Teamleider-fwg55,
+,,
