@@ -2,7 +2,43 @@ import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angula
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import cytoscape from 'cytoscape';
+import dagre from 'cytoscape-dagre';
 import { CareerDataService, NodeData, CareerPath } from '../../services/career-data.service';
+
+cytoscape.use(dagre);
+
+// Single source of truth for cluster colors (graph nodes, legend and sidebar dots)
+const CLUSTER_COLORS: Record<string, string> = {
+  'acute zorg': '#dd1334',            // ETZ Red
+  'langdurige zorg': '#41b8ee',       // ETZ Light Blue
+  'Medisch ondersteunend': '#00273e', // ETZ Navy
+  'moeder en kind': '#db2777',        // Pink
+  'paramedische zorg': '#a4c047',     // ETZ Green
+  'Inkoop & Logistiek': '#0f766e',    // Dark Teal
+  'Veiligheid & Ontvangst': '#d97706',// Orange-Amber
+  'fsp & catering': '#b45309',        // Warm Terracotta
+  'patientenvoeding': '#15803d',      // Fresh Green
+  'schoonmaak': '#0369a1',            // Sky Blue
+  'hospitality': '#be185d',           // Rose-Pink
+  'Fac Services alg': '#4b5563',      // Charcoal Gray
+  'nvt': '#9333ea'                    // Purple
+};
+const DEFAULT_CLUSTER_COLOR = '#9333ea';
+
+// Subtle edge styling for the overview: with this many cross-references the
+// lines are only a hint; they light up (green/blue) once a node is selected
+const SUBTLE_EDGE_STYLE = {
+  'opacity': 0.15,
+  'line-color': '#9ca3af',
+  'target-arrow-color': '#9ca3af',
+  'width': 1.5,
+  'z-index': 10
+};
+
+export interface LegendItem {
+  name: string;
+  color: string;
+}
 
 @Component({
   selector: 'app-explore',
@@ -18,10 +54,10 @@ export class Explore implements OnInit, AfterViewInit {
   selectedNode: NodeData | null = null;
   currentFamily: 'care' | 'facility' = 'care';
 
-  // Add new properties
   searchQuery: string = '';
   searchResults: NodeData[] = [];
   selectedNodePaths: CareerPath[] = [];
+  selectedNodeIncomingPaths: CareerPath[] = [];
 
   // Filter properties
   departments: string[] = [];
@@ -33,39 +69,128 @@ export class Explore implements OnInit, AfterViewInit {
   careClusters: string[] = [];
   selectedCareCluster: string = '';
 
-  // Welcome screen properties
+  // Welcome screen
   showWelcome: boolean = true;
-  welcomeChoice: 'starter' | 'experienced' | 'specialized' | 'management' | '' = '';
-  selectedStartNode: NodeData | null = null;
 
   // Hover tooltip properties
   hoveredNode: NodeData | null = null;
   tooltipPosition = { x: 0, y: 0 };
   showTooltip = false;
+  tooltipBelow = false;
 
   // Additional UI state
   showLabels = true;
   showFilters = false;
+  showLegend = true;
+  showIncomingPaths = false;
   currentZoomLevel = 100;
-
-  // Store initial layout state
-  private initialPositions: Map<string, any> = new Map();
-  private hasStoredInitialLayout = false;
+  legendItems: LegendItem[] = [];
 
   // Navigation history
   navigationHistory: NodeData[] = [];
   maxHistorySize: number = 5;
+
+  private keyboardShortcutsInitialized = false;
+
+  // Original positions of nodes moved by the focus view, so they can be put back
+  private focusSavedPositions = new Map<string, { x: number; y: number }>();
+
+  // Grid sort: group by cluster, then by salary scale, so the overview reads as blocks of color
+  private clusterGridSort = (a: any, b: any): number => {
+    const clusterA = a.data('careCluster') || '';
+    const clusterB = b.data('careCluster') || '';
+    if (clusterA !== clusterB) {
+      return clusterA.localeCompare(clusterB);
+    }
+    return (a.data('salary') || '').localeCompare(b.data('salary') || '');
+  };
+
+  // Move incoming nodes into columns left of the selected node and outgoing
+  // nodes into columns on the right, so a busy network stays readable per selection
+  private applyFocusLayout(node: any, incomingNodes: any, outgoingNodes: any) {
+    const center = node.position();
+    const columnWidth = 380;
+    const rowHeight = 110;
+    const perColumn = 8;
+
+    const place = (collection: any, direction: 1 | -1) => {
+      const nodes = collection
+        .toArray()
+        .sort((a: any, b: any) => (a.data('label') || '').localeCompare(b.data('label') || ''));
+
+      nodes.forEach((n: any, i: number) => {
+        const column = Math.floor(i / perColumn);
+        const indexInColumn = i % perColumn;
+        const countInColumn = Math.min(perColumn, nodes.length - column * perColumn);
+
+        if (!this.focusSavedPositions.has(n.id())) {
+          this.focusSavedPositions.set(n.id(), { ...n.position() });
+        }
+
+        n.position({
+          x: center.x + direction * columnWidth * (column + 1),
+          y: center.y + (indexInColumn - (countInColumn - 1) / 2) * rowHeight
+        });
+      });
+    };
+
+    place(outgoingNodes, 1);
+    place(incomingNodes, -1);
+  }
+
+  // Run the overview layout as soon as the graph container has real dimensions.
+  // On first paint (or in an embedded/hidden pane) the container can be 0x0;
+  // running grid then would stack every node on one spot.
+  private runOverviewLayoutWhenVisible() {
+    const cy = this.cy;
+    const container = this.cytoscapeContainer.nativeElement;
+
+    const runLayout = () => {
+      if (!cy || cy.destroyed() || cy !== this.cy) {
+        return;
+      }
+      cy.resize();
+      cy.layout({
+        name: 'grid',
+        spacingFactor: 1.2,
+        avoidOverlap: true,
+        padding: 60,
+        fit: true,
+        animate: false,
+        sort: this.clusterGridSort
+      } as any).run();
+      this.updateZoomLevel();
+    };
+
+    if (container.clientWidth > 0 && container.clientHeight > 0) {
+      runLayout();
+      return;
+    }
+
+    const observer = new ResizeObserver(() => {
+      if (container.clientWidth > 0 && container.clientHeight > 0) {
+        observer.disconnect();
+        runLayout();
+      }
+    });
+    observer.observe(container);
+  }
+
+  private restoreFocusPositions() {
+    this.focusSavedPositions.forEach((position, id) => {
+      const n = this.cy.getElementById(id);
+      if (n && n.length) {
+        n.position(position);
+      }
+    });
+    this.focusSavedPositions.clear();
+  }
 
   constructor(
     private dataService: CareerDataService,
     private route: ActivatedRoute
   ) {
     // data will be loaded in ngOnInit; departments and salaryLevels are populated after load
-  }
-
-  setWelcomeChoice(choice: 'starter' | 'experienced' | 'specialized' | 'management') {
-    this.welcomeChoice = choice;
-    this.selectedStartNode = null;
   }
 
   selectQuickStartFunction(functionName: string) {
@@ -84,6 +209,10 @@ export class Explore implements OnInit, AfterViewInit {
         }
       }, 100);
     }
+  }
+
+  openHelp() {
+    this.showWelcome = true;
   }
 
   // Navigation history methods
@@ -122,81 +251,6 @@ export class Explore implements OnInit, AfterViewInit {
     return this.navigationHistory.length > 1;
   }
 
-  getRelevantDepartments(): string[] {
-    switch (this.welcomeChoice) {
-      case 'starter':
-        return this.departments.filter(dept =>
-          this.careerData.some(node =>
-            node.department === dept &&
-            ['Medewerker zorg C', 'Medewerker zorg A - helpende zorg en welzijn niv 2',
-              'medisch assistent D', 'medisch assistent C'].includes(node.level)
-          )
-        );
-      case 'management':
-        return this.departments.filter(dept =>
-          this.careerData.some(node =>
-            node.department === dept &&
-            ['Teamleider zorg A', 'Teamleider zorg B', 'Organisatorisch hoofd A',
-              'Organisatorisch hoofd B1', 'generiek'].includes(node.level)
-          )
-        );
-      case 'specialized':
-        return this.departments.filter(dept =>
-          this.careerData.some(node =>
-            node.department === dept &&
-            ['verpleegkundige specialist', 'Physician assistant', 'Sedatie praktijk specialist',
-              'Deskundige infectiepreventie', 'verpleegkundige bewaking A'].includes(node.level)
-          )
-        );
-      default:
-        return this.departments;
-    }
-  }
-
-  selectDepartment(department: string) {
-    if (!department) {
-      this.selectedStartNode = null;
-      return;
-    }
-
-    this.selectedDepartment = department;
-    const nodes = this.careerData.filter(node => node.department === department);
-
-    switch (this.welcomeChoice) {
-      case 'starter':
-        this.selectedStartNode = nodes.find(node =>
-          ['Medewerker zorg C', 'Medewerker zorg A - helpende zorg en welzijn niv 2',
-            'medisch assistent D', 'medisch assistent C'].includes(node.level)
-        ) || nodes[0];
-        break;
-      case 'management':
-        this.selectedStartNode = nodes.find(node =>
-          ['Teamleider zorg C', 'Teamleider zorg B'].includes(node.level)
-        ) || nodes[0];
-        break;
-      case 'specialized':
-        this.selectedStartNode = nodes.find(node =>
-          node.level.includes('verpleegkundige') || node.level.includes('specialist')
-        ) || nodes[0];
-        break;
-      default:
-        this.selectedStartNode = nodes[0];
-    }
-  }
-
-  startExploring() {
-    this.showWelcome = false;
-    this.cy.nodes().style({ 'opacity': 0.15 });
-
-    if (this.selectedStartNode) {
-      const node = this.cy.getElementById(this.selectedStartNode.id);
-      if (node) {
-        this.selectNodeById(this.selectedStartNode.id);
-
-      }
-    }
-  }
-
   // Data will be loaded from the assets via CareerDataService
   private careerData: NodeData[] = [];
   private careerPaths: CareerPath[] = [];
@@ -226,6 +280,12 @@ export class Explore implements OnInit, AfterViewInit {
         this.salaryLevels = [...new Set(this.careerData.map(node => node.salary))].sort();
         this.careTypes = [...new Set(this.careerData.map(node => node.careNonCare).filter(Boolean) as string[])].sort();
         this.careClusters = [...new Set(this.careerData.map(node => node.careCluster).filter(Boolean) as string[])].sort();
+
+        // Legend: only the clusters that actually occur in this family
+        this.legendItems = this.careClusters.map(name => ({
+          name,
+          color: CLUSTER_COLORS[name] || DEFAULT_CLUSTER_COLOR
+        }));
 
         // Initialize cytoscape once data is available
         // Delay initialization until view is ready
@@ -291,7 +351,7 @@ export class Explore implements OnInit, AfterViewInit {
         {
           selector: 'node',
           style: {
-            'background-color': '#9333ea', // Default purple for nvt/unknown
+            'background-color': DEFAULT_CLUSTER_COLOR, // Default purple for nvt/unknown
             'label': 'data(label)',
             'color': '#ffffff',
             'text-valign': 'center',
@@ -312,111 +372,14 @@ export class Explore implements OnInit, AfterViewInit {
             'z-index-compare': 'manual'
           }
         },
-        // Color by Cluster - Using ETZ Hospital Logo Colors & Harmonious Facility Colors
-        // Acute zorg (ETZ red)
-        {
-          selector: 'node[careCluster="acute zorg"]',
+        // Color by cluster, from the shared CLUSTER_COLORS map
+        ...Object.entries(CLUSTER_COLORS).map(([cluster, color]) => ({
+          selector: `node[careCluster="${cluster}"]`,
           style: {
-            'background-color': '#dd1334', // ETZ Red
+            'background-color': color,
             'opacity': 1
           }
-        },
-        // Langdurige zorg (ETZ light blue)
-        {
-          selector: 'node[careCluster="langdurige zorg"]',
-          style: {
-            'background-color': '#41b8ee', // ETZ Light Blue
-            'opacity': 1
-          }
-        },
-        // Medisch ondersteunend (ETZ navy)
-        {
-          selector: 'node[careCluster="Medisch ondersteunend"]',
-          style: {
-            'background-color': '#00273e', // ETZ Navy
-            'opacity': 1
-          }
-        },
-        // Moeder en kind (pink - complementary)
-        {
-          selector: 'node[careCluster="moeder en kind"]',
-          style: {
-            'background-color': '#db2777', // Pink
-            'opacity': 1
-          }
-        },
-        // Paramedische zorg (ETZ green)
-        {
-          selector: 'node[careCluster="paramedische zorg"]',
-          style: {
-            'background-color': '#a4c047', // ETZ Green
-            'opacity': 1
-          }
-        },
-        // Facility: Inkoop & Logistiek (Dark Teal)
-        {
-          selector: 'node[careCluster="Inkoop & Logistiek"]',
-          style: {
-            'background-color': '#0f766e',
-            'opacity': 1
-          }
-        },
-        // Facility: Veiligheid & Ontvangst (Orange-Amber)
-        {
-          selector: 'node[careCluster="Veiligheid & Ontvangst"]',
-          style: {
-            'background-color': '#d97706',
-            'opacity': 1
-          }
-        },
-        // Facility: fsp & catering (Warm Terracotta)
-        {
-          selector: 'node[careCluster="fsp & catering"]',
-          style: {
-            'background-color': '#b45309',
-            'opacity': 1
-          }
-        },
-        // Facility: patientenvoeding (Fresh Green)
-        {
-          selector: 'node[careCluster="patientenvoeding"]',
-          style: {
-            'background-color': '#15803d',
-            'opacity': 1
-          }
-        },
-        // Facility: schoonmaak (Sky Blue)
-        {
-          selector: 'node[careCluster="schoonmaak"]',
-          style: {
-            'background-color': '#0369a1',
-            'opacity': 1
-          }
-        },
-        // Facility: hospitality (Rose-Pink)
-        {
-          selector: 'node[careCluster="hospitality"]',
-          style: {
-            'background-color': '#be185d',
-            'opacity': 1
-          }
-        },
-        // Facility: Fac Services alg (Charcoal Gray)
-        {
-          selector: 'node[careCluster="Fac Services alg"]',
-          style: {
-            'background-color': '#4b5563',
-            'opacity': 1
-          }
-        },
-        // nvt (purple)
-        {
-          selector: 'node[careCluster="nvt"]',
-          style: {
-            'background-color': '#9333ea', // Purple
-            'opacity': 1
-          }
-        },
+        })),
         // Role nodes (triangle shape, dashed border)
         {
           selector: 'node[isRole]',
@@ -443,12 +406,9 @@ export class Explore implements OnInit, AfterViewInit {
         {
           selector: 'edge',
           style: {
-            'width': 3,
-            'line-color': '#6b7280',
-            'target-arrow-color': '#6b7280',
+            ...SUBTLE_EDGE_STYLE,
             'target-arrow-shape': 'triangle',
             'curve-style': 'bezier',
-            'z-index': 10,
             'z-index-compare': 'manual',
             'events': 'no'
           }
@@ -461,16 +421,10 @@ export class Explore implements OnInit, AfterViewInit {
             'line-dash-pattern': [6, 4]
           }
         }
-      ],
-      layout: {
-        name: 'grid',
-        spacingFactor: 1.3,
-        avoidOverlap: true,
-        // Add more default layout options
-        padding: 80,
-        animate: true,
-        animationDuration: 500,
-      },
+      ] as any,
+      // Positions come from runOverviewLayoutWhenVisible(), which waits until
+      // the container actually has dimensions (grid needs them to spread nodes)
+      layout: { name: 'preset' } as any,
       // Disable built-in zoom
       userZoomingEnabled: false,
       minZoom: 0.1,
@@ -478,71 +432,61 @@ export class Explore implements OnInit, AfterViewInit {
       zoom: 1
     });
 
-    // Store initial positions after first layout
-    setTimeout(() => {
-      if (!this.hasStoredInitialLayout) {
-        this.cy.nodes().forEach((node: any) => {
-          this.initialPositions.set(node.id(), {
-            x: node.position('x'),
-            y: node.position('y')
-          });
-        });
-        this.hasStoredInitialLayout = true;
-      }
-    }, 600);
+    this.runOverviewLayoutWhenVisible();
 
     // Custom zoom handler
-    let currentZoom = 1;
     const zoomStep = 0.1;
 
     this.cytoscapeContainer.nativeElement.addEventListener('wheel', (event: WheelEvent) => {
       event.preventDefault();
 
-      // Calculate new zoom level
+      // Start from the actual current zoom so wheel and buttons stay in sync
+      let zoom = this.cy.zoom();
       if (event.deltaY < 0) {
-        currentZoom = Math.min(currentZoom + zoomStep, 3);
+        zoom = Math.min(zoom + zoomStep, 3);
       } else {
-        currentZoom = Math.max(currentZoom - zoomStep, 0.1);
+        zoom = Math.max(zoom - zoomStep, 0.1);
       }
 
       // Apply zoom centered on mouse position
-      const mousePosition = this.cy.renderer().projectIntoViewport(event.offsetX, event.offsetY);
       this.cy.zoom({
-        level: currentZoom,
+        level: zoom,
         renderedPosition: { x: event.offsetX, y: event.offsetY }
       });
 
       // Update zoom level display
       this.updateZoomLevel();
 
-      // Adjust text visibility based on zoom level
-      if (currentZoom < 0.3) {
-        // Hide labels when zoomed out too much
-        this.cy.style()
-          .selector('node')
-          .style({
-            'font-size': '0px',
-            'text-opacity': 0
-          })
-          .update();
-      } else if (currentZoom < 0.6) {
-        // Show abbreviated labels
-        this.cy.style()
-          .selector('node')
-          .style({
-            'font-size': '10px',
-            'text-opacity': 0.7
-          })
-          .update();
-      } else {
-        // Show full labels
-        this.cy.style()
-          .selector('node')
-          .style({
-            'font-size': '14px',
-            'text-opacity': 1
-          })
-          .update();
+      // Adjust text visibility based on zoom level (only when labels are enabled)
+      if (this.showLabels) {
+        if (zoom < 0.3) {
+          // Hide labels when zoomed out too much
+          this.cy.style()
+            .selector('node')
+            .style({
+              'font-size': '0px',
+              'text-opacity': 0
+            })
+            .update();
+        } else if (zoom < 0.6) {
+          // Show abbreviated labels
+          this.cy.style()
+            .selector('node')
+            .style({
+              'font-size': '10px',
+              'text-opacity': 0.7
+            })
+            .update();
+        } else {
+          // Show full labels
+          this.cy.style()
+            .selector('node')
+            .style({
+              'font-size': '14px',
+              'text-opacity': 1
+            })
+            .update();
+        }
       }
     });
 
@@ -554,15 +498,27 @@ export class Explore implements OnInit, AfterViewInit {
       this.hoveredNode = this.careerData.find(n => n.id === nodeId) || null;
 
       if (this.hoveredNode) {
-        // Get the rendered position of the node
         const renderedPosition = node.renderedPosition();
-        const containerRect = this.cytoscapeContainer.nativeElement.getBoundingClientRect();
+        const container = this.cytoscapeContainer.nativeElement;
 
-        this.tooltipPosition = {
-          x: renderedPosition.x,
-          y: renderedPosition.y
-        };
+        // Clamp horizontally so the tooltip never leaves the graph area
+        const halfTooltipWidth = 160; // ~half of the 300px max-width plus margin
+        const x = Math.max(
+          halfTooltipWidth,
+          Math.min(container.clientWidth - halfTooltipWidth, renderedPosition.x)
+        );
 
+        // Flip below the node when there is not enough room above it
+        this.tooltipBelow = renderedPosition.y < 280;
+
+        const nodeHalfHeight = typeof node.renderedOuterHeight === 'function'
+          ? node.renderedOuterHeight() / 2
+          : 40;
+        const y = this.tooltipBelow
+          ? renderedPosition.y + nodeHalfHeight + 10
+          : renderedPosition.y - nodeHalfHeight - 10;
+
+        this.tooltipPosition = { x, y };
         this.showTooltip = true;
 
         // Add hover style to node
@@ -605,7 +561,13 @@ export class Explore implements OnInit, AfterViewInit {
 
       this.updateSelectedNodePaths(nodeId);
 
-      // Hide all edges first (make them nearly invisible and lower z-index)
+      // Put any previously focused neighbors back before arranging new ones
+      this.restoreFocusPositions();
+
+      // Clear cytoscape's native selection so no old orange border lingers
+      this.cy.elements().unselect();
+
+      // Reset edge styling
       this.cy.edges().style({
         'opacity': 0.01,
         'line-color': '#6b7280',
@@ -614,16 +576,38 @@ export class Explore implements OnInit, AfterViewInit {
         'z-index': 5
       });
 
-      // Hide all nodes (make them nearly invisible)
+      // Hide all other nodes completely so nothing shows through the focus view,
+      // and wipe any leftover selection border from a previous focus
       this.cy.nodes().style({
-        'opacity': 0.1
+        'display': 'none',
+        'opacity': 1,
+        'border-color': '#ffffff',
+        'border-width': '2px',
+        'z-index': 1
       });
 
-      // Get only outgoing edges and their target nodes
       const outgoingEdges = node.outgoers('edge');
-      const outgoingNodes = outgoingEdges.targets();
+      const outgoingNodes = outgoingEdges.targets().difference(node);
+      const incomingEdges = node.incomers('edge');
+      const incomingNodes = incomingEdges.sources().difference(outgoingNodes).difference(node);
 
-      // Show and highlight outgoing edges with brighter green and draw them on top
+      // Incoming paths (where you can come from) in blue — only when toggled on
+      if (this.showIncomingPaths) {
+        incomingEdges.style({
+          'line-color': '#3b82f6',
+          'target-arrow-color': '#3b82f6',
+          'width': 3,
+          'opacity': 0.9,
+          'z-index': 15
+        });
+        incomingNodes.style({
+          'display': 'element',
+          'opacity': 0.75,
+          'z-index': 25
+        });
+      }
+
+      // Outgoing paths (where you can go) in green, on top
       outgoingEdges.style({
         'line-color': '#22c55e',
         'target-arrow-color': '#22c55e',
@@ -631,33 +615,51 @@ export class Explore implements OnInit, AfterViewInit {
         'opacity': 1,
         'z-index': 20
       });
-
-      // Show target nodes (where you can go)
       outgoingNodes.style({
-        'opacity': 1
+        'display': 'element',
+        'opacity': 1,
+        'z-index': 25
       });
 
       // Make selected node stand out prominently
       node.style({
+        'display': 'element',
         'opacity': 1,
         'border-color': '#fbbf24',
-        'border-width': '5px'
+        'border-width': '5px',
+        'z-index': 30
       });
 
-      // Auto-zoom to fit selected node and forward paths
+      // Arrange the neighborhood as a tidy focus view: incoming left, outgoing right
+      this.applyFocusLayout(
+        node,
+        this.showIncomingPaths ? incomingNodes : this.cy.collection(),
+        outgoingNodes
+      );
+
+      // Auto-zoom to fit selected node plus visible paths
       setTimeout(() => {
-        const nodesToFit = node.union(outgoingNodes);
+        let nodesToFit = node.union(outgoingNodes);
+        if (this.showIncomingPaths) {
+          nodesToFit = nodesToFit.union(incomingNodes);
+        }
 
         this.cy.animate({
           fit: {
             eles: nodesToFit,
-            padding: 30
+            padding: 60
           },
           duration: 400,
           easing: 'ease-out'
         });
 
         setTimeout(() => {
+          // Don't blow a lone node up to max zoom (e.g. end of a career line)
+          const maxFocusZoom = 1.2;
+          if (this.cy.zoom() > maxFocusZoom) {
+            this.cy.zoom(maxFocusZoom);
+            this.cy.center(nodesToFit);
+          }
           this.updateZoomLevel();
         }, 450);
       }, 50);
@@ -681,8 +683,6 @@ export class Explore implements OnInit, AfterViewInit {
     const cyNode = this.cy.getElementById(node.id);
     if (cyNode) {
       cyNode.trigger('tap');
-
-      this.cy.fit(cyNode.neighborhood().add(cyNode), 100);
     }
 
     // Auto-scroll on mobile
@@ -703,57 +703,10 @@ export class Explore implements OnInit, AfterViewInit {
 
   public resetView(): void {
     if (this.cy) {
-      // Remove selected class from all nodes
-      this.cy.nodes().removeClass('selected');
+      // Put focus-view neighbors back on their original spot
+      this.restoreFocusPositions();
 
-      // Clear selection
-      this.selectedNode = null;
-      this.selectedNodePaths = [];
-
-      // Reset all nodes to be visible with proper colors based on their care cluster
-      this.cy.nodes().forEach((node: any) => {
-        const careCluster = node.data('careCluster');
-        let backgroundColor = '#9333ea'; // Default purple for nvt/unknown
-
-        const colors: Record<string, string> = {
-          'acute zorg': '#dd1334',
-          'langdurige zorg': '#41b8ee',
-          'Medisch ondersteunend': '#00273e',
-          'moeder en kind': '#db2777',
-          'paramedische zorg': '#a4c047',
-          'Inkoop & Logistiek': '#0f766e',
-          'Veiligheid & Ontvangst': '#d97706',
-          'fsp & catering': '#b45309',
-          'patientenvoeding': '#15803d',
-          'schoonmaak': '#0369a1',
-          'hospitality': '#be185d',
-          'Fac Services alg': '#4b5563',
-          'nvt': '#9333ea'
-        };
-
-        if (colors[careCluster]) {
-          backgroundColor = colors[careCluster];
-        }
-
-        node.style({
-          'background-color': backgroundColor,
-          'opacity': 1,
-          'border-width': '2px',
-          'border-color': '#ffffff',
-          'label': this.showLabels ? node.data('label') : '',
-          'font-size': '14px',
-          'text-opacity': this.showLabels ? 1 : 0
-        });
-      });
-
-      // Reset all edges
-      this.cy.edges().style({
-        'opacity': 1,
-        'line-color': '#6b7280',
-        'target-arrow-color': '#6b7280',
-        'width': 3,
-        'z-index': 10
-      });
+      this.resetSelectionAndStyles();
 
       // Reset zoom and fit
       this.cy.fit();
@@ -761,7 +714,37 @@ export class Explore implements OnInit, AfterViewInit {
     }
   }
 
-  // Add new methods
+  private resetSelectionAndStyles(): void {
+    // Remove selected class from all nodes
+    this.cy.nodes().removeClass('selected');
+
+    // Clear selection
+    this.selectedNode = null;
+    this.selectedNodePaths = [];
+    this.selectedNodeIncomingPaths = [];
+
+    // Reset all nodes to be visible with proper colors based on their care cluster
+    this.cy.nodes().forEach((node: any) => {
+      const careCluster = node.data('careCluster');
+      const backgroundColor = CLUSTER_COLORS[careCluster] || DEFAULT_CLUSTER_COLOR;
+
+      node.style({
+        'background-color': backgroundColor,
+        'display': 'element',
+        'opacity': 1,
+        'border-width': '2px',
+        'border-color': '#ffffff',
+        'z-index': 1,
+        'label': this.showLabels ? node.data('label') : '',
+        'font-size': '14px',
+        'text-opacity': this.showLabels ? 1 : 0
+      });
+    });
+
+    // Reset all edges to the subtle overview styling
+    this.cy.edges().style(SUBTLE_EDGE_STYLE);
+  }
+
   onSearch(event: any) {
     const query = this.searchQuery.toLowerCase();
     if (query.length < 2) {
@@ -780,9 +763,28 @@ export class Explore implements OnInit, AfterViewInit {
     return this.careerData.find(node => node.id === nodeId)?.label || nodeId;
   }
 
+  getNodeById(nodeId: string): NodeData | undefined {
+    return this.careerData.find(node => node.id === nodeId);
+  }
+
+  getClusterColor(cluster?: string): string {
+    return (cluster && CLUSTER_COLORS[cluster]) || DEFAULT_CLUSTER_COLOR;
+  }
+
+  get activeFilterCount(): number {
+    return [
+      this.selectedDepartment,
+      this.selectedSalaryLevel,
+      this.selectedCareType,
+      this.selectedCareCluster
+    ].filter(Boolean).length;
+  }
+
   updateSelectedNodePaths(nodeId: string) {
-    // Find all possible career paths from this node
+    // Outgoing: where you can go from this node
     this.selectedNodePaths = this.careerPaths.filter(path => path.from === nodeId);
+    // Incoming: from which functions you can grow into this node
+    this.selectedNodeIncomingPaths = this.careerPaths.filter(path => path.to === nodeId);
   }
 
   selectNodeById(nodeId: string) {
@@ -793,46 +795,19 @@ export class Explore implements OnInit, AfterViewInit {
       node.trigger('tap');
 
       this.scrollToDetails();
-
-      // Use setTimeout to ensure zoom happens after tap event completes
-      if (false) setTimeout(() => {
-        // Get outgoing edges and their target nodes for better zoom
-        const outgoingEdges = node.outgoers('edge');
-        const outgoingNodes = outgoingEdges.targets();
-
-        // Create collection of selected node + all outgoing nodes
-        const nodesToFit = node.union(outgoingNodes);
-
-        // Animate the zoom for smoother transition
-        this.cy.animate({
-          fit: {
-            eles: nodesToFit,
-            padding: 30
-          },
-          duration: 400,
-          easing: 'ease-out'
-        });
-
-        // Update zoom level display after animation
-        setTimeout(() => {
-          this.updateZoomLevel();
-        }, 450);
-      }, 50);
     }
   }
 
   // Filter nodes based on selected department and salary
 
   applyFilters() {
-    // Reset all nodes to fully visible first
+    // Reset all nodes and edges to fully visible first
     this.cy.nodes().style({
       'opacity': 1,
-      'display': 'element'
+      'display': 'element',
+      'z-index': 1
     });
-    this.cy.edges().style({
-      'opacity': 1,
-      'z-index': 10
-    });
+    this.cy.edges().style(SUBTLE_EDGE_STYLE);
 
     // Apply department filter
     if (this.selectedDepartment) {
@@ -888,27 +863,46 @@ export class Explore implements OnInit, AfterViewInit {
     }
   }
 
+  toggleClusterFilter(cluster: string) {
+    this.selectedCareCluster = this.selectedCareCluster === cluster ? '' : cluster;
+    this.applyFilters();
+  }
+
   resetFilters() {
     this.selectedDepartment = '';
     this.selectedSalaryLevel = '';
     this.selectedCareType = '';
     this.selectedCareCluster = '';
     this.cy.nodes().style({ 'display': 'element' });
-    this.cy.fit();
+    this.applyFilters();
   }
 
   toggleFilters() {
     this.showFilters = !this.showFilters;
   }
 
-  // Add new method to handle layout changes
+  // Handle layout changes: always reset selection and view for a clean start
   changeLayout(event: Event) {
     const select = event.target as HTMLSelectElement;
     const layoutName = select.value;
 
-    // Note: Removed position restoration for breadthfirst to allow proper hierarchical layout
+    // A new layout re-positions everything, so forget saved focus positions
+    this.focusSavedPositions.clear();
+    this.resetSelectionAndStyles();
 
     const layoutOptions: any = {
+      grid: {
+        name: 'grid',
+        avoidOverlap: true,
+        spacingFactor: 1.2,
+        sort: this.clusterGridSort
+      },
+      dagre: {
+        name: 'dagre',
+        rankDir: 'LR',
+        nodeSep: 30,
+        rankSep: 130
+      },
       breadthfirst: {
         name: 'breadthfirst',
         directed: true,
@@ -917,31 +911,10 @@ export class Explore implements OnInit, AfterViewInit {
         circle: false,
         grid: false,
         roots: undefined,  // Auto-detect roots
-        maximal: false,
-        animate: true
-      },
-      circle: {
-        name: 'circle',
-        spacingFactor: 1.2,  // Reduced from 1.5
-        avoidOverlap: true,
-      },
-      concentric: {
-        name: 'concentric',
-        minNodeSpacing: 80,  // Reduced from 100
-        avoidOverlap: true,
-      },
-      grid: {
-        name: 'grid',
-        avoidOverlap: true,
-        spacingFactor: 1.3,  // Reduced from 1.8
-      },
-      random: {
-        name: 'random',
-        avoidOverlap: true,
+        maximal: false
       },
       cose: {
         name: 'cose',
-        animate: true,
         nodeRepulsion: 8000,
         idealEdgeLength: 100,
         edgeElasticity: 100,
@@ -954,31 +927,18 @@ export class Explore implements OnInit, AfterViewInit {
       }
     };
 
-    // Common options for all layouts
-    const commonOptions = {
+    const layout = this.cy.layout({
+      ...layoutOptions[layoutName],
       animate: true,
       animationDuration: 500,
-      padding: 80,
+      padding: 60,
       fit: true
-    };
-
-    // Store current zoom and pan before layout
-    const currentZoom = this.cy.zoom();
-    const currentPan = this.cy.pan();
-
-    // Disable auto-fit to prevent node resizing (except for breadthfirst which needs it)
-    const layoutConfig = {
-      ...layoutOptions[layoutName],
-      ...commonOptions,
-      fit: layoutName === 'breadthfirst' ? true : false  // breadthfirst needs fit to work properly
-    };
-
-    const layout = this.cy.layout(layoutConfig);
+    });
 
     // Run the layout
     layout.run();
 
-    // When layout completes, restore node styles, zoom, and pan
+    // When layout completes, restore node styles
     layout.one('layoutstop', () => {
       // Force re-apply node dimensions and font sizes
       this.cy.nodes().forEach((node: any) => {
@@ -991,13 +951,21 @@ export class Explore implements OnInit, AfterViewInit {
         });
       });
 
-      // Restore the original zoom and pan instead of fitting
-      this.cy.zoom(currentZoom);
-      this.cy.pan(currentPan);
-
       // Update zoom level display
       this.updateZoomLevel();
     });
+  }
+
+  // Toggle incoming paths in the focus view; re-applies the current selection
+  toggleIncomingPaths() {
+    this.showIncomingPaths = !this.showIncomingPaths;
+
+    if (this.selectedNode && this.cy) {
+      const cyNode = this.cy.getElementById(this.selectedNode.id);
+      if (cyNode && cyNode.length) {
+        cyNode.trigger('tap');
+      }
+    }
   }
 
   // Toggle node labels visibility
@@ -1036,6 +1004,11 @@ export class Explore implements OnInit, AfterViewInit {
   }
 
   private setupKeyboardShortcuts() {
+    if (this.keyboardShortcutsInitialized) {
+      return;
+    }
+    this.keyboardShortcutsInitialized = true;
+
     window.addEventListener('keydown', (event: KeyboardEvent) => {
       // Only handle shortcuts when not typing in an input
       if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {

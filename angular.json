@@ -33,6 +33,10 @@
             ],
             "styles": [
               "src/styles.css"
+            ],
+            "allowedCommonJsDependencies": [
+              "cytoscape-dagre",
+              "dagre"
             ]
           },
           "configurations": {
