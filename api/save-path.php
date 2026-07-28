@@ -20,23 +20,34 @@ if (!$input || empty($input['from']) || empty($input['to']) || empty($input['fam
 $from = trim($input['from']);
 $to = trim($input['to']);
 $family = trim($input['family']);
+// Target may live in another family (cross-family step); defaults to the same family
+$toFamily = !empty($input['toFamily']) ? trim($input['toFamily']) : $family;
 $timeframe = isset($input['timeframe']) ? trim($input['timeframe']) : '';
 
 try {
-    // 1. Verify that both from and to nodes exist in the nodes table
+    // 1. Verify that both nodes exist, each in their own family
     $checkStmt = $pdo->prepare("SELECT COUNT(*) FROM nodes WHERE id = ? AND family = ?");
-    
+
     $checkStmt->execute([$from, $family]);
     $fromExists = $checkStmt->fetchColumn() > 0;
 
-    $checkStmt->execute([$to, $family]);
+    $checkStmt->execute([$to, $toFamily]);
     $toExists = $checkStmt->fetchColumn() > 0;
 
-    if (!$fromExists || !$toExists) {
+    if (!$fromExists) {
         http_response_code(400);
         echo json_encode([
             'error' => 'Bad Request',
-            'message' => "Both source node ($from) and target node ($to) must exist in the family '$family' database."
+            'message' => "Source node ($from) must exist in the family '$family' database."
+        ]);
+        exit(0);
+    }
+
+    if (!$toExists) {
+        http_response_code(400);
+        echo json_encode([
+            'error' => 'Bad Request',
+            'message' => "Target node ($to) must exist in the family '$toFamily' database."
         ]);
         exit(0);
     }

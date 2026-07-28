@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
-import { RouterLink, ActivatedRoute } from '@angular/router';
+import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import cytoscape from 'cytoscape';
 import dagre from 'cytoscape-dagre';
@@ -25,6 +25,11 @@ const CLUSTER_COLORS: Record<string, string> = {
 };
 const DEFAULT_CLUSTER_COLOR = '#9333ea';
 
+// Display names for clusters whose stored value is internal jargon
+const CLUSTER_LABELS: Record<string, string> = {
+  'nvt': 'Basisfuncties'
+};
+
 // Subtle edge styling for the overview: with this many cross-references the
 // lines are only a hint; they light up (green/blue) once a node is selected
 const SUBTLE_EDGE_STYLE = {
@@ -35,8 +40,17 @@ const SUBTLE_EDGE_STYLE = {
   'z-index': 10
 };
 
+// Accent for steps that lead into the other career family
+const CROSS_FAMILY_COLOR = '#a855f7';
+
+const FAMILY_LABELS: Record<string, string> = {
+  care: 'Zorg',
+  facility: 'Facilitair'
+};
+
 export interface LegendItem {
-  name: string;
+  name: string;  // stored value, used for filtering
+  label: string; // what the employee reads
   color: string;
 }
 
@@ -58,14 +72,23 @@ export class Explore implements OnInit, AfterViewInit {
   searchResults: NodeData[] = [];
   selectedNodePaths: CareerPath[] = [];
   selectedNodeIncomingPaths: CareerPath[] = [];
+  selectedNodeCrossFamilyPaths: CareerPath[] = [];
+
+  // Sidebar list sections: collapsed on desktop for calm, open on mobile
+  // (mobile has no graph, so the lists are the only way to navigate)
+  private isMobileView = typeof window !== 'undefined' && window.innerWidth < 768;
+  showOutgoingList = this.isMobileView;
+  showIncomingList = this.isMobileView;
+
+  // Bumped on every new selection to retrigger the details attention animation
+  detailsPulse = 0;
+  linkCopied = false;
 
   // Filter properties
   departments: string[] = [];
   selectedDepartment: string = '';
   salaryLevels: string[] = [];
   selectedSalaryLevel: string = '';
-  careTypes: string[] = [];
-  selectedCareType: string = '';
   careClusters: string[] = [];
   selectedCareCluster: string = '';
 
@@ -150,7 +173,10 @@ export class Explore implements OnInit, AfterViewInit {
         return;
       }
       cy.resize();
-      cy.layout({
+      // Foreign nodes are excluded from the overview, so they must not take up
+      // a grid cell either
+      cy.nodes('[isForeign]').style({ 'display': 'none' });
+      cy.nodes('[!isForeign]').layout({
         name: 'grid',
         spacingFactor: 1.2,
         avoidOverlap: true,
@@ -160,12 +186,17 @@ export class Explore implements OnInit, AfterViewInit {
         sort: this.clusterGridSort
       } as any).run();
       this.updateZoomLevel();
+      this.applyPendingSelection();
     };
 
     if (container.clientWidth > 0 && container.clientHeight > 0) {
       runLayout();
       return;
     }
+
+    // On mobile the graph pane is hidden altogether, so the observer would
+    // never fire; a deep link must still open its function in the sidebar
+    this.applyPendingSelection();
 
     const observer = new ResizeObserver(() => {
       if (container.clientWidth > 0 && container.clientHeight > 0) {
@@ -188,7 +219,8 @@ export class Explore implements OnInit, AfterViewInit {
 
   constructor(
     private dataService: CareerDataService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     // data will be loaded in ngOnInit; departments and salaryLevels are populated after load
   }
@@ -254,17 +286,53 @@ export class Explore implements OnInit, AfterViewInit {
   // Data will be loaded from the assets via CareerDataService
   private careerData: NodeData[] = [];
   private careerPaths: CareerPath[] = [];
+  private foreignNodeIds = new Set<string>();
+  private loadedFamily: string | null = null;
+  private pendingNodeId = '';
+
+  isForeignNode(node?: NodeData | null): boolean {
+    return !!node && !!node.family && node.family !== this.currentFamily;
+  }
+
+  getFamilyLabel(family?: string): string {
+    return FAMILY_LABELS[family || ''] || family || '';
+  }
+
+  get otherFamilyLabel(): string {
+    return this.getFamilyLabel(this.currentFamily === 'care' ? 'facility' : 'care');
+  }
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
-      this.currentFamily = params['family'] === 'facility' ? 'facility' : 'care';
-      // Reset data and reload
-      this.careerData = [];
-      this.careerPaths = [];
-      if (this.cy) {
-        this.cy.destroy(); // Optional: destroy existing graph to prevent conflicts
+      const family = params['family'] === 'facility' ? 'facility' : 'care';
+      const nodeId = params['node'] || '';
+
+      // Only rebuild the graph when the family actually changes; selecting a
+      // node rewrites the URL too and must not trigger a full reload
+      if (family !== this.loadedFamily) {
+        this.currentFamily = family;
+        this.loadedFamily = family;
+        this.pendingNodeId = nodeId;
+        this.careerData = [];
+        this.careerPaths = [];
+        this.navigationHistory = [];
+        this.selectedNode = null;
+        if (this.cy) {
+          this.cy.destroy(); // Destroy existing graph to prevent conflicts
+          this.cy = null;
+        }
+        this.loadCareerData();
+        return;
       }
-      this.loadCareerData();
+
+      // Same family: apply a deep link to a node we are not showing yet
+      if (nodeId && nodeId !== this.selectedNode?.id) {
+        if (this.cy) {
+          this.selectNodeById(nodeId);
+        } else {
+          this.pendingNodeId = nodeId;
+        }
+      }
     });
   }
 
@@ -275,15 +343,22 @@ export class Explore implements OnInit, AfterViewInit {
         this.careerData = data.nodes || [];
         this.careerPaths = data.paths || [];
 
+        // Nodes from another family are only reachable as a cross-family step;
+        // they stay out of the overview, the filters and the search
+        this.foreignNodeIds = new Set(
+          this.careerData.filter(node => this.isForeignNode(node)).map(node => node.id)
+        );
+        const ownNodes = this.careerData.filter(node => !this.foreignNodeIds.has(node.id));
+
         // Populate filters
-        this.departments = [...new Set(this.careerData.map(node => node.department))].sort();
-        this.salaryLevels = [...new Set(this.careerData.map(node => node.salary))].sort();
-        this.careTypes = [...new Set(this.careerData.map(node => node.careNonCare).filter(Boolean) as string[])].sort();
-        this.careClusters = [...new Set(this.careerData.map(node => node.careCluster).filter(Boolean) as string[])].sort();
+        this.departments = [...new Set(ownNodes.map(node => node.department))].sort();
+        this.salaryLevels = [...new Set(ownNodes.map(node => node.salary))].sort();
+        this.careClusters = [...new Set(ownNodes.map(node => node.careCluster).filter(Boolean) as string[])].sort();
 
         // Legend: only the clusters that actually occur in this family
         this.legendItems = this.careClusters.map(name => ({
           name,
+          label: this.getClusterLabel(name),
           color: CLUSTER_COLORS[name] || DEFAULT_CLUSTER_COLOR
         }));
 
@@ -321,7 +396,8 @@ export class Explore implements OnInit, AfterViewInit {
           level: node.level,
           salary: node.salary,
           careCluster: node.careCluster || 'nvt', // Add care cluster to node data
-          isRole: node.isRole || undefined
+          isRole: node.isRole || undefined,
+          isForeign: this.foreignNodeIds.has(node.id) || undefined
         }
       })),
       ...this.careerPaths
@@ -338,7 +414,8 @@ export class Explore implements OnInit, AfterViewInit {
               source: path.from,
               target: path.to,
               timeframe: path.timeframe,
-              isToRole: isToRole || undefined
+              isToRole: isToRole || undefined,
+              isCrossFamily: this.foreignNodeIds.has(path.to) || undefined
             }
           };
         })
@@ -395,6 +472,16 @@ export class Explore implements OnInit, AfterViewInit {
             'font-size': '13px'
           }
         },
+        // Nodes from the other career family: dashed violet border marks them
+        // as a doorway rather than a step inside this family
+        {
+          selector: 'node[isForeign]',
+          style: {
+            'border-color': CROSS_FAMILY_COLOR,
+            'border-width': '5px',
+            'border-style': 'dashed'
+          }
+        },
         {
           selector: 'node:selected',
           style: {
@@ -431,8 +518,6 @@ export class Explore implements OnInit, AfterViewInit {
       maxZoom: 3,
       zoom: 1
     });
-
-    this.runOverviewLayoutWhenVisible();
 
     // Custom zoom handler
     const zoomStep = 0.1;
@@ -547,6 +632,12 @@ export class Explore implements OnInit, AfterViewInit {
       const nodeId = event.target.id();
       const node = event.target;
 
+      // Clicking a node of the other family jumps to that family's graph
+      if (this.foreignNodeIds.has(nodeId)) {
+        this.openInOtherFamily(nodeId);
+        return;
+      }
+
       // Remove selected class from all nodes
       this.cy.nodes().removeClass('selected');
       // Add selected class to clicked node
@@ -557,6 +648,7 @@ export class Explore implements OnInit, AfterViewInit {
       // Add to navigation history
       if (this.selectedNode) {
         this.addToHistory(this.selectedNode);
+        this.announceSelection(nodeId);
       }
 
       this.updateSelectedNodePaths(nodeId);
@@ -621,6 +713,16 @@ export class Explore implements OnInit, AfterViewInit {
         'z-index': 25
       });
 
+      // Steps into the other family get their own violet, dashed styling
+      outgoingEdges.filter('[isCrossFamily]').style({
+        'line-color': CROSS_FAMILY_COLOR,
+        'target-arrow-color': CROSS_FAMILY_COLOR,
+        'line-style': 'dashed',
+        'width': 4,
+        'opacity': 1,
+        'z-index': 22
+      });
+
       // Make selected node stand out prominently
       node.style({
         'display': 'element',
@@ -669,6 +771,10 @@ export class Explore implements OnInit, AfterViewInit {
     this.cy.on('viewport', () => {
       this.showTooltip = false;
     });
+
+    // Last: the overview layout also applies a deep-linked selection, which
+    // needs the tap handler above to be registered
+    this.runOverviewLayoutWhenVisible();
   }
 
   selectSearchResult(node: NodeData) {
@@ -708,8 +814,8 @@ export class Explore implements OnInit, AfterViewInit {
 
       this.resetSelectionAndStyles();
 
-      // Reset zoom and fit
-      this.cy.fit();
+      // Reset zoom and fit to the nodes that are actually shown
+      this.cy.fit(this.cy.nodes('[!isForeign]'));
       this.updateZoomLevel();
     }
   }
@@ -728,12 +834,16 @@ export class Explore implements OnInit, AfterViewInit {
       const careCluster = node.data('careCluster');
       const backgroundColor = CLUSTER_COLORS[careCluster] || DEFAULT_CLUSTER_COLOR;
 
+      const isForeign = node.data('isForeign');
+
       node.style({
         'background-color': backgroundColor,
-        'display': 'element',
+        // Nodes of the other family stay out of the overview; they only
+        // surface in the focus view of a node that links to them
+        'display': isForeign ? 'none' : 'element',
         'opacity': 1,
-        'border-width': '2px',
-        'border-color': '#ffffff',
+        'border-width': isForeign ? '5px' : '2px',
+        'border-color': isForeign ? CROSS_FAMILY_COLOR : '#ffffff',
         'z-index': 1,
         'label': this.showLabels ? node.data('label') : '',
         'font-size': '14px',
@@ -754,8 +864,9 @@ export class Explore implements OnInit, AfterViewInit {
 
     this.showWelcome = false; // Hide welcome screen when searching
     this.searchResults = this.careerData.filter(node =>
-      node.label.toLowerCase().includes(query) ||
-      node.department.toLowerCase().includes(query)
+      !this.foreignNodeIds.has(node.id) &&
+      (node.label.toLowerCase().includes(query) ||
+        node.department.toLowerCase().includes(query))
     ).slice(0, 5); // Limit to 5 results
   }
 
@@ -771,20 +882,84 @@ export class Explore implements OnInit, AfterViewInit {
     return (cluster && CLUSTER_COLORS[cluster]) || DEFAULT_CLUSTER_COLOR;
   }
 
+  getClusterLabel(cluster?: string): string {
+    return (cluster && CLUSTER_LABELS[cluster]) || cluster || '';
+  }
+
   get activeFilterCount(): number {
     return [
       this.selectedDepartment,
       this.selectedSalaryLevel,
-      this.selectedCareType,
       this.selectedCareCluster
     ].filter(Boolean).length;
   }
 
   updateSelectedNodePaths(nodeId: string) {
-    // Outgoing: where you can go from this node
-    this.selectedNodePaths = this.careerPaths.filter(path => path.from === nodeId);
+    const outgoing = this.careerPaths.filter(path => path.from === nodeId);
+
+    // Steps into the other family are listed separately, as a deliberate switch
+    this.selectedNodeCrossFamilyPaths = outgoing.filter(path => this.foreignNodeIds.has(path.to));
+    // Outgoing: where you can go from this node inside this family
+    this.selectedNodePaths = outgoing.filter(path => !this.foreignNodeIds.has(path.to));
     // Incoming: from which functions you can grow into this node
     this.selectedNodeIncomingPaths = this.careerPaths.filter(path => path.to === nodeId);
+  }
+
+  // Bump the attention animation and keep the URL in sync so every function
+  // has its own shareable address
+  private announceSelection(nodeId: string) {
+    this.detailsPulse++;
+    this.linkCopied = false;
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { family: this.currentFamily, node: nodeId },
+      replaceUrl: true
+    });
+  }
+
+  // Jump to the same node in the family it actually belongs to
+  openInOtherFamily(nodeId: string) {
+    const target = this.careerData.find(n => n.id === nodeId);
+    if (!target?.family) {
+      return;
+    }
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { family: target.family, node: nodeId }
+    });
+  }
+
+  private applyPendingSelection() {
+    const nodeId = this.pendingNodeId;
+    this.pendingNodeId = '';
+
+    if (!nodeId || !this.cy) {
+      return;
+    }
+
+    const node = this.cy.getElementById(nodeId);
+    if (node && node.length) {
+      this.showWelcome = false;
+      node.trigger('tap');
+    }
+  }
+
+  copyNodeLink() {
+    if (!this.selectedNode) {
+      return;
+    }
+
+    const url = `${window.location.origin}${window.location.pathname}` +
+      `?family=${this.currentFamily}&node=${encodeURIComponent(this.selectedNode.id)}`;
+
+    navigator.clipboard?.writeText(url).then(() => {
+      this.linkCopied = true;
+      setTimeout(() => { this.linkCopied = false; }, 2500);
+    }).catch(() => {
+      this.linkCopied = false;
+    });
   }
 
   selectNodeById(nodeId: string) {
@@ -801,12 +976,13 @@ export class Explore implements OnInit, AfterViewInit {
   // Filter nodes based on selected department and salary
 
   applyFilters() {
-    // Reset all nodes and edges to fully visible first
-    this.cy.nodes().style({
+    // Reset all nodes and edges to fully visible first (foreign nodes stay out)
+    this.cy.nodes('[!isForeign]').style({
       'opacity': 1,
       'display': 'element',
       'z-index': 1
     });
+    this.cy.nodes('[isForeign]').style({ 'display': 'none' });
     this.cy.edges().style(SUBTLE_EDGE_STYLE);
 
     // Apply department filter
@@ -823,17 +999,6 @@ export class Explore implements OnInit, AfterViewInit {
       this.cy.nodes().filter((node: any) =>
         node.data('salary') !== this.selectedSalaryLevel
       ).style({ 'opacity': 0.1 });
-    }
-
-    // Apply care type filter
-    if (this.selectedCareType) {
-      this.showWelcome = false;
-      const filteredNodes = this.careerData
-        .filter(node => node.careNonCare !== this.selectedCareType)
-        .map(node => node.id);
-      filteredNodes.forEach(id => {
-        this.cy.getElementById(id).style({ 'opacity': 0.1 });
-      });
     }
 
     // Apply care cluster filter
@@ -859,7 +1024,7 @@ export class Explore implements OnInit, AfterViewInit {
 
     if (!selectedNodeStillVisible) {
       // Fit the view to show visible nodes only if we lost our focus point
-      this.cy.fit();
+      this.cy.fit(this.cy.nodes('[!isForeign]'));
     }
   }
 
@@ -871,9 +1036,7 @@ export class Explore implements OnInit, AfterViewInit {
   resetFilters() {
     this.selectedDepartment = '';
     this.selectedSalaryLevel = '';
-    this.selectedCareType = '';
     this.selectedCareCluster = '';
-    this.cy.nodes().style({ 'display': 'element' });
     this.applyFilters();
   }
 
@@ -927,7 +1090,8 @@ export class Explore implements OnInit, AfterViewInit {
       }
     };
 
-    const layout = this.cy.layout({
+    // Lay out only the nodes of this family; foreign nodes stay hidden
+    const layout = this.cy.nodes('[!isForeign]').layout({
       ...layoutOptions[layoutName],
       animate: true,
       animationDuration: 500,

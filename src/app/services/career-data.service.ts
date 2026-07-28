@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 export interface NodeData {
   id: string;
+  family?: 'care' | 'facility' | string; // family the node belongs to; may differ from the graph being viewed
   label: string;
   department: string;
   level: string;
@@ -66,7 +67,7 @@ export class CareerDataService {
     return this.http.post<any>(`${this.apiBaseUrl}/delete-node.php`, { id, family }, this.getHeaders());
   }
 
-  savePath(path: { from: string; to: string; timeframe: string; family: string }): Observable<any> {
+  savePath(path: { from: string; to: string; timeframe: string; family: string; toFamily?: string }): Observable<any> {
     return this.http.post<any>(`${this.apiBaseUrl}/save-path.php`, path, this.getHeaders());
   }
 

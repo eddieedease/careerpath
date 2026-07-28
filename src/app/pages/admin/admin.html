@@ -213,7 +213,14 @@
                     </td>
                     <td class="p-4 text-gray-400 text-center font-bold">➔</td>
                     <td class="p-4 font-semibold text-gray-900">
-                      <div>{{ getNodeLabel(path.to) }}</div>
+                      <div class="flex items-center gap-2">
+                        <span>{{ getNodeLabel(path.to) }}</span>
+                        @if (isCrossFamilyPath(path)) {
+                          <span class="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-purple-100 text-purple-700 border border-purple-200 whitespace-nowrap">
+                            ⇥ {{ getTargetFamilyLabel(path) }}
+                          </span>
+                        }
+                      </div>
                       <span class="text-[10px] font-mono text-gray-400">{{ path.to }}</span>
                     </td>
                     <td class="p-4 text-gray-600">
@@ -421,6 +428,21 @@
                   <div class="px-3 py-2 text-xs text-gray-400 italic">Geen functies gevonden</div>
                 }
               </div>
+            }
+          </div>
+
+          <!-- Target family -->
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">Loopbaanfamilie van de vervolgstap</label>
+            <select [(ngModel)]="pathForm.toFamily" (change)="onToFamilyChange()"
+                    class="w-full px-3 py-2 border rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option [value]="currentFamily">{{ getFamilyLabel(currentFamily) }} (zelfde familie)</option>
+              <option [value]="otherFamily">{{ getFamilyLabel(otherFamily) }} (overstap naar andere familie)</option>
+            </select>
+            @if (pathForm.toFamily === otherFamily) {
+              <p class="mt-1 text-[11px] text-purple-700 bg-purple-50 border border-purple-200 rounded px-2 py-1">
+                Deze stap verschijnt bij de medewerker als een overstap naar {{ getFamilyLabel(otherFamily) }}.
+              </p>
             }
           </div>
 

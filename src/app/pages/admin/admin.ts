@@ -13,6 +13,7 @@ import { CareerDataService, NodeData, CareerPath } from '../../services/career-d
 export class Admin implements OnInit {
   currentFamily: 'care' | 'facility' = 'care';
   nodes: NodeData[] = [];
+  allNodes: NodeData[] = []; // includes cross-family targets, for label lookups
   paths: CareerPath[] = [];
   filteredNodes: NodeData[] = [];
   filteredPaths: CareerPath[] = [];
@@ -57,7 +58,8 @@ export class Admin implements OnInit {
   pathForm = {
     from: '',
     to: '',
-    timeframe: ''
+    timeframe: '',
+    toFamily: '' as 'care' | 'facility' | ''
   };
 
   // Typeahead state for paths
@@ -65,6 +67,23 @@ export class Admin implements OnInit {
   toSearch: string = '';
   showFromDropdown: boolean = false;
   showToDropdown: boolean = false;
+
+  // Nodes of the other family, for cross-family steps
+  otherFamilyNodes: NodeData[] = [];
+  private otherFamilyNodesFamily: string = '';
+
+  get otherFamily(): 'care' | 'facility' {
+    return this.currentFamily === 'care' ? 'facility' : 'care';
+  }
+
+  getFamilyLabel(family?: string): string {
+    return family === 'facility' ? 'Facilitair' : family === 'care' ? 'Zorg' : (family || '');
+  }
+
+  // Nodes eligible as target: own family, or the other family when chosen
+  get targetNodes(): NodeData[] {
+    return this.pathForm.toFamily === this.otherFamily ? this.otherFamilyNodes : this.nodes;
+  }
 
   get filteredFromNodes(): NodeData[] {
     const query = this.fromSearch.toLowerCase().trim();
@@ -77,11 +96,21 @@ export class Admin implements OnInit {
 
   get filteredToNodes(): NodeData[] {
     const query = this.toSearch.toLowerCase().trim();
-    if (!query) return this.nodes;
-    return this.nodes.filter(n =>
+    if (!query) return this.targetNodes;
+    return this.targetNodes.filter(n =>
       n.label.toLowerCase().includes(query) ||
       n.id.toLowerCase().includes(query)
     );
+  }
+
+  // A path is cross-family when its target node is not part of this family
+  isCrossFamilyPath(path: CareerPath): boolean {
+    const target = this.allNodes.find(n => n.id === path.to);
+    return !!target?.family && target.family !== this.currentFamily;
+  }
+
+  getTargetFamilyLabel(path: CareerPath): string {
+    return this.getFamilyLabel(this.allNodes.find(n => n.id === path.to)?.family);
   }
 
   constructor(private dataService: CareerDataService) {}
@@ -160,7 +189,11 @@ export class Admin implements OnInit {
     this.clearMessages();
     this.dataService.getCareerData(this.currentFamily).subscribe({
       next: (data) => {
-        this.nodes = data.nodes || [];
+        const returned = data.nodes || [];
+        // Cross-family targets ride along in the response; keep them for label
+        // lookups but out of this family's own node list
+        this.allNodes = returned;
+        this.nodes = returned.filter(n => !n.family || n.family === this.currentFamily);
         this.paths = data.paths || [];
         this.applySearch();
         this.applyPathSearch();
@@ -321,13 +354,33 @@ export class Admin implements OnInit {
     this.pathForm = {
       from: '',
       to: '',
-      timeframe: ''
+      timeframe: '',
+      toFamily: this.currentFamily
     };
     this.fromSearch = '';
     this.toSearch = '';
     this.showFromDropdown = false;
     this.showToDropdown = false;
     this.showPathModal = true;
+
+    // Load the other family's nodes so a cross-family target can be picked
+    if (this.otherFamilyNodes.length === 0 || this.otherFamilyNodesFamily !== this.otherFamily) {
+      const target = this.otherFamily;
+      this.dataService.getCareerData(target).subscribe({
+        next: (data) => {
+          this.otherFamilyNodes = (data.nodes || []).filter(n => !n.family || n.family === target);
+          this.otherFamilyNodesFamily = target;
+        },
+        error: (err) => console.error('Failed to load other family nodes', err)
+      });
+    }
+  }
+
+  onToFamilyChange() {
+    // Switching family invalidates the chosen target
+    this.pathForm.to = '';
+    this.toSearch = '';
+    this.showToDropdown = false;
   }
 
   selectFromNode(node: NodeData) {
@@ -357,7 +410,7 @@ export class Admin implements OnInit {
   closeToDropdown() {
     setTimeout(() => {
       this.showToDropdown = false;
-      const selected = this.nodes.find(n => n.id === this.pathForm.to);
+      const selected = this.targetNodes.find(n => n.id === this.pathForm.to);
       if (selected) {
         this.toSearch = selected.label;
       } else {
@@ -396,8 +449,11 @@ export class Admin implements OnInit {
     }
 
     const payload = {
-      ...this.pathForm,
-      family: this.currentFamily
+      from: this.pathForm.from,
+      to: this.pathForm.to,
+      timeframe: this.pathForm.timeframe,
+      family: this.currentFamily,
+      toFamily: this.pathForm.toFamily || this.currentFamily
     };
 
     this.dataService.savePath(payload).subscribe({
@@ -440,6 +496,6 @@ export class Admin implements OnInit {
   }
 
   getNodeLabel(id: string): string {
-    return this.nodes.find(n => n.id === id)?.label || id;
+    return this.allNodes.find(n => n.id === id)?.label || id;
   }
 }

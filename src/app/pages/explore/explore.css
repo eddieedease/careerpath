@@ -14,6 +14,58 @@
   }
 }
 
+/* Draw the eye to the details panel whenever another function is selected.
+   The panel element is reused between selections, so a single animation would
+   only ever run once; alternating two identical animations restarts it. */
+.details-attention-a {
+  animation: detailsAttentionA 1.1s ease-out;
+}
+
+.details-attention-b {
+  animation: detailsAttentionB 1.1s ease-out;
+}
+
+@keyframes detailsAttentionA {
+  0% {
+    transform: translateY(-4px);
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.55);
+    background-color: #dbeafe;
+  }
+  35% {
+    transform: translateY(0);
+    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+    background-color: #dbeafe;
+  }
+  100% {
+    transform: translateY(0);
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
+}
+
+@keyframes detailsAttentionB {
+  0% {
+    transform: translateY(-4px);
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.55);
+    background-color: #dbeafe;
+  }
+  35% {
+    transform: translateY(0);
+    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+    background-color: #dbeafe;
+  }
+  100% {
+    transform: translateY(0);
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .details-attention-a,
+  .details-attention-b {
+    animation-duration: 0.01ms;
+  }
+}
+
 /* Graph container cursor */
 .cytoscape-container {
   cursor: grab;
