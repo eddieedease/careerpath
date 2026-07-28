@@ -1,4 +1,18 @@
 <?php
+// DESTRUCTIVE: this script drops and rebuilds the nodes and paths tables.
+// db.php only checks the admin password on non-GET requests, so a plain
+// browser GET would wipe the database. Require POST; db.php then enforces
+// the password for us.
+if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header('Content-Type: application/json');
+    http_response_code(405);
+    echo json_encode([
+        'error' => 'Method not allowed',
+        'message' => 'De migratie kan alleen via POST met een geldig beheerderswachtwoord worden gestart.'
+    ]);
+    exit(0);
+}
+
 require_once 'db.php';
 
 header('Content-Type: application/json');

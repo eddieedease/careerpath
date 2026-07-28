@@ -28,7 +28,12 @@
               {
                 "glob": "**/*",
                 "input": "api",
-                "output": "/api"
+                "output": "/api",
+                "ignore": [
+                  "migrate.php",
+                  "Dockerfile",
+                  "json_data/**"
+                ]
               }
             ],
             "styles": [
@@ -96,7 +101,12 @@
               {
                 "glob": "**/*",
                 "input": "api",
-                "output": "/api"
+                "output": "/api",
+                "ignore": [
+                  "migrate.php",
+                  "Dockerfile",
+                  "json_data/**"
+                ]
               }
             ],
             "styles": [
