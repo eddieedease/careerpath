@@ -248,10 +248,10 @@
           @if (selectedNodePaths.length > 0) {
           <div class="border border-gray-200 rounded-lg overflow-hidden">
             <button (click)="showOutgoingList = !showOutgoingList"
-              class="w-full flex items-center justify-between gap-2 px-3 py-2.5 bg-gray-50 hover:bg-green-50 transition-colors cursor-pointer">
+              class="w-full flex items-center justify-between gap-2 px-3 py-2.5 bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer">
               <span class="font-medium text-gray-800 flex items-center gap-1.5">
-                <span class="text-green-600 font-bold">→</span> Loopbaanmogelijkheden
-                <span class="inline-flex items-center justify-center min-w-5 h-5 px-1.5 text-xs font-bold text-white bg-green-600 rounded-full">
+                <span class="text-gray-600 font-bold">→</span> Loopbaanmogelijkheden
+                <span class="inline-flex items-center justify-center min-w-5 h-5 px-1.5 text-xs font-bold text-white bg-gray-600 rounded-full">
                   {{ selectedNodePaths.length }}
                 </span>
               </span>
@@ -264,7 +264,7 @@
             <div class="space-y-3 p-3">
               @for (path of selectedNodePaths; track path.to) {
               <div (click)="selectNodeById(path.to)"
-                class="bg-gray-50 p-3 rounded-lg text-sm cursor-pointer hover:bg-green-50 border border-transparent hover:border-green-300 transition-colors">
+                class="bg-gray-50 p-3 rounded-lg text-sm cursor-pointer hover:bg-white border border-transparent hover:border-gray-400 transition-colors">
                 <div class="flex items-center justify-between gap-2 mb-1">
                   <span class="font-medium text-blue-600 flex items-center gap-2 min-w-0">
                     <span class="w-2.5 h-2.5 rounded-full shrink-0"
@@ -332,10 +332,10 @@
           @if (selectedNodeIncomingPaths.length > 0) {
           <div class="border border-gray-200 rounded-lg overflow-hidden">
             <button (click)="showIncomingList = !showIncomingList"
-              class="w-full flex items-center justify-between gap-2 px-3 py-2.5 bg-gray-50 hover:bg-blue-50 transition-colors cursor-pointer">
+              class="w-full flex items-center justify-between gap-2 px-3 py-2.5 bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer">
               <span class="font-medium text-gray-800 flex items-center gap-1.5">
-                <span class="text-blue-600 font-bold">→</span> Instroom vanuit
-                <span class="inline-flex items-center justify-center min-w-5 h-5 px-1.5 text-xs font-bold text-white bg-blue-600 rounded-full">
+                <span class="text-gray-400 font-bold">→</span> Instroom vanuit
+                <span class="inline-flex items-center justify-center min-w-5 h-5 px-1.5 text-xs font-bold text-white bg-gray-400 rounded-full">
                   {{ selectedNodeIncomingPaths.length }}
                 </span>
               </span>
@@ -352,7 +352,7 @@
               </button>
               @for (path of selectedNodeIncomingPaths; track path.from) {
               <div (click)="selectNodeById(path.from)"
-                class="bg-gray-50 p-3 rounded-lg text-sm cursor-pointer hover:bg-blue-50 border border-transparent hover:border-blue-300 transition-colors">
+                class="bg-gray-50 p-3 rounded-lg text-sm cursor-pointer hover:bg-white border border-transparent hover:border-gray-400 transition-colors">
                 <div class="flex items-center justify-between gap-2 mb-1">
                   <span class="font-medium text-blue-600 flex items-center gap-2 min-w-0">
                     <span class="w-2.5 h-2.5 rounded-full shrink-0"
@@ -397,10 +397,10 @@
         <button (click)="toggleIncomingPaths()"
           class="bg-white shadow-md px-3 py-2 rounded-lg text-sm hover:bg-gray-50 w-full flex items-center justify-center gap-1.5"
           [class.ring-2]="showIncomingPaths" [class.ring-blue-400]="showIncomingPaths"
-          title="Toon ook blauwe pijlen: vanuit welke functies je kunt instromen">
+          title="Toon ook de lichte pijlen: vanuit welke functies je kunt instromen">
           <svg width="16" height="10" class="shrink-0">
-            <line x1="1" y1="5" x2="9" y2="5" stroke="#3b82f6" stroke-width="2" />
-            <polygon points="9,1 15,5 9,9" fill="#3b82f6" />
+            <line x1="1" y1="5" x2="9" y2="5" stroke="#a1a1aa" stroke-width="2" />
+            <polygon points="9,1 15,5 9,9" fill="#a1a1aa" />
           </svg>
           {{ showIncomingPaths ? 'Verberg' : 'Toon' }} Instroom
         </button>
@@ -469,16 +469,16 @@
             </div>
             <div class="flex items-center gap-2">
               <svg width="20" height="10" class="shrink-0">
-                <line x1="1" y1="5" x2="13" y2="5" stroke="#22c55e" stroke-width="2" />
-                <polygon points="13,1 19,5 13,9" fill="#22c55e" />
+                <line x1="1" y1="5" x2="13" y2="5" stroke="#52525b" stroke-width="2.5" />
+                <polygon points="13,1 19,5 13,9" fill="#52525b" />
               </svg>
               <span>Mogelijke vervolgstap</span>
             </div>
             @if (showIncomingPaths) {
             <div class="flex items-center gap-2">
               <svg width="20" height="10" class="shrink-0">
-                <line x1="1" y1="5" x2="13" y2="5" stroke="#3b82f6" stroke-width="2" />
-                <polygon points="13,1 19,5 13,9" fill="#3b82f6" />
+                <line x1="1" y1="5" x2="13" y2="5" stroke="#a1a1aa" stroke-width="2" />
+                <polygon points="13,1 19,5 13,9" fill="#a1a1aa" />
               </svg>
               <span>Instroom</span>
             </div>
@@ -579,8 +579,8 @@
               </li>
               <li class="flex items-start">
                 <span class="text-blue-600 mr-2">3.</span>
-                <span><strong>Volg de groene pijlen</strong>: die laten zien naar welke functies je kunt doorgroeien.
-                  Wil je ook zien waar je vandaan kunt komen? Zet dan <strong>Toon Instroom</strong> aan (blauwe
+                <span><strong>Volg de donkere pijlen</strong>: die laten zien naar welke functies je kunt doorgroeien.
+                  Wil je ook zien waar je vandaan kunt komen? Zet dan <strong>Toon Instroom</strong> aan (lichtgrijze
                   pijlen)</span>
               </li>
             </ul>
@@ -602,15 +602,15 @@
             </div>
             <div class="flex items-center gap-2">
               <svg width="26" height="12" class="shrink-0">
-                <line x1="1" y1="6" x2="18" y2="6" stroke="#22c55e" stroke-width="2.5" />
-                <polygon points="18,1 25,6 18,11" fill="#22c55e" />
+                <line x1="1" y1="6" x2="18" y2="6" stroke="#52525b" stroke-width="3" />
+                <polygon points="18,1 25,6 18,11" fill="#52525b" />
               </svg>
               <span>Mogelijke vervolgstap</span>
             </div>
             <div class="flex items-center gap-2">
               <svg width="26" height="12" class="shrink-0">
-                <line x1="1" y1="6" x2="18" y2="6" stroke="#3b82f6" stroke-width="2.5" />
-                <polygon points="18,1 25,6 18,11" fill="#3b82f6" />
+                <line x1="1" y1="6" x2="18" y2="6" stroke="#a1a1aa" stroke-width="2.5" />
+                <polygon points="18,1 25,6 18,11" fill="#a1a1aa" />
               </svg>
               <span>Instroomroute (optioneel)</span>
             </div>
