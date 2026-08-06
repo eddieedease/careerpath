@@ -37,8 +37,8 @@ const CLUSTER_LABELS: Record<string, string> = {
 // was measured and is worse: it drops colour-blind separation between
 // clusters from dE 8.2 to 2.9, because it strips two of the few
 // well-separated hues out of a palette that already carries 8 categories.)
-const OUTGOING_EDGE_COLOR = '#52525b'; // mid grey: where you can grow to
-const INCOMING_EDGE_COLOR = '#a1a1aa'; // light grey: where you can come from
+const OUTGOING_EDGE_COLOR = '#9ca3af'; // soft grey: where you can grow to
+const INCOMING_EDGE_COLOR = '#cbd5e1'; // lighter grey: where you can come from
 
 // Subtle edge styling for the overview: with this many cross-references the
 // lines are only a hint; they gain weight and contrast once a node is selected
@@ -636,9 +636,10 @@ export class Explore implements OnInit, AfterViewInit {
         this.tooltipPosition = { x, y };
         this.showTooltip = true;
 
-        // Add hover style to node (neutral: hue stays reserved for clusters)
+        // Add hover style to node (neutral: hue stays reserved for clusters).
+        // Darker than the edges on purpose - a hover ring has to register.
         node.style({
-          'border-color': OUTGOING_EDGE_COLOR,
+          'border-color': '#4b5563',
           'border-width': '3px'
         });
       }

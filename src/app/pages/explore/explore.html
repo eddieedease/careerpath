@@ -250,7 +250,7 @@
             <button (click)="showOutgoingList = !showOutgoingList"
               class="w-full flex items-center justify-between gap-2 px-3 py-2.5 bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer">
               <span class="font-medium text-gray-800 flex items-center gap-1.5">
-                <span class="text-gray-600 font-bold">→</span> Loopbaanmogelijkheden
+                <span class="text-gray-500 font-bold">→</span> Loopbaanmogelijkheden
                 <span class="inline-flex items-center justify-center min-w-5 h-5 px-1.5 text-xs font-bold text-white bg-gray-600 rounded-full">
                   {{ selectedNodePaths.length }}
                 </span>
@@ -335,7 +335,7 @@
               class="w-full flex items-center justify-between gap-2 px-3 py-2.5 bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer">
               <span class="font-medium text-gray-800 flex items-center gap-1.5">
                 <span class="text-gray-400 font-bold">→</span> Instroom vanuit
-                <span class="inline-flex items-center justify-center min-w-5 h-5 px-1.5 text-xs font-bold text-white bg-gray-400 rounded-full">
+                <span class="inline-flex items-center justify-center min-w-5 h-5 px-1.5 text-xs font-bold text-white bg-gray-500 rounded-full">
                   {{ selectedNodeIncomingPaths.length }}
                 </span>
               </span>
@@ -399,8 +399,8 @@
           [class.ring-2]="showIncomingPaths" [class.ring-blue-400]="showIncomingPaths"
           title="Toon ook de lichte pijlen: vanuit welke functies je kunt instromen">
           <svg width="16" height="10" class="shrink-0">
-            <line x1="1" y1="5" x2="9" y2="5" stroke="#a1a1aa" stroke-width="2" />
-            <polygon points="9,1 15,5 9,9" fill="#a1a1aa" />
+            <line x1="1" y1="5" x2="9" y2="5" stroke="#cbd5e1" stroke-width="2" />
+            <polygon points="9,1 15,5 9,9" fill="#cbd5e1" />
           </svg>
           {{ showIncomingPaths ? 'Verberg' : 'Toon' }} Instroom
         </button>
@@ -469,16 +469,16 @@
             </div>
             <div class="flex items-center gap-2">
               <svg width="20" height="10" class="shrink-0">
-                <line x1="1" y1="5" x2="13" y2="5" stroke="#52525b" stroke-width="2.5" />
-                <polygon points="13,1 19,5 13,9" fill="#52525b" />
+                <line x1="1" y1="5" x2="13" y2="5" stroke="#9ca3af" stroke-width="2.5" />
+                <polygon points="13,1 19,5 13,9" fill="#9ca3af" />
               </svg>
               <span>Mogelijke vervolgstap</span>
             </div>
             @if (showIncomingPaths) {
             <div class="flex items-center gap-2">
               <svg width="20" height="10" class="shrink-0">
-                <line x1="1" y1="5" x2="13" y2="5" stroke="#a1a1aa" stroke-width="2" />
-                <polygon points="13,1 19,5 13,9" fill="#a1a1aa" />
+                <line x1="1" y1="5" x2="13" y2="5" stroke="#cbd5e1" stroke-width="2" />
+                <polygon points="13,1 19,5 13,9" fill="#cbd5e1" />
               </svg>
               <span>Instroom</span>
             </div>
@@ -579,7 +579,7 @@
               </li>
               <li class="flex items-start">
                 <span class="text-blue-600 mr-2">3.</span>
-                <span><strong>Volg de donkere pijlen</strong>: die laten zien naar welke functies je kunt doorgroeien.
+                <span><strong>Volg de pijlen</strong>: die laten zien naar welke functies je kunt doorgroeien.
                   Wil je ook zien waar je vandaan kunt komen? Zet dan <strong>Toon Instroom</strong> aan (lichtgrijze
                   pijlen)</span>
               </li>
@@ -602,15 +602,15 @@
             </div>
             <div class="flex items-center gap-2">
               <svg width="26" height="12" class="shrink-0">
-                <line x1="1" y1="6" x2="18" y2="6" stroke="#52525b" stroke-width="3" />
-                <polygon points="18,1 25,6 18,11" fill="#52525b" />
+                <line x1="1" y1="6" x2="18" y2="6" stroke="#9ca3af" stroke-width="3" />
+                <polygon points="18,1 25,6 18,11" fill="#9ca3af" />
               </svg>
               <span>Mogelijke vervolgstap</span>
             </div>
             <div class="flex items-center gap-2">
               <svg width="26" height="12" class="shrink-0">
-                <line x1="1" y1="6" x2="18" y2="6" stroke="#a1a1aa" stroke-width="2.5" />
-                <polygon points="18,1 25,6 18,11" fill="#a1a1aa" />
+                <line x1="1" y1="6" x2="18" y2="6" stroke="#cbd5e1" stroke-width="2.5" />
+                <polygon points="18,1 25,6 18,11" fill="#cbd5e1" />
               </svg>
               <span>Instroomroute (optioneel)</span>
             </div>
