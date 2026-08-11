@@ -5,11 +5,11 @@
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-4">
           <img src="/logo.svg" alt="ETZ Logo" class="h-12">
-          <h1 class="hidden md:block text-2xl font-bold text-blue-600">Loopbaanpaden Verkenner</h1>
+          <h1 class="hidden md:block text-2xl font-bold text-blue-600">Loopbaanlijnen Verkenner</h1>
           <select (change)="changeLayout($event)"
             class="hidden md:block px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
             <option value="grid">Overzicht</option>
-            <option value="dagre">Loopbaanlijnen</option>
+            <option value="dagre">Doorstroom</option>
             <option value="breadthfirst">Hierarchisch</option>
             <option value="cose">Relatief</option>
           </select>
@@ -29,7 +29,7 @@
       <!-- Search and Filter Section -->
       <div class="p-4 border-b border-gray-200 space-y-4">
         <!-- Mobile Title -->
-        <h1 class="block md:hidden text-xl font-bold text-blue-600 mb-2">Loopbaanpaden Verkenner</h1>
+        <h1 class="block md:hidden text-xl font-bold text-blue-600 mb-2">Loopbaanlijnen Verkenner</h1>
 
         <!-- Search box -->
         <div class="bg-white p-4 rounded-lg border-2 border-blue-400 shadow-lg">
@@ -145,7 +145,7 @@
         <div class="text-center py-8">
           <div class="text-gray-400 text-5xl mb-4">👆</div>
           <p class="text-gray-600">Zoek hierboven een functie, of klik op een functie in de grafiek om details en
-            loopbaanpaden te bekijken.</p>
+            loopbaanlijnen te bekijken.</p>
         </div>
         } @else {
         <div class="space-y-4">
@@ -299,7 +299,7 @@
               <span class="font-bold" style="color: #a855f7;">⇥</span> Verder kijken in een andere loopbaanfamilie
             </h4>
             <p class="text-xs text-gray-600">
-              Deze functie sluit aan op een loopbaanpad buiten {{ getFamilyLabel(currentFamily) }}.
+              Deze functie sluit aan op een loopbaanlijn buiten {{ getFamilyLabel(currentFamily) }}.
             </p>
             <div class="space-y-2">
               @for (path of selectedNodeCrossFamilyPaths; track path.to) {
@@ -564,7 +564,7 @@
     <div class="absolute inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
       <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full p-8 max-h-[90vh] overflow-y-auto">
         <div class="flex items-start justify-between gap-4 mb-4">
-          <h2 class="text-2xl font-bold text-blue-600">Welkom bij de Loopbaanpaden Verkenner</h2>
+          <h2 class="text-2xl font-bold text-blue-600">Welkom bij de Loopbaanlijnen Verkenner</h2>
           <button (click)="showWelcome = false" aria-label="Sluiten"
             class="shrink-0 w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 cursor-pointer">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

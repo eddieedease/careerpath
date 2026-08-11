@@ -25,6 +25,6 @@ describe('Landing', () => {
 
   it('should display the disclaimer text', () => {
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.textContent).toContain('De loopbaanlijnen-tool biedt inzicht in mogelijke loopbaanpaden binnen het ziekenhuis');
+    expect(compiled.textContent).toContain('De loopbaanlijnen-tool biedt inzicht in mogelijke loopbaanlijnen binnen het ziekenhuis');
   });
 });
