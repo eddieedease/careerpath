@@ -160,6 +160,10 @@
                 @if (selectedNode.isRole) {
                 <span class="px-2 py-0.5 text-xs font-semibold bg-blue-100 text-blue-800 rounded-full">Rol</span>
                 }
+                @if (hasExtraRole(selectedNode)) {
+                <span class="px-2 py-0.5 text-xs font-semibold bg-gray-200 text-gray-700 rounded-full whitespace-nowrap">extra
+                  rol</span>
+                }
                 <button (click)="copyNodeLink()" [title]="'Kopieer een directe link naar deze functie'"
                   class="p-1 rounded text-gray-400 hover:text-blue-600 hover:bg-white cursor-pointer transition-colors">
                   @if (linkCopied) {
@@ -193,12 +197,12 @@
 
           <div>
             <h4 class="font-medium text-gray-800 mb-2">Omschrijving</h4>
-            <p class="text-gray-600 text-sm">{{ selectedNode.description }}</p>
+            <div class="text-gray-600 text-sm rich-text" [innerHTML]="selectedDescriptionHtml"></div>
           </div>
 
           <div>
             <h4 class="font-medium text-gray-800 mb-2">Vereisten</h4>
-            <p class="text-sm text-gray-600">{{ selectedNode.requirements }}</p>
+            <div class="text-gray-600 text-sm rich-text" [innerHTML]="selectedRequirementsHtml"></div>
           </div>
 
           <!-- Care/non care -->
@@ -468,6 +472,13 @@
               <span>Rol</span>
             </div>
             <div class="flex items-center gap-2">
+              <svg width="20" height="14" class="shrink-0">
+                <rect x="1" y="2" width="18" height="10" rx="3" fill="#41b8ee" stroke="#9ca3af" />
+                <rect x="1.5" y="8.5" width="17" height="3.2" fill="#ffffff" fill-opacity="0.92" />
+              </svg>
+              <span>Functie met extra rol</span>
+            </div>
+            <div class="flex items-center gap-2">
               <svg width="20" height="10" class="shrink-0">
                 <line x1="1" y1="5" x2="13" y2="5" stroke="#9ca3af" stroke-width="2.5" />
                 <polygon points="13,1 19,5 13,9" fill="#9ca3af" />
@@ -542,7 +553,7 @@
           <p><span class="font-medium">Niveau:</span> {{ hoveredNode.level }}</p>
           <p><span class="font-medium">Salaris:</span> {{ hoveredNode.salary }}</p>
         </div>
-        <p class="text-sm text-gray-700 mt-2 line-clamp-4">{{ hoveredNode.description }}</p>
+        <p class="text-sm text-gray-700 mt-2 line-clamp-4">{{ tooltipDescription(hoveredNode) }}</p>
         <p class="text-xs text-gray-500 mt-2 italic">Klik voor meer details</p>
       </div>
     </div>

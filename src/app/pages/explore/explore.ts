@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import cytoscape from 'cytoscape';
 import dagre from 'cytoscape-dagre';
 import { CareerDataService, NodeData, CareerPath } from '../../services/career-data.service';
+import { renderRichText, stripRichText } from '../../services/rich-text';
 
 cytoscape.use(dagre);
 
@@ -58,6 +59,21 @@ const FAMILY_LABELS: Record<string, string> = {
   facility: 'Facilitair'
 };
 
+// Band across the bottom of a regular function that also carries an extra role.
+// Drawn as a background image because cytoscape has no per-side node styling.
+const EXTRA_ROLE_BAR = 'data:image/svg+xml;utf8,' + encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" width="150" height="22" viewBox="0 0 150 22">' +
+  '<rect width="150" height="22" fill="#ffffff" fill-opacity="0.92"/>' +
+  '<text x="75" y="15.5" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" ' +
+  'font-size="11" font-weight="bold" fill="#374151">extra rol</text>' +
+  '</svg>'
+);
+
+/** A regular function that also carries an extra role (Rollen Status = ja). */
+function hasExtraRole(node: NodeData): boolean {
+  return !node.isRole && String(node.roles || '').trim().toLowerCase() === 'ja';
+}
+
 export interface LegendItem {
   name: string;  // stored value, used for filtering
   label: string; // what the employee reads
@@ -93,6 +109,11 @@ export class Explore implements OnInit, AfterViewInit {
   // Bumped on every new selection to retrigger the details attention animation
   detailsPulse = 0;
   linkCopied = false;
+
+  // Free-text fields rendered once per selection rather than on every change
+  // detection pass (each pass would re-sanitize the string)
+  selectedDescriptionHtml = '';
+  selectedRequirementsHtml = '';
 
   // Filter properties
   departments: string[] = [];
@@ -427,7 +448,8 @@ export class Explore implements OnInit, AfterViewInit {
           salary: node.salary,
           careCluster: node.careCluster || 'nvt', // Add care cluster to node data
           isRole: node.isRole || undefined,
-          isForeign: this.foreignNodeIds.has(node.id) || undefined
+          isForeign: this.foreignNodeIds.has(node.id) || undefined,
+          hasExtraRole: hasExtraRole(node) || undefined
         }
       })),
       ...this.careerPaths
@@ -500,6 +522,22 @@ export class Explore implements OnInit, AfterViewInit {
             'text-margin-y': 12,
             'text-max-width': '110px',
             'font-size': '13px'
+          }
+        },
+        // Regular function that also carries an extra role: band along the
+        // bottom edge, with the label lifted clear of it
+        {
+          selector: 'node[hasExtraRole]',
+          style: {
+            'background-image': EXTRA_ROLE_BAR,
+            'background-fit': 'none',
+            'background-width': '100%',
+            'background-height': '22px',
+            'background-position-x': '50%',
+            'background-position-y': '100%',
+            'background-clip': 'node',
+            'background-image-opacity': 1,
+            'text-margin-y': -10
           }
         },
         // Nodes from the other career family: dashed violet border marks them
@@ -930,7 +968,18 @@ export class Explore implements OnInit, AfterViewInit {
     ].filter(Boolean).length;
   }
 
+  hasExtraRole(node?: NodeData | null): boolean {
+    return !!node && hasExtraRole(node);
+  }
+
+  tooltipDescription(node?: NodeData | null): string {
+    return stripRichText(node?.description);
+  }
+
   updateSelectedNodePaths(nodeId: string) {
+    this.selectedDescriptionHtml = renderRichText(this.selectedNode?.description);
+    this.selectedRequirementsHtml = renderRichText(this.selectedNode?.requirements);
+
     const outgoing = this.careerPaths.filter(path => path.from === nodeId);
 
     // Steps into the other family are listed separately, as a deliberate switch

@@ -4,3 +4,42 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 }
+/* Formatted free-text fields (omschrijving, vereisten).
+   Global on purpose: this markup is inserted through [innerHTML], so it never
+   carries a component's scoping attribute and component styles cannot reach it.
+   The .rich-text class keeps the rules contained. */
+.rich-text p {
+  margin: 0 0 0.5rem;
+}
+
+.rich-text p:last-child {
+  margin-bottom: 0;
+}
+
+.rich-text ul,
+.rich-text ol {
+  margin: 0 0 0.5rem;
+  padding-left: 1.15rem;
+}
+
+.rich-text ul:last-child,
+.rich-text ol:last-child {
+  margin-bottom: 0;
+}
+
+.rich-text ul {
+  list-style: disc;
+}
+
+.rich-text ol {
+  list-style: decimal;
+}
+
+.rich-text li {
+  margin-bottom: 0.15rem;
+}
+
+.rich-text strong {
+  font-weight: 600;
+  color: #374151;
+}

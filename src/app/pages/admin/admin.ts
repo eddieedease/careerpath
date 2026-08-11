@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CareerDataService, NodeData, CareerPath } from '../../services/career-data.service';
+import { renderRichText } from '../../services/rich-text';
 
 @Component({
   selector: 'app-admin',
@@ -67,6 +68,17 @@ export class Admin implements OnInit {
   toSearch: string = '';
   showFromDropdown: boolean = false;
   showToDropdown: boolean = false;
+
+  // Formatting help + live preview for the free-text fields
+  showFormattingHelp: boolean = false;
+
+  get descriptionPreview(): string {
+    return renderRichText(this.nodeForm.description);
+  }
+
+  get requirementsPreview(): string {
+    return renderRichText(this.nodeForm.requirements);
+  }
 
   // Nodes of the other family, for cross-family steps
   otherFamilyNodes: NodeData[] = [];
