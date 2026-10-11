@@ -97,7 +97,7 @@
 
             <!-- Care cluster filter -->
             <div>
-              <label for="careCluster" class="block text-sm text-gray-600 mb-1">Care cluster</label>
+              <label for="careCluster" class="block text-sm text-gray-600 mb-1">Cluster</label>
               <select id="careCluster" [(ngModel)]="selectedCareCluster" (change)="applyFilters()"
                 class="w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="">Alle clusters</option>
@@ -133,7 +133,7 @@
       <div id="function-details" class="p-6">
         <div class="block md:hidden bg-blue-50 border-l-4 border-blue-500 p-4 mb-4 rounded-r">
           <p class="text-sm text-blue-700">
-            ℹ️ Voor de beste ervaring met de interactieve grafiek adviseren wij een desktop of tablet.
+            ℹ️ Voor de beste ervaring met het interactieve overzicht adviseren wij een desktop of tablet.
           </p>
         </div>
 
@@ -144,8 +144,8 @@
         @if (!selectedNode) {
         <div class="text-center py-8">
           <div class="text-gray-400 text-5xl mb-4">👆</div>
-          <p class="text-gray-600">Zoek hierboven een functie, of klik op een functie in de grafiek om details en
-            loopbaanlijnen te bekijken.</p>
+          <p class="text-gray-600">Zoek hierboven een functie, of klik rechts in het overzicht op een functie om
+            details en loopbaanlijnen te bekijken.</p>
         </div>
         } @else {
         <div class="space-y-4">
@@ -181,9 +181,13 @@
               </div>
             </div>
             <div class="space-y-2 text-sm">
-              <p><span class="font-medium">Afdeling:</span> {{ selectedNode.department || 'N/A' }}</p>
-              <p><span class="font-medium">Niveau:</span> {{ selectedNode.level || 'N/A' }}</p>
-              <p><span class="font-medium">Salarisschaal:</span> {{ selectedNode.salary || 'N/A' }}</p>
+              @if (selectedNode.department) {
+              <p><span class="font-medium">Afdeling:</span> {{ selectedNode.department }}</p>
+              }
+              @if (selectedNode.level) {
+              <p><span class="font-medium">Functiehuis:</span> {{ selectedNode.level }}</p>
+              }
+              <p><span class="font-medium">Salarisschaal:</span> {{ selectedNode.salary || (selectedNode.isRole ? 'geen vaste schaal (rol)' : 'onbekend') }}</p>
               @if (selectedNode.careCluster) {
               <p class="flex items-center gap-1.5">
                 <span class="font-medium">Cluster:</span>
@@ -195,21 +199,25 @@
             </div>
           </div>
 
+          @if (selectedDescriptionHtml) {
           <div>
             <h4 class="font-medium text-gray-800 mb-2">Omschrijving</h4>
             <div class="text-gray-600 text-sm rich-text" [innerHTML]="selectedDescriptionHtml"></div>
           </div>
+          }
 
+          @if (selectedRequirementsHtml) {
           <div>
             <h4 class="font-medium text-gray-800 mb-2">Vereisten</h4>
             <div class="text-gray-600 text-sm rich-text" [innerHTML]="selectedRequirementsHtml"></div>
           </div>
+          }
 
           <!-- Care/non care -->
           @if (selectedNode.careNonCare) {
           <div>
-            <h4 class="font-medium text-gray-800 mb-2">Care/non care</h4>
-            <p class="text-sm text-gray-600">{{ selectedNode.careNonCare }}</p>
+            <h4 class="font-medium text-gray-800 mb-2">Soort functie</h4>
+            <p class="text-sm text-gray-600">{{ getCareNonCareLabel(selectedNode.careNonCare) }}</p>
           </div>
           }
 
@@ -276,7 +284,7 @@
                     <span class="truncate">{{ getNodeLabel(path.to) }}</span>
                   </span>
                   @if (path.timeframe) {
-                  <span class="text-gray-500 text-xs shrink-0">{{ path.timeframe }}</span>
+                  <span class="text-gray-500 text-xs shrink-0" [title]="timeframeHint(path.timeframe)">{{ formatTimeframe(path.timeframe) }}</span>
                   }
                 </div>
                 <p class="text-xs text-gray-600">
@@ -323,7 +331,7 @@
                   · Schaal: {{ getNodeById(path.to)?.salary }}
                   }
                   @if (path.timeframe) {
-                  · {{ path.timeframe }}
+                  · {{ formatTimeframe(path.timeframe) }}
                   }
                 </p>
               </button>
@@ -352,7 +360,7 @@
             <div class="space-y-3 p-3">
               <button (click)="toggleIncomingPaths()"
                 class="hidden md:block text-xs text-blue-600 hover:text-blue-800 underline cursor-pointer">
-                {{ showIncomingPaths ? 'Verberg in grafiek' : 'Toon in grafiek' }}
+                {{ showIncomingPaths ? 'Verberg in overzicht' : 'Toon in overzicht' }}
               </button>
               @for (path of selectedNodeIncomingPaths; track path.from) {
               <div (click)="selectNodeById(path.from)"
@@ -364,7 +372,7 @@
                     <span class="truncate">{{ getNodeLabel(path.from) }}</span>
                   </span>
                   @if (path.timeframe) {
-                  <span class="text-gray-500 text-xs shrink-0">{{ path.timeframe }}</span>
+                  <span class="text-gray-500 text-xs shrink-0" [title]="timeframeHint(path.timeframe)">{{ formatTimeframe(path.timeframe) }}</span>
                   }
                 </div>
                 <p class="text-xs text-gray-600">
@@ -532,7 +540,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
-          <span>Zoom in of hover over knoppen om labels te lezen</span>
+          <span>Zoom in, of beweeg de muis over een functie om de naam te lezen</span>
         </div>
     </div>
     }
@@ -549,12 +557,18 @@
           {{ hoveredNode.label }}
         </h4>
         <div class="text-sm text-gray-600 space-y-1">
+          @if (hoveredNode.department) {
           <p><span class="font-medium">Afdeling:</span> {{ hoveredNode.department }}</p>
-          <p><span class="font-medium">Niveau:</span> {{ hoveredNode.level }}</p>
-          <p><span class="font-medium">Salaris:</span> {{ hoveredNode.salary }}</p>
+          }
+          @if (hoveredNode.level) {
+          <p><span class="font-medium">Functiehuis:</span> {{ hoveredNode.level }}</p>
+          }
+          @if (hoveredNode.salary) {
+          <p><span class="font-medium">Salarisschaal:</span> {{ hoveredNode.salary }}</p>
+          }
         </div>
         <p class="text-sm text-gray-700 mt-2 line-clamp-4">{{ tooltipDescription(hoveredNode) }}</p>
-        <p class="text-xs text-gray-500 mt-2 italic">Klik voor meer details</p>
+        <p class="text-xs text-gray-500 mt-2 italic">Klik op de functie voor meer details</p>
       </div>
     </div>
     }
@@ -585,7 +599,7 @@
               </li>
               <li class="flex items-start">
                 <span class="text-blue-600 mr-2">2.</span>
-                <span><strong>Klik op een functie</strong> in de grafiek voor details, vereisten en
+                <span><strong>Klik op een functie</strong> in het overzicht voor details, vereisten en
                   salarisschaal</span>
               </li>
               <li class="flex items-start">
@@ -593,6 +607,12 @@
                 <span><strong>Volg de pijlen</strong>: die laten zien naar welke functies je kunt doorgroeien.
                   Wil je ook zien waar je vandaan kunt komen? Zet dan <strong>Toon Instroom</strong> aan (lichtgrijze
                   pijlen)</span>
+              </li>
+              <li class="flex items-start">
+                <span class="text-blue-600 mr-2">4.</span>
+                <span>Bij een stap staat soms een <strong>indicatie in jaren</strong> (bijv. "ca. 3-5 jaar"): zo lang
+                  duurt het ongeveer voordat die stap reëel is. Staat er een <strong>voorwaarde</strong> (bijv. "mits
+                  HBO"), dan is die nodig voor de stap.</span>
               </li>
             </ul>
           </div>
@@ -633,31 +653,31 @@
 
             <div class="grid grid-cols-2 gap-3">
               @if (currentFamily === 'care') {
-              <button (click)="selectQuickStartFunction('MBO-verpleegkundige')"
+              <button (click)="selectQuickStartFunction('mbo-verpleegkundige-fwg45')"
                 class="p-4 border-2 border-blue-200 rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer group">
-                <h4 class="font-semibold text-blue-700 group-hover:text-blue-800">MBO-verpleegkundige</h4>
-                <p class="text-xs text-gray-600 mt-1">Zorg niveau C/B</p>
+                <h4 class="font-semibold text-blue-700 group-hover:text-blue-800">Verpleegkundige (mbo)</h4>
+                <p class="text-xs text-gray-600 mt-1">Verpleegkundige B</p>
               </button>
 
-              <button (click)="selectQuickStartFunction('HBO-verpleegkundige')"
+              <button (click)="selectQuickStartFunction('hbo-verpleegkundige-fwg50')"
                 class="p-4 border-2 border-blue-200 rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer group">
-                <h4 class="font-semibold text-blue-700 group-hover:text-blue-800">HBO-verpleegkundige</h4>
+                <h4 class="font-semibold text-blue-700 group-hover:text-blue-800">Hbo-verpleegkundige</h4>
                 <p class="text-xs text-gray-600 mt-1">Verpleegkundige A</p>
               </button>
 
-              <button (click)="selectQuickStartFunction('IC verpleegkundige')"
+              <button (click)="selectQuickStartFunction('ic-verpleegkundige-fwg55')"
                 class="p-4 border-2 border-blue-200 rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer group">
                 <h4 class="font-semibold text-blue-700 group-hover:text-blue-800">IC-verpleegkundige</h4>
                 <p class="text-xs text-gray-600 mt-1">Intensive Care</p>
               </button>
 
-              <button (click)="selectQuickStartFunction('Afdelingsassistent')"
+              <button (click)="selectQuickStartFunction('afdelingsassistent-fwg20')"
                 class="p-4 border-2 border-blue-200 rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer group">
-                <h4 class="font-semibold text-blue-700 group-hover:text-blue-800">Afdelingsassistent</h4>
+                <h4 class="font-semibold text-blue-700 group-hover:text-blue-800">Facilitair medewerker zorg</h4>
                 <p class="text-xs text-gray-600 mt-1">Ondersteunende zorg</p>
               </button>
 
-              <button (click)="selectQuickStartFunction('Radiologisch laborant all round')"
+              <button (click)="selectQuickStartFunction('radiologisch-laborant-allround-fwg45')"
                 class="p-4 border-2 border-blue-200 rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer group">
                 <h4 class="font-semibold text-blue-700 group-hover:text-blue-800">Radiologisch laborant</h4>
                 <p class="text-xs text-gray-600 mt-1">Medisch ondersteunend</p>
@@ -665,25 +685,25 @@
               }
 
               @if (currentFamily === 'facility') {
-              <button (click)="selectQuickStartFunction('logistiek medewerker E')"
+              <button (click)="selectQuickStartFunction('Logistiek medewerker E-fwg20')"
                 class="p-4 border-2 border-blue-200 rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer group">
                 <h4 class="font-semibold text-blue-700 group-hover:text-blue-800">Logistiek medewerker E</h4>
-                <p class="text-xs text-gray-600 mt-1">Logistiek & Transport</p>
+                <p class="text-xs text-gray-600 mt-1">Inkoop & Logistiek</p>
               </button>
 
-              <button (click)="selectQuickStartFunction('Medewerker restaurant')"
+              <button (click)="selectQuickStartFunction('Medewerker restauratieve voorzieningen-fwg20')"
                 class="p-4 border-2 border-blue-200 rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer group">
                 <h4 class="font-semibold text-blue-700 group-hover:text-blue-800">Medewerker restaurant</h4>
                 <p class="text-xs text-gray-600 mt-1">Catering & Horeca</p>
               </button>
 
-              <button (click)="selectQuickStartFunction('medewerker algemene schoonmaak')"
+              <button (click)="selectQuickStartFunction('medewerker algemene schoonmaak-fwg15')"
                 class="p-4 border-2 border-blue-200 rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer group">
                 <h4 class="font-semibold text-blue-700 group-hover:text-blue-800">Medewerker schoonmaak</h4>
                 <p class="text-xs text-gray-600 mt-1">Schoonmaakdienst</p>
               </button>
 
-              <button (click)="selectQuickStartFunction('medewerker Receptie & Registratie')"
+              <button (click)="selectQuickStartFunction('Medewerker Receptie & Registratie-fwg35')"
                 class="p-4 border-2 border-blue-200 rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer group">
                 <h4 class="font-semibold text-blue-700 group-hover:text-blue-800">Receptie & Registratie</h4>
                 <p class="text-xs text-gray-600 mt-1">Veiligheid & Ontvangst</p>

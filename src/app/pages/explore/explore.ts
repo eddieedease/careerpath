@@ -28,8 +28,26 @@ const DEFAULT_CLUSTER_COLOR = '#9333ea';
 
 // Display names for clusters whose stored value is internal jargon
 const CLUSTER_LABELS: Record<string, string> = {
-  'nvt': 'Basisfuncties'
+  'nvt': 'Algemeen'
 };
+
+const CARE_NON_CARE_LABELS: Record<string, string> = {
+  'care': 'Zorg',
+  'non care': 'Ondersteunend (niet-zorg)'
+};
+
+/** Data follows the functiehuis spelling ("medewerker Logistiek B1"); on screen
+ * every name starts with a capital so lists and legends read consistently. */
+function capitalize(value?: string): string {
+  const text = (value || '').trim();
+  return text ? text.charAt(0).toUpperCase() + text.slice(1) : text;
+}
+
+/** Sort key for salary scales such as "FWG 35"; scales without a number last. */
+function salaryRank(salary?: string): number {
+  const match = String(salary || '').match(/\d+/);
+  return match ? Number(match[0]) : Number.MAX_SAFE_INTEGER;
+}
 
 // Edges are deliberately achromatic. Hue is reserved for one job only -
 // telling clusters apart - so a coloured line can never read as "this line
@@ -53,6 +71,28 @@ const SUBTLE_EDGE_STYLE = {
 
 // Accent for steps that lead into the other career family
 const CROSS_FAMILY_COLOR = '#a855f7';
+
+// Focus view: neighbours grouped in one card per cluster (sizes in graph units)
+const FOREIGN_GROUP = '__foreign';
+const FOCUS_CHIP_W = 230;
+const FOCUS_CHIP_H = 46;
+const FOCUS_GAP = 8;
+const FOCUS_PAD = 14;
+const FOCUS_HEADER = 34;
+const FOCUS_COLUMNS = 2;
+const FOCUS_GROUP_GAP = 22;
+const FOCUS_OFFSET = 170;     // from the selected function's centre to the cards
+const FOCUS_MIN_ZOOM = 0.5;   // below this the chip labels stop being readable
+
+/** Dark text on light fills, white on dark ones (WCAG relative luminance). */
+function readableTextColor(hex: string): string {
+  const rgb = (hex.replace('#', '').match(/../g) || []).map(h => {
+    const c = parseInt(h, 16) / 255;
+    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+  });
+  const luminance = 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2];
+  return luminance > 0.25 ? '#111827' : '#ffffff';
+}
 
 const FAMILY_LABELS: Record<string, string> = {
   care: 'Zorg',
@@ -148,6 +188,8 @@ export class Explore implements OnInit, AfterViewInit {
 
   // Original positions of nodes moved by the focus view, so they can be put back
   private focusSavedPositions = new Map<string, { x: number; y: number }>();
+  // Function nodes currently drawn as a chip inside a focus-view cluster card
+  private focusChipIds = new Set<string>();
 
   // Grid sort: group by cluster, then by salary scale, so the overview reads as blocks of color
   private clusterGridSort = (a: any, b: any): number => {
@@ -156,53 +198,148 @@ export class Explore implements OnInit, AfterViewInit {
     if (clusterA !== clusterB) {
       return clusterA.localeCompare(clusterB);
     }
-    return (a.data('salary') || '').localeCompare(b.data('salary') || '');
+    return salaryRank(a.data('salary')) - salaryRank(b.data('salary'));
   };
 
-  // Fan the neighbourhood out on an arc around the selected node: incoming to
-  // the left, outgoing to the right.
+  // Group the neighbourhood per cluster: one card per cluster with the
+  // functions as compact chips inside, and ONE bundled line from the selected
+  // function to each card. Incoming to the left, outgoing to the right.
   //
-  // Every node sits at the SAME distance from the centre but at its own angle,
-  // which is what keeps the picture readable: a straight edge from the centre
-  // only reaches that distance at its own endpoint, so it can never cross
-  // another function's box. Columns could not promise that - an edge to the
-  // second column always had to pass the first one, and landed on whatever
-  // happened to be there.
-  private applyFocusLayout(node: any, incomingNodes: any, outgoingNodes: any) {
+  // A line per function (the old fan) never crosses a box, but with 25+ steps
+  // the fan grew so wide that everything had to be zoomed out until nothing was
+  // readable. Bundling keeps the line count at the number of clusters, and the
+  // cards stack compactly enough to stay at a readable zoom.
+  private applyFocusLayout(node: any, incomingNodes: any, outgoingNodes: any): any {
     const center = node.position();
-    const spacing = 105;      // distance between two neighbours along the arc
-    const minRadius = 420;
-    const maxAngle = 1.13;    // ~65 degrees above and below the horizontal
+    let cards = this.cy.collection();
 
-    const place = (collection: any, direction: 1 | -1) => {
-      const nodes = collection
-        .toArray()
-        .sort((a: any, b: any) => (a.data('label') || '').localeCompare(b.data('label') || ''));
-
-      if (nodes.length === 0) {
+    const place = (collection: any, side: 'in' | 'out') => {
+      const groups = new Map<string, any[]>();
+      collection.forEach((n: any) => {
+        const key = n.data('isForeign') ? FOREIGN_GROUP : (n.data('careCluster') || 'nvt');
+        groups.set(key, [...(groups.get(key) || []), n]);
+      });
+      if (groups.size === 0) {
         return;
       }
 
-      // Widen the arc until every node fits on it without crowding its neighbour
-      const radius = Math.max(minRadius, ((nodes.length - 1) * spacing) / (2 * maxAngle));
-      const angleStep = nodes.length > 1 ? spacing / radius : 0;
-      const startAngle = (-angleStep * (nodes.length - 1)) / 2;
+      // Alphabetical, with the catch-all cluster and the other family last
+      const order = (key: string) => key === FOREIGN_GROUP ? 2 : key === 'nvt' ? 1 : 0;
+      const keys = [...groups.keys()].sort((a, b) =>
+        order(a) - order(b) || this.getClusterLabel(a).localeCompare(this.getClusterLabel(b)));
 
-      nodes.forEach((n: any, i: number) => {
-        if (!this.focusSavedPositions.has(n.id())) {
-          this.focusSavedPositions.set(n.id(), { ...n.position() });
-        }
+      const cardWidth = FOCUS_PAD * 2 + FOCUS_COLUMNS * FOCUS_CHIP_W + (FOCUS_COLUMNS - 1) * FOCUS_GAP;
+      const heights = keys.map(key => {
+        const rows = Math.ceil(groups.get(key)!.length / FOCUS_COLUMNS);
+        return FOCUS_PAD * 2 + FOCUS_HEADER + rows * FOCUS_CHIP_H + (rows - 1) * FOCUS_GAP;
+      });
+      const total = heights.reduce((a, b) => a + b, 0) + (keys.length - 1) * FOCUS_GROUP_GAP;
+      const cardCenterX = center.x + (side === 'out' ? 1 : -1) * (FOCUS_OFFSET + cardWidth / 2);
+      let top = center.y - total / 2;
 
-        const angle = startAngle + i * angleStep;
-        n.position({
-          x: center.x + direction * radius * Math.cos(angle),
-          y: center.y + radius * Math.sin(angle)
+      keys.forEach((key, i) => {
+        const members = groups.get(key)!.sort((a: any, b: any) =>
+          salaryRank(a.data('salary')) - salaryRank(b.data('salary')) ||
+          (a.data('label') || '').localeCompare(b.data('label') || ''));
+        const color = key === FOREIGN_GROUP ? CROSS_FAMILY_COLOR : this.getClusterColor(key);
+        const label = key === FOREIGN_GROUP
+          ? `Andere familie · ${members.length}`
+          : `${this.getClusterLabel(key)} · ${members.length}`;
+
+        const card = this.cy.add({
+          group: 'nodes',
+          classes: 'focus-decor',
+          data: { id: `__focus-${side}-${i}`, label, isDecor: true },
+          position: { x: cardCenterX, y: top + heights[i] / 2 }
         });
+        card.style({
+          'shape': 'round-rectangle',
+          'width': cardWidth,
+          'height': heights[i],
+          'background-color': '#ffffff',
+          'background-opacity': 0.92,
+          'border-color': color,
+          'border-width': 2,
+          'border-style': key === FOREIGN_GROUP ? 'dashed' : 'solid',
+          'label': label,
+          'color': '#1f2937',
+          'text-outline-width': 0,
+          'font-size': '17px',
+          'font-weight': 'bold',
+          'text-wrap': 'none',
+          'text-valign': 'top',
+          'text-halign': 'center',
+          'text-margin-y': FOCUS_PAD + FOCUS_HEADER - 4,
+          'z-index': 2,
+          'events': 'no'
+        });
+        cards = cards.union(card);
+
+        // Chips: the real function nodes, so hover and click keep working
+        const left = cardCenterX - cardWidth / 2 + FOCUS_PAD;
+        members.forEach((n: any, j: number) => {
+          if (!this.focusSavedPositions.has(n.id())) {
+            this.focusSavedPositions.set(n.id(), { ...n.position() });
+          }
+          const col = j % FOCUS_COLUMNS;
+          const row = Math.floor(j / FOCUS_COLUMNS);
+          n.position({
+            x: left + col * (FOCUS_CHIP_W + FOCUS_GAP) + FOCUS_CHIP_W / 2,
+            y: top + FOCUS_PAD + FOCUS_HEADER + row * (FOCUS_CHIP_H + FOCUS_GAP) + FOCUS_CHIP_H / 2
+          });
+          const fill = n.data('isForeign') ? '#e9d5ff' : this.getClusterColor(n.data('careCluster'));
+          n.style({
+            'display': 'element',
+            'opacity': 1,
+            'shape': 'round-rectangle',
+            'width': FOCUS_CHIP_W,
+            'height': FOCUS_CHIP_H,
+            'font-size': '15px',
+            'text-max-width': `${FOCUS_CHIP_W - 14}px`,
+            'text-margin-y': 0,
+            'color': readableTextColor(fill),
+            'text-outline-width': 0,
+            'background-image': 'none',
+            'border-width': n.data('isRole') ? 2 : 1,
+            'border-style': n.data('isRole') ? 'dashed' : 'solid',
+            'border-color': n.data('isRole') ? '#374151' : '#ffffff',
+            'z-index': 25
+          });
+          this.focusChipIds.add(n.id());
+        });
+
+        // One bundled line per cluster
+        const edge = this.cy.add({
+          group: 'edges',
+          classes: 'focus-decor',
+          data: {
+            id: `__focus-edge-${side}-${i}`,
+            source: side === 'out' ? node.id() : card.id(),
+            target: side === 'out' ? card.id() : node.id()
+          }
+        });
+        const lineColor = key === FOREIGN_GROUP
+          ? CROSS_FAMILY_COLOR
+          : side === 'out' ? OUTGOING_EDGE_COLOR : INCOMING_EDGE_COLOR;
+        edge.style({
+          'curve-style': 'taxi',
+          'taxi-direction': 'horizontal',
+          'taxi-turn': '50%',
+          'line-color': lineColor,
+          'target-arrow-color': lineColor,
+          'line-style': key === FOREIGN_GROUP ? 'dashed' : 'solid',
+          'width': side === 'out' ? 4 : 3,
+          'opacity': 1,
+          'z-index': 20
+        });
+
+        top += heights[i] + FOCUS_GROUP_GAP;
       });
     };
 
-    place(outgoingNodes, 1);
-    place(incomingNodes, -1);
+    place(outgoingNodes, 'out');
+    place(incomingNodes, 'in');
+    return cards;
   }
 
   // Run the overview layout as soon as the graph container has real dimensions.
@@ -258,7 +395,63 @@ export class Explore implements OnInit, AfterViewInit {
     observer.observe(container);
   }
 
+  // The view buttons float over the top-right of the graph. When the cards
+  // run under them, use the free room on the left first and only then zoom
+  // out, just enough for the cards to end left of the buttons
+  private keepClearOfControls(eles: any) {
+    const controls = this.cytoscapeContainer.nativeElement.parentElement?.querySelector('.top-4.right-4');
+    if (!controls) {
+      return;
+    }
+    const padding = 50;
+    const containerRect = this.cytoscapeContainer.nativeElement.getBoundingClientRect();
+    const controlsRect = controls.getBoundingClientRect();
+    const controlsLeft = controlsRect.left - containerRect.left - 16;
+    const controlsBottom = controlsRect.bottom - containerRect.top;
+    let box = eles.renderedBoundingBox();
+    if (box.x2 <= controlsLeft || box.y1 >= controlsBottom) {
+      return;
+    }
+
+    const scale = Math.min(1, (controlsLeft - padding) / box.w);
+    if (scale < 1) {
+      const level = Math.max(FOCUS_MIN_ZOOM, this.cy.zoom() * scale);
+      this.cy.zoom({ level, renderedPosition: { x: box.x1, y: (box.y1 + box.y2) / 2 } });
+      box = eles.renderedBoundingBox();
+    }
+    this.cy.panBy({ x: padding - box.x1, y: 0 });
+  }
+
+  // The legend floats over the bottom-left of the graph; fold it away when it
+  // would cover the selected function (it opens again with one click)
+  private keepClearOfLegend(node: any) {
+    const legend = this.cytoscapeContainer.nativeElement.parentElement?.querySelector('.help-tips');
+    if (!legend || !this.showLegend) {
+      return;
+    }
+    const containerRect = this.cytoscapeContainer.nativeElement.getBoundingClientRect();
+    const legendRect = legend.getBoundingClientRect();
+    const box = node.renderedBoundingBox();
+    const legendTop = legendRect.top - containerRect.top;
+    const legendRight = legendRect.right - containerRect.left;
+    if (box.y2 > legendTop && box.x1 < legendRight) {
+      this.showLegend = false;
+    }
+  }
+
+  // Put the focus view away: drop the cluster cards and bundled lines, give the
+  // chips their normal function shape back and return them to their spot
   private restoreFocusPositions() {
+    this.cy.remove('.focus-decor');
+    this.focusChipIds.forEach(id => {
+      const n = this.cy.getElementById(id);
+      if (n && n.length) {
+        n.removeStyle('shape width height font-size text-max-width text-margin-y color ' +
+          'text-outline-width background-image border-style');
+      }
+    });
+    this.focusChipIds.clear();
+
     this.focusSavedPositions.forEach((position, id) => {
       const n = this.cy.getElementById(id);
       if (n && n.length) {
@@ -276,11 +469,10 @@ export class Explore implements OnInit, AfterViewInit {
     // data will be loaded in ngOnInit; departments and salaryLevels are populated after load
   }
 
-  selectQuickStartFunction(functionName: string) {
-    // Find the node by label (case-insensitive partial match)
-    const node = this.careerData.find(n =>
-      n.label.toLowerCase().includes(functionName.toLowerCase())
-    );
+  // Quick-start buttons point at a node id: labels follow the functiehuis and
+  // change with feedback, ids stay put
+  selectQuickStartFunction(nodeId: string) {
+    const node = this.careerData.find(n => n.id === nodeId);
 
     if (node) {
       this.showWelcome = false;
@@ -391,7 +583,12 @@ export class Explore implements OnInit, AfterViewInit {
     // Load career data from service
     this.dataService.getCareerData(this.currentFamily).subscribe({
       next: (data) => {
-        this.careerData = data.nodes || [];
+        this.careerData = (data.nodes || []).map(node => ({
+          ...node,
+          label: capitalize(node.label),
+          level: capitalize(node.level),
+          department: capitalize(node.department)
+        }));
         this.careerPaths = data.paths || [];
 
         // Nodes from another family are only reachable as a cross-family step;
@@ -402,8 +599,9 @@ export class Explore implements OnInit, AfterViewInit {
         const ownNodes = this.careerData.filter(node => !this.foreignNodeIds.has(node.id));
 
         // Populate filters
-        this.departments = [...new Set(ownNodes.map(node => node.department))].sort();
-        this.salaryLevels = [...new Set(ownNodes.map(node => node.salary))].sort();
+        this.departments = [...new Set(ownNodes.map(node => node.department).filter(Boolean))].sort();
+        this.salaryLevels = [...new Set(ownNodes.map(node => node.salary).filter(Boolean))]
+          .sort((a, b) => salaryRank(a) - salaryRank(b) || a.localeCompare(b));
         this.careClusters = [...new Set(ownNodes.map(node => node.careCluster).filter(Boolean) as string[])].sort();
 
         // Legend: only the clusters that actually occur in this family
@@ -730,7 +928,7 @@ export class Explore implements OnInit, AfterViewInit {
 
       // Reset edge styling
       this.cy.edges().style({
-        'opacity': 0.01,
+        'opacity': 0,
         'line-color': '#6b7280',
         'target-arrow-color': '#6b7280',
         'width': 1,
@@ -748,50 +946,18 @@ export class Explore implements OnInit, AfterViewInit {
       });
 
       const outgoingEdges = node.outgoers('edge');
-      const outgoingNodes = outgoingEdges.targets().difference(node);
       const incomingEdges = node.incomers('edge');
+      // A function you can both come from and grow to sits on the incoming side
+      // while instroom is shown - otherwise it would look as if it were missing
+      // there - and on the outgoing side otherwise
+      const twoWayNodes = this.showIncomingPaths
+        ? incomingEdges.sources().intersection(outgoingEdges.targets())
+        : this.cy.collection();
+      const outgoingNodes = outgoingEdges.targets().difference(node).difference(twoWayNodes);
       const incomingNodes = incomingEdges.sources().difference(outgoingNodes).difference(node);
 
-      // Incoming paths (where you can come from): lighter and thinner than the
-      // outgoing ones — only when toggled on
-      if (this.showIncomingPaths) {
-        incomingEdges.style({
-          'line-color': INCOMING_EDGE_COLOR,
-          'target-arrow-color': INCOMING_EDGE_COLOR,
-          'width': 3,
-          'opacity': 1,
-          'z-index': 15
-        });
-        incomingNodes.style({
-          'display': 'element',
-          'opacity': 0.75,
-          'z-index': 25
-        });
-      }
-
-      // Outgoing paths (where you can go): the heaviest, darkest line, on top
-      outgoingEdges.style({
-        'line-color': OUTGOING_EDGE_COLOR,
-        'target-arrow-color': OUTGOING_EDGE_COLOR,
-        'width': 4,
-        'opacity': 1,
-        'z-index': 20
-      });
-      outgoingNodes.style({
-        'display': 'element',
-        'opacity': 1,
-        'z-index': 25
-      });
-
-      // Steps into the other family get their own violet, dashed styling
-      outgoingEdges.filter('[isCrossFamily]').style({
-        'line-color': CROSS_FAMILY_COLOR,
-        'target-arrow-color': CROSS_FAMILY_COLOR,
-        'line-style': 'dashed',
-        'width': 4,
-        'opacity': 1,
-        'z-index': 22
-      });
+      // The individual edges stay hidden: the focus view draws one bundled
+      // line per cluster instead (see applyFocusLayout)
 
       // Make selected node stand out prominently
       node.style({
@@ -802,24 +968,21 @@ export class Explore implements OnInit, AfterViewInit {
         'z-index': 30
       });
 
-      // Arrange the neighborhood as a tidy focus view: incoming left, outgoing right
-      this.applyFocusLayout(
+      // Arrange the neighborhood as cluster cards: incoming left, outgoing right
+      const cards = this.applyFocusLayout(
         node,
         this.showIncomingPaths ? incomingNodes : this.cy.collection(),
         outgoingNodes
       );
 
-      // Auto-zoom to fit selected node plus visible paths
+      // Auto-zoom to fit selected node plus its cluster cards
       setTimeout(() => {
-        let nodesToFit = node.union(outgoingNodes);
-        if (this.showIncomingPaths) {
-          nodesToFit = nodesToFit.union(incomingNodes);
-        }
+        const nodesToFit = node.union(cards);
 
         this.cy.animate({
           fit: {
             eles: nodesToFit,
-            padding: 60
+            padding: 50
           },
           duration: 400,
           easing: 'ease-out'
@@ -828,14 +991,21 @@ export class Explore implements OnInit, AfterViewInit {
         setTimeout(() => {
           // Re-assert the framing once the animation is done: a layout or
           // resize finishing late can leave the viewport panned elsewhere
-          this.cy.fit(nodesToFit, 60);
+          this.cy.fit(nodesToFit, 50);
 
-          // Don't blow a lone node up to max zoom (e.g. end of a career line)
+          // Don't blow a lone node up to max zoom (e.g. end of a career line),
+          // and never zoom out so far that the chips can't be read: then the
+          // view starts at the selected function and the rest is a scroll away
           const maxFocusZoom = 1.2;
           if (this.cy.zoom() > maxFocusZoom) {
             this.cy.zoom(maxFocusZoom);
             this.cy.center(nodesToFit);
+          } else if (this.cy.zoom() < FOCUS_MIN_ZOOM) {
+            this.cy.zoom(FOCUS_MIN_ZOOM);
+            this.cy.center(node);
           }
+          this.keepClearOfControls(nodesToFit);
+          this.keepClearOfLegend(node);
           this.updateZoomLevel();
         }, 450);
       }, 50);
@@ -957,7 +1127,29 @@ export class Explore implements OnInit, AfterViewInit {
   }
 
   getClusterLabel(cluster?: string): string {
-    return (cluster && CLUSTER_LABELS[cluster]) || cluster || '';
+    return capitalize((cluster && CLUSTER_LABELS[cluster]) || cluster || '');
+  }
+
+  getCareNonCareLabel(value?: string): string {
+    const key = (value || '').trim().toLowerCase();
+    return CARE_NON_CARE_LABELS[key] || capitalize(value);
+  }
+
+  // A path's timeframe holds either an indicative duration ("3-5 jaar") or a
+  // condition ("mits HBO"); durations get a "ca." so they don't read as a rule
+  private isDuration(timeframe?: string): boolean {
+    return /^\s*\d+\s*(-\s*\d+\s*)?jaar\s*$/i.test(timeframe || '');
+  }
+
+  formatTimeframe(timeframe?: string): string {
+    const text = (timeframe || '').trim();
+    return this.isDuration(text) ? `ca. ${text}` : capitalize(text);
+  }
+
+  timeframeHint(timeframe?: string): string {
+    return this.isDuration(timeframe)
+      ? 'Indicatie: zo lang duurt het ongeveer voordat deze stap reëel is'
+      : 'Voorwaarde voor deze stap';
   }
 
   get activeFilterCount(): number {
@@ -1061,6 +1253,9 @@ export class Explore implements OnInit, AfterViewInit {
   // Filter nodes based on selected department and salary
 
   applyFilters() {
+    // Filters work on the overview, so leave the focus view first
+    this.restoreFocusPositions();
+
     // Reset all nodes and edges to fully visible first (foreign nodes stay out)
     this.cy.nodes('[!isForeign]').style({
       'opacity': 1,
@@ -1134,8 +1329,8 @@ export class Explore implements OnInit, AfterViewInit {
     const select = event.target as HTMLSelectElement;
     const layoutName = select.value;
 
-    // A new layout re-positions everything, so forget saved focus positions
-    this.focusSavedPositions.clear();
+    // A new layout re-positions everything; just put the focus view away first
+    this.restoreFocusPositions();
     this.resetSelectionAndStyles();
 
     const layoutOptions: any = {
