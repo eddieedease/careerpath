@@ -6,13 +6,6 @@
         <div class="flex items-center gap-4">
           <img src="/logo.svg" alt="ETZ Logo" class="h-12">
           <h1 class="hidden md:block text-2xl font-bold text-blue-600">Loopbaanlijnen Verkenner</h1>
-          <select (change)="changeLayout($event)"
-            class="hidden md:block px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <option value="grid">Overzicht</option>
-            <option value="dagre">Doorstroom</option>
-            <option value="breadthfirst">Hierarchisch</option>
-            <option value="cose">Relatief</option>
-          </select>
         </div>
         <button routerLink="/landing"
           class="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
@@ -222,7 +215,7 @@
           }
 
           <!-- Werkenbij link -->
-          @if (selectedNode.werkenbijlink) {
+          @if (hasLink(selectedNode.werkenbijlink)) {
           <div>
             <h4 class="font-medium text-gray-800 mb-2">Meer informatie</h4>
             <a [href]="selectedNode.werkenbijlink" target="_blank" rel="noopener noreferrer"
@@ -237,7 +230,7 @@
           }
 
           <!-- PIO link -->
-          @if (selectedNode.pioLink) {
+          @if (hasLink(selectedNode.pioLink)) {
           <div>
             <h4 class="font-medium text-gray-800 mb-2">PIO informatie</h4>
             <a [href]="selectedNode.pioLink" target="_blank" rel="noopener noreferrer"
@@ -253,7 +246,8 @@
 
           <!-- Career paths section (outgoing) -->
           @if (selectedNodePaths.length === 0) {
-          <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm text-gray-500">
+          <div class="bg-gray-50 border-4 border-double border-gray-800 rounded-lg p-3 text-sm text-gray-700">
+            <span class="font-semibold">Eindpunt van deze loopbaanlijn.</span>
             Voor deze {{ selectedNode.isRole ? 'rol' : 'functie' }} zijn (nog) geen vervolgstappen geregistreerd.
           </div>
           }
@@ -509,6 +503,13 @@
               </svg>
               <span>Andere familie</span>
             </div>
+            <div class="flex items-center gap-2">
+              <svg width="20" height="14" class="shrink-0">
+                <rect x="1.5" y="2.5" width="17" height="9" rx="3" fill="#41b8ee" stroke="#111827" stroke-width="1" />
+                <rect x="3.5" y="4.5" width="13" height="5" rx="1.5" fill="none" stroke="#111827" stroke-width="1" />
+              </svg>
+              <span>Eindpunt (geen vervolgstap)</span>
+            </div>
           </div>
 
           <!-- Cluster colors -->
@@ -566,6 +567,12 @@
           @if (hoveredNode.salary) {
           <p><span class="font-medium">Salarisschaal:</span> {{ hoveredNode.salary }}</p>
           }
+          @if (hasExtraRole(hoveredNode)) {
+          <p class="font-medium">+ extra rol</p>
+          }
+          @if (isEndpoint(hoveredNode)) {
+          <p class="font-medium text-gray-800">Eindpunt van deze loopbaanlijn</p>
+          }
         </div>
         <p class="text-sm text-gray-700 mt-2 line-clamp-4">{{ tooltipDescription(hoveredNode) }}</p>
         <p class="text-xs text-gray-500 mt-2 italic">Klik op de functie voor meer details</p>
@@ -610,9 +617,9 @@
               </li>
               <li class="flex items-start">
                 <span class="text-blue-600 mr-2">4.</span>
-                <span>Bij een stap staat soms een <strong>indicatie in jaren</strong> (bijv. "ca. 3-5 jaar"): zo lang
-                  duurt het ongeveer voordat die stap reëel is. Staat er een <strong>voorwaarde</strong> (bijv. "mits
-                  HBO"), dan is die nodig voor de stap.</span>
+                <span>Staat er bij een stap een <strong>voorwaarde</strong> (bijv. "mits HBO"), dan is die nodig voor
+                  die stap. Een functie met een <strong>dubbele donkere rand</strong> is een eindpunt: daar zijn geen
+                  vervolgstappen.</span>
               </li>
             </ul>
           </div>
@@ -644,6 +651,13 @@
                 <polygon points="18,1 25,6 18,11" fill="#cbd5e1" />
               </svg>
               <span>Instroomroute (optioneel)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <svg width="26" height="16" class="shrink-0">
+                <rect x="1.5" y="2.5" width="23" height="11" rx="4" fill="#41b8ee" stroke="#111827" stroke-width="1" />
+                <rect x="3.5" y="4.5" width="19" height="7" rx="2.5" fill="none" stroke="#111827" stroke-width="1" />
+              </svg>
+              <span>Eindpunt (geen vervolgstap)</span>
             </div>
           </div>
 

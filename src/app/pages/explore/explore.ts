@@ -2,11 +2,8 @@ import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angula
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import cytoscape from 'cytoscape';
-import dagre from 'cytoscape-dagre';
 import { CareerDataService, NodeData, CareerPath } from '../../services/career-data.service';
 import { renderRichText, stripRichText } from '../../services/rich-text';
-
-cytoscape.use(dagre);
 
 // Single source of truth for cluster colors (graph nodes, legend and sidebar dots)
 const CLUSTER_COLORS: Record<string, string> = {
@@ -22,13 +19,14 @@ const CLUSTER_COLORS: Record<string, string> = {
   'schoonmaak': '#0369a1',            // Sky Blue
   'hospitality': '#be185d',           // Rose-Pink
   'Fac Services alg': '#4b5563',      // Charcoal Gray
+  'Management en beleid': '#a16207',  // Dark Gold
   'nvt': '#9333ea'                    // Purple
 };
 const DEFAULT_CLUSTER_COLOR = '#9333ea';
 
 // Display names for clusters whose stored value is internal jargon
 const CLUSTER_LABELS: Record<string, string> = {
-  'nvt': 'Algemeen'
+  'nvt': 'Zorg'
 };
 
 const CARE_NON_CARE_LABELS: Record<string, string> = {
@@ -71,6 +69,9 @@ const SUBTLE_EDGE_STYLE = {
 
 // Accent for steps that lead into the other career family
 const CROSS_FAMILY_COLOR = '#a855f7';
+
+// End of a career line (no next step): dark double border, in the overview and as a chip
+const ENDPOINT_BORDER = { 'border-color': '#111827', 'border-width': 5, 'border-style': 'double' };
 
 // Focus view: neighbours grouped in one card per cluster (sizes in graph units)
 const FOREIGN_GROUP = '__foreign';
@@ -242,9 +243,9 @@ export class Explore implements OnInit, AfterViewInit {
           salaryRank(a.data('salary')) - salaryRank(b.data('salary')) ||
           (a.data('label') || '').localeCompare(b.data('label') || ''));
         const color = key === FOREIGN_GROUP ? CROSS_FAMILY_COLOR : this.getClusterColor(key);
-        const label = key === FOREIGN_GROUP
-          ? `Andere familie · ${members.length}`
-          : `${this.getClusterLabel(key)} · ${members.length}`;
+        // No count in the header: employees read it as something else than
+        // "number of functions in this cluster"
+        const label = key === FOREIGN_GROUP ? 'Andere familie' : this.getClusterLabel(key);
 
         const card = this.cy.add({
           group: 'nodes',
@@ -288,6 +289,11 @@ export class Explore implements OnInit, AfterViewInit {
             y: top + FOCUS_PAD + FOCUS_HEADER + row * (FOCUS_CHIP_H + FOCUS_GAP) + FOCUS_CHIP_H / 2
           });
           const fill = n.data('isForeign') ? '#e9d5ff' : this.getClusterColor(n.data('careCluster'));
+          const border = n.data('isRole')
+            ? { 'border-width': 2, 'border-style': 'dashed', 'border-color': '#374151' }
+            : n.data('isEndpoint')
+              ? ENDPOINT_BORDER
+              : { 'border-width': 1, 'border-style': 'solid', 'border-color': '#ffffff' };
           n.style({
             'display': 'element',
             'opacity': 1,
@@ -299,10 +305,10 @@ export class Explore implements OnInit, AfterViewInit {
             'text-margin-y': 0,
             'color': readableTextColor(fill),
             'text-outline-width': 0,
+            // The overview's "extra rol" band doesn't fit a chip; say it in words
             'background-image': 'none',
-            'border-width': n.data('isRole') ? 2 : 1,
-            'border-style': n.data('isRole') ? 'dashed' : 'solid',
-            'border-color': n.data('isRole') ? '#374151' : '#ffffff',
+            'label': n.data('hasExtraRole') ? `${n.data('label')}\n+ extra rol` : n.data('label'),
+            ...border,
             'z-index': 25
           });
           this.focusChipIds.add(n.id());
@@ -339,6 +345,35 @@ export class Explore implements OnInit, AfterViewInit {
 
     place(outgoingNodes, 'out');
     place(incomingNodes, 'in');
+
+    // Nothing to grow to from here: say so where the next steps would be
+    if (node.data('isEndpoint')) {
+      const card = this.cy.add({
+        group: 'nodes',
+        classes: 'focus-decor',
+        data: { id: '__focus-endpoint', label: 'Eindpunt van deze loopbaanlijn', isDecor: true },
+        position: { x: center.x + FOCUS_OFFSET + 150, y: center.y }
+      });
+      card.style({
+        'shape': 'round-rectangle',
+        'width': 300,
+        'height': 70,
+        'background-color': '#f9fafb',
+        'border-color': '#111827',
+        'border-width': 5,
+        'border-style': 'double',
+        'label': 'Eindpunt van deze loopbaanlijn\ngeen vervolgstappen',
+        'text-wrap': 'wrap',
+        'text-max-width': '280px',
+        'color': '#111827',
+        'text-outline-width': 0,
+        'font-size': '15px',
+        'font-weight': 'bold',
+        'z-index': 2,
+        'events': 'no'
+      });
+      cards = cards.union(card);
+    }
     return cards;
   }
 
@@ -354,6 +389,11 @@ export class Explore implements OnInit, AfterViewInit {
         return;
       }
       cy.resize();
+      // A deep link may already have opened a focus view while the container
+      // was still 0x0 (see below); put it away so the grid doesn't swallow the
+      // cluster cards, and open it again once the grid stands
+      const reselectId = this.pendingNodeId ? '' : (this.selectedNode?.id || '');
+      this.restoreFocusPositions();
       // Foreign nodes are excluded from the overview, so they must not take up
       // a grid cell either
       cy.nodes('[isForeign]').style({ 'display': 'none' });
@@ -372,6 +412,9 @@ export class Explore implements OnInit, AfterViewInit {
       layout.one('layoutstop', () => {
         this.updateZoomLevel();
         this.applyPendingSelection();
+        if (reselectId && this.selectedNode?.id === reselectId) {
+          cy.getElementById(reselectId).trigger('tap');
+        }
       });
 
       layout.run();
@@ -447,7 +490,7 @@ export class Explore implements OnInit, AfterViewInit {
       const n = this.cy.getElementById(id);
       if (n && n.length) {
         n.removeStyle('shape width height font-size text-max-width text-margin-y color ' +
-          'text-outline-width background-image border-style');
+          'text-outline-width background-image label border-color border-width border-style');
       }
     });
     this.focusChipIds.clear();
@@ -647,7 +690,10 @@ export class Explore implements OnInit, AfterViewInit {
           careCluster: node.careCluster || 'nvt', // Add care cluster to node data
           isRole: node.isRole || undefined,
           isForeign: this.foreignNodeIds.has(node.id) || undefined,
-          hasExtraRole: hasExtraRole(node) || undefined
+          hasExtraRole: hasExtraRole(node) || undefined,
+          // Only judged for this family: a foreign node's own steps aren't loaded
+          isEndpoint: (!this.foreignNodeIds.has(node.id) &&
+            !this.careerPaths.some(path => path.from === node.id)) || undefined
         }
       })),
       ...this.careerPaths
@@ -737,6 +783,11 @@ export class Explore implements OnInit, AfterViewInit {
             'background-image-opacity': 1,
             'text-margin-y': -10
           }
+        },
+        // End of a career line: no next step from here
+        {
+          selector: 'node[isEndpoint]',
+          style: ENDPOINT_BORDER
         },
         // Nodes from the other career family: dashed violet border marks them
         // as a doorway rather than a step inside this family
@@ -887,11 +938,8 @@ export class Explore implements OnInit, AfterViewInit {
 
       // Reset border unless it's the selected node
       const node = event.target;
-      if (!node.hasClass('selected')) {
-        node.style({
-          'border-color': '#ffffff',
-          'border-width': '2px'
-        });
+      if (!node.hasClass('selected') && !this.focusChipIds.has(node.id())) {
+        node.removeStyle('border-color border-width border-style');
       }
     });
 
@@ -940,10 +988,9 @@ export class Explore implements OnInit, AfterViewInit {
       this.cy.nodes().style({
         'display': 'none',
         'opacity': 1,
-        'border-color': '#ffffff',
-        'border-width': '2px',
         'z-index': 1
       });
+      this.cy.nodes().removeStyle('border-color border-width border-style');
 
       const outgoingEdges = node.outgoers('edge');
       const incomingEdges = node.incomers('edge');
@@ -1086,13 +1133,13 @@ export class Explore implements OnInit, AfterViewInit {
         // surface in the focus view of a node that links to them
         'display': isForeign ? 'none' : 'element',
         'opacity': 1,
-        'border-width': isForeign ? '5px' : '2px',
-        'border-color': isForeign ? CROSS_FAMILY_COLOR : '#ffffff',
         'z-index': 1,
         'label': this.showLabels ? node.data('label') : '',
         'font-size': '14px',
         'text-opacity': this.showLabels ? 1 : 0
       });
+      // Borders come from the stylesheet (foreign, endpoint, plain)
+      node.removeStyle('border-color border-width border-style');
     });
 
     // Reset all edges to the subtle overview styling
@@ -1107,11 +1154,37 @@ export class Explore implements OnInit, AfterViewInit {
     }
 
     this.showWelcome = false; // Hide welcome screen when searching
-    this.searchResults = this.careerData.filter(node =>
-      !this.foreignNodeIds.has(node.id) &&
-      (node.label.toLowerCase().includes(query) ||
-        node.department.toLowerCase().includes(query))
-    ).slice(0, 5); // Limit to 5 results
+
+    // Every word must occur somewhere in the name, department, functiehuis
+    // or id, so "verpleegkundige (mbo)" finds the function labelled
+    // "Verpleegkundige" (id mbo-verpleegkundige-fwg45)
+    const words = query.split(/[^\p{L}\p{N}]+/u).filter(Boolean);
+    const phrase = words.join(' ');
+
+    // Most relevant first: the exact name, then names starting with the
+    // search, then names containing it as a word, then other matches.
+    // Ties go to the shorter name, so "Verpleegkundige" beats
+    // "Neuroverpleegkundige" when you type "verpleegkundige"
+    const rank = (node: NodeData): number => {
+      const label = node.label.toLowerCase();
+      if (label === phrase) return 0;
+      if (label.startsWith(phrase)) return 1;
+      if (label.split(/[^\p{L}\p{N}]+/u).includes(words[0])) return 2;
+      if (label.includes(phrase)) return 3;
+      return 4;
+    };
+
+    this.searchResults = this.careerData
+      .filter(node => {
+        if (this.foreignNodeIds.has(node.id)) {
+          return false;
+        }
+        const haystack = [node.label, node.department, node.level, node.id.replace(/[-_/]/g, ' ')]
+          .join(' ').toLowerCase();
+        return words.every(word => haystack.includes(word));
+      })
+      .sort((a, b) => rank(a) - rank(b) || a.label.length - b.label.length || a.label.localeCompare(b.label))
+      .slice(0, 8);
   }
 
   getNodeLabel(nodeId: string): string {
@@ -1135,21 +1208,23 @@ export class Explore implements OnInit, AfterViewInit {
     return CARE_NON_CARE_LABELS[key] || capitalize(value);
   }
 
-  // A path's timeframe holds either an indicative duration ("3-5 jaar") or a
-  // condition ("mits HBO"); durations get a "ca." so they don't read as a rule
-  private isDuration(timeframe?: string): boolean {
-    return /^\s*\d+\s*(-\s*\d+\s*)?jaar\s*$/i.test(timeframe || '');
-  }
-
+  // A path's timeframe field holds a condition for the step ("mits HBO");
+  // the indicative durations were dropped in feedback round 2
   formatTimeframe(timeframe?: string): string {
-    const text = (timeframe || '').trim();
-    return this.isDuration(text) ? `ca. ${text}` : capitalize(text);
+    return capitalize(timeframe);
   }
 
   timeframeHint(timeframe?: string): string {
-    return this.isDuration(timeframe)
-      ? 'Indicatie: zo lang duurt het ongeveer voordat deze stap reëel is'
-      : 'Voorwaarde voor deze stap';
+    return 'Voorwaarde voor deze stap';
+  }
+
+  isEndpoint(node?: NodeData | null): boolean {
+    return !!node && !this.foreignNodeIds.has(node.id) &&
+      !this.careerPaths.some(path => path.from === node.id);
+  }
+
+  hasLink(url?: string): boolean {
+    return /^https?:\/\//i.test((url || '').trim());
   }
 
   get activeFilterCount(): number {
@@ -1322,82 +1397,6 @@ export class Explore implements OnInit, AfterViewInit {
 
   toggleFilters() {
     this.showFilters = !this.showFilters;
-  }
-
-  // Handle layout changes: always reset selection and view for a clean start
-  changeLayout(event: Event) {
-    const select = event.target as HTMLSelectElement;
-    const layoutName = select.value;
-
-    // A new layout re-positions everything; just put the focus view away first
-    this.restoreFocusPositions();
-    this.resetSelectionAndStyles();
-
-    const layoutOptions: any = {
-      grid: {
-        name: 'grid',
-        avoidOverlap: true,
-        spacingFactor: 1.2,
-        sort: this.clusterGridSort
-      },
-      dagre: {
-        name: 'dagre',
-        rankDir: 'LR',
-        nodeSep: 30,
-        rankSep: 130
-      },
-      breadthfirst: {
-        name: 'breadthfirst',
-        directed: true,
-        spacingFactor: 2.0,  // Increased spacing for hierarchical view
-        avoidOverlap: true,
-        circle: false,
-        grid: false,
-        roots: undefined,  // Auto-detect roots
-        maximal: false
-      },
-      cose: {
-        name: 'cose',
-        nodeRepulsion: 8000,
-        idealEdgeLength: 100,
-        edgeElasticity: 100,
-        nestingFactor: 5,
-        gravity: 80,
-        numIter: 1000,
-        initialTemp: 200,
-        coolingFactor: 0.95,
-        minTemp: 1.0
-      }
-    };
-
-    // Lay out only the nodes of this family; foreign nodes stay hidden
-    const layout = this.cy.nodes('[!isForeign]').layout({
-      ...layoutOptions[layoutName],
-      animate: true,
-      animationDuration: 500,
-      padding: 60,
-      fit: true
-    });
-
-    // Run the layout
-    layout.run();
-
-    // When layout completes, restore node styles
-    layout.one('layoutstop', () => {
-      // Force re-apply node dimensions and font sizes
-      this.cy.nodes().forEach((node: any) => {
-        const isRole = node.data('isRole');
-        node.style({
-          'width': isRole ? '140px' : '150px',
-          'height': isRole ? '125px' : '80px',
-          'font-size': isRole ? '13px' : '14px',
-          'text-max-width': isRole ? '110px' : '140px'
-        });
-      });
-
-      // Update zoom level display
-      this.updateZoomLevel();
-    });
   }
 
   // Toggle incoming paths in the focus view; re-applies the current selection

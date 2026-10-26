@@ -1,8 +1,8 @@
-# Feedback Jildau — verwerking
+# Feedback Loopbaanlijnen Verkenner — verwerking
 
 Bronnen: `feedback_1.docx` (20 punten) en `feedback_2.xlsx` (opmerkingen per functie).
 Basis: serverexport van 11-10-2026 (146 functies, 721 paden).
-Resultaat na verwerking: **135 functies, 689 paden**.
+Resultaat na ronde 1: **135 functies, 689 paden**. Na ronde 2 (26-10-2026): **134 functies, 699 paden**.
 
 Besluiten (11-10-2026):
 - We nemen over wat Jildau aangeeft, ook haar directe aanpassingen in de salariskolom.
@@ -103,20 +103,70 @@ Status: ✅ verwerkt · 💬 verwerkt, maar graag bevestigen in het overleg · �
 
 ---
 
-## Voor het overleg met Jildau en de groep
+## Ronde 1: antwoorden op de open vragen (verwerkt in ronde 2)
 
-1. **Beleidsadviseur (zorg):** instroom komt nu alleen vanuit radiologisch laboranten en de medisch nucleair werker. Welke instroom klopt? En de beleidsadviseurs bij Facilitair: Jildau noemt dat er veel meer zijn, met andere aandachtsgebieden. Wie leveren we aan?
-2. **"Logistiek medewerker" (OK, zonder schaal):** welke functie is dit? Anders verwijderen.
-3. **Van OK-assistent naar logistiek coördinator op OK:** welke koppeling is bedoeld? Dit pad staat niet in de data.
-4. **Gipsverbandmeester vanuit medisch hulpverlener:** zo'n pad bestaat niet in de data. Waar zag Jildau dit?
-5. **Praktijkopleiders (acuut / kliniek):** als rol houden zonder vaste schaal, of weghalen?
-6. **Basisfuncties → "Algemeen":** is dit een goede naam?
-7. **"ca. 3-5 jaar":** klopt de uitleg "zo lang duurt het ongeveer voordat de stap reëel is"?
-8. **FWG 15/25 in de zorg:** zijn er zorgfuncties op dat niveau die we moeten toevoegen?
-9. **Teamleider Zorg B (kliniek/polikliniek) en teamleider Zorg B** zijn volgens Jildau dezelfde functie, net als teamleider Zorg A en teamleider Zorg A (acute as). Samenvoegen?
-10. **Teamleider B (Receptie & Registratie en Vrijwilligerswerk):** Jildau schreef "teamleider Zorg B". Dat lijkt een vergissing; het is nu "teamleider B".
-11. **Paden van logistiek medewerker E/D en afdelingslogistiek naar coördinator meewerkend schoonmaak:** stond "Is dit logisch?" bij. Houden?
-12. **Kok in opleiding:** welke schaal ("schaal afhankelijk van …")?
-13. **Algemene vereisten** zoals "Afgeronde vakopleiding" en "BIG-registratie" zijn vaag (punt 14: "wat voor opleiding?"). Wil de groep per functie de concrete opleiding aanleveren?
-14. **12 functies zonder enkel pad**, die dus los in het overzicht staan: beheerder OK materialen, adviseur Vervoersmobiliteit, beleidsadviseur (Beveiliging/Veiligheid), beleidsadviseur Duurzaamheid, beleidsadviseur Zirop, BHV coördinator, hoofd (Inkoop & Logistiek), managementassistente, medewerker Patiëntenvervoer, projectleider, teamleider B (Schoonmaak), teamleider B (Patiëntenvervoer). Wat zijn hun instroom en vervolgstappen?
-15. **Teamleiders Schoonmaak:** bij Beveiliging loopt de lijn nu van teamleider D naar teamleider B. Bij Schoonmaak heeft teamleider B (de strategische) nog geen enkel pad. Zal ik daar dezelfde lijn leggen (coördinator → teamleider D → teamleider B)?
+| # | Vraag | Antwoord | Wat er is gedaan | Status |
+|---|---|---|---|---|
+| 1 | Beleidsadviseur (zorg): welke instroom? | Pak je zelf op | Wel al toegevoegd vanuit nieuwe feedback: verpleegkundige, hbo-verpleegkundige en teamleider Zorg A/B/C → beleidsadviseur (zie R2-3.g/h). | 💬 todo Eddie |
+| 1 | Beleidsadviseurs Facilitair | Heten gewoon "beleidsadviseur", op verschillende schalen; 55 → 55, 55 → 60, 60 → hoofd | Hernoemd naar "beleidsadviseur (FWG 55)" / "(FWG 60)". Paden per afdeling: Veiligheid & Ontvangst 55 ↔ 55 (incl. BHV coördinator), 55 → 60 (beleidsadviseur, adviseur Vervoersmobiliteit), 60 → hoofd; Inkoop & Logistiek 60 (beleidsadviseur, contractmanager) → hoofd; beleidsadviseur Duurzaamheid (FWG 60, geen hoofd) krijgt instroom vanuit de 55's. | ✅ |
+| 2 | "Logistiek medewerker" (OK) | FWG 35; materiaalbeheerder FWG 40 | Logistiek medewerker FWG 35, met een pad naar beheerder OK materialen (FWG 40). | ✅ |
+| 3 | OK-assistent → logistiek coördinator OK | Pak je zelf op | — | 💬 todo Eddie |
+| 4 | Gipsverbandmeester vanuit medisch hulpverlener | Toevoegen; ondersteunend, FWG 55 | Pad toegevoegd (gipsverbandmeester staat al in Medisch ondersteunend, FWG 55). | ✅ |
+| 5 | Praktijkopleiders | Houden zonder vaste schaal | Ongewijzigd. | ✅ |
+| 6 | Basisfuncties / "Algemeen" | Nieuw cluster "Management en beleid" voor leidinggevende functies; "Algemeen" wordt "Zorg" | "Algemeen" heet nu "Zorg". Nieuw cluster **Management en beleid** (eigen kleur): teamleider Zorg A/B/C, beide organisatorisch hoofden en de beleidsadviseur (zorg). | ✅ |
+| 7 | "ca. 3-5 jaar" | Overal weghalen | Alle doorlooptijden in jaren verwijderd uit de data en de app; voorwaarden ("mits HBO") blijven staan. | ✅ |
+| 8 | FWG 15/25 in de zorg | Niet nodig | — | ✅ |
+| 9 | Teamleiders Zorg B/A dubbel | Samenvoegen | "Teamleider Zorg B (kliniek/polikliniek)" opgegaan in **teamleider Zorg B**, "teamleider Zorg A (acute as)" in **teamleider Zorg A**; alle paden overgenomen. | ✅ |
+| 10 | Teamleider B (R&R en Vrijwilligerswerk) | Klopt | — | ✅ |
+| 11 | Paden logistiek → coördinator meewerkend schoonmaak | Nagaan met Facilitair | — | 💬 todo Eddie |
+| 12 | Kok in opleiding: schaal | Open laten | — | ✅ |
+| 13 | Algemene vereisten | Klopt zoals het staat | — | ✅ |
+| 14 | Functies zonder pad | Zie beleidsadviseurs (1) | Opgelost voor de beleidsadviseurs, BHV coördinator, adviseur Vervoersmobiliteit, hoofd Inkoop & Logistiek, beheerder OK materialen en teamleider B Schoonmaak. Nog zonder pad: managementassistente, medewerker Patiëntenvervoer, projectleider, teamleider B (Patiëntenvervoer). | 💬 todo Eddie |
+| 15 | Teamleiders Schoonmaak | Ja, zelfde lijn | Pad teamleider D → teamleider B (Schoonmaak) toegevoegd; coördinator → teamleider D bestond al. | ✅ |
+
+## Ronde 2: UX-aanpassingen
+
+| # | Punt | Wat er is gedaan | Status |
+|---|---|---|---|
+| R2-2.a | Facilitair: werkenbij-links weg (komen later handmatig) | Alle links in de facilitaire familie verwijderd. Daar stond vaak "geen", wat als kapotte link werd getoond; de app toont nu alleen nog echte links (http…). Ook twee zorgfuncties met tekst in plaats van een link hersteld (anesthesiemedewerker A, operatie assistent A). | ✅ |
+| R2-2.b | Eindpunt aangeven | Een functie zonder vervolgstap heeft een **dubbele donkere rand**, in het overzicht én in de clusterkaarten. Selecteer je een eindpunt, dan staat rechts een kaart "Eindpunt van deze loopbaanlijn" en in het zijpaneel een omkaderde melding. Ook in de popup en in de legenda/uitleg. | ✅ |
+| R2-2.c | Aantal in de clusterkop is verwarrend | Weggehaald; de kop toont alleen de clusternaam. | ✅ |
+| R2-2.d | Keuzelijst naast de titel (Overzicht / Doorstroom / Hiërarchisch / Relatief) is niet meer nodig | Weggehaald, inclusief de alternatieve weergaven en de dagre-bibliotheek. | ✅ |
+
+## Ronde 2: nieuwe feedback
+
+| # | Punt | Wat er is gedaan | Status |
+|---|---|---|---|
+| R2-3.a | Zorgassistent → dialyse-assistent vraagt diploma verzorgende IG | Voorwaarde "mits diploma verzorgende IG" bij dat pad. | ✅ |
+| R2-3.b | PACU is acuut | PACU verpleegkundige naar cluster Acute zorg. | ✅ |
+| R2-3.c | Echocardiografist en pacemaker technicus: post-hbo, niet vanuit mbo? | Niet aangepast; navragen bij Nadia. | 💬 todo Eddie |
+| R2-3.d | Nieuw blokje verpleegkundige moeder en kind (4 losse EPA's) | Nieuwe functie **verpleegkundige moeder en kind**, verpleegkundige B, FWG 45, cluster Moeder en kind. Instroom vanuit verpleegkundige (mbo); door naar kinder-, obstetrie- en neonatologieverpleegkundige. | ✅ |
+| R2-3.e | Verpleegkundige → polikliniek assistent is een stap terug (45 → 35) | Pad vervangen door verpleegkundige → **medisch assistent** (FWG 40). | 💬 bevestigen |
+| R2-3.f | Teamleider staat bij "Algemeen" | Valt nu onder het nieuwe cluster Management en beleid. | ✅ |
+| R2-3.g | (Beleids)adviseur vanuit verpleegkundige en hbo-verpleegkundige | Paden toegevoegd. | ✅ |
+| R2-3.h | (Beleids)adviseur vanuit teamleider | Paden vanuit teamleider Zorg A, B en C toegevoegd. | ✅ |
+| R2-3.i | Radiodiagnostisch laborant mist bij (hbo-)verpleegkundige | Paden naar radiologisch laborant all-round toegevoegd. | ✅ |
+| R2-3.j | Medisch assistent → anesthesiemedewerker / operatieassistent (via duale opleiding) | Paden naar anesthesiemedewerker B en operatie assistent B, met voorwaarde "via de duale opleiding". | ✅ |
+| R2-3.k | Hbo-verpleegkundige → verpleegkundige BAZ ontbrak | Pad hbo verpleegkundige → hbo verpleegkundige met BAZ toegevoegd. | ✅ |
+| R2-3.l | BAZ niet aangemerkt als (extra) rol | BAZ blijft een functie met een extra rol. Dat stond alleen in het overzicht (bandje); nu ook "+ extra rol" in de clusterkaarten en in de popup. | ✅ |
+| R2-3.m | Zoeken op "verpleegkundige (mbo)" vindt niets | Zoeken kijkt nu per woord naar naam, afdeling, functiehuis en de interne naam; "verpleegkundige (mbo)" vindt Verpleegkundige en Verpleegkundige met BAZ. | ✅ |
+| R2-3.n | Zoeken op "verpleegkundige" toont Verpleegkundige niet | Resultaten op relevantie gesorteerd (exacte naam, dan "begint met", dan kortere namen eerst); maximaal 8 resultaten in plaats van 5. | ✅ |
+
+## Ronde 2: zelf gevonden en meegenomen
+
+| Punt | Wat er is gedaan | Status |
+|---|---|---|
+| Coördinerend radiologisch laborant en beheerder OK materialen hadden geen cluster (en vielen dus onder "Zorg") | Naar Medisch ondersteunend, net als hun collega's. Medewerker CSA heeft nog geen cluster. | ✅ / 💬 |
+| Opende je de app met een link naar een functie terwijl het overzicht nog geen afmetingen had, dan belandden de clusterkaarten in het raster | De focusweergave wordt nu opnieuw opgebouwd zodra het overzicht klaar is. | ✅ |
+
+---
+
+## Todo Eddie
+
+1. **Beleidsadviseur (zorg):** instroom en vervolgstappen bepalen; is nu nog een eindpunt.
+2. **OK-assistent → logistiek coördinator op OK:** welke koppeling is bedoeld?
+3. **Paden logistiek medewerker E/D en afdelingslogistiek → coördinator meewerkend schoonmaak:** nagaan met Facilitair of die kloppen.
+4. **Echocardiografist en pacemaker technicus:** post-hbo? Navragen bij Nadia of de instroom vanuit mbo (o.a. verpleegkundige, medisch assistent) klopt.
+5. **Functies zonder pad:** managementassistente, medewerker Patiëntenvervoer, projectleider, teamleider B (Patiëntenvervoer).
+6. **Verpleegkundige → medisch assistent** (i.p.v. polikliniek assistent): bevestigen. Alternatief: polikliniekverpleegkundige (FWG 45).
+7. **Medewerker CSA:** welk cluster?
