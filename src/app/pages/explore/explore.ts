@@ -29,11 +29,6 @@ const CLUSTER_LABELS: Record<string, string> = {
   'nvt': 'Zorg'
 };
 
-const CARE_NON_CARE_LABELS: Record<string, string> = {
-  'care': 'Zorg',
-  'non care': 'Ondersteunend (niet-zorg)'
-};
-
 /** Data follows the functiehuis spelling ("medewerker Logistiek B1"); on screen
  * every name starts with a capital so lists and legends read consistently. */
 function capitalize(value?: string): string {
@@ -75,15 +70,39 @@ const ENDPOINT_BORDER = { 'border-color': '#111827', 'border-width': 5, 'border-
 
 // Focus view: neighbours grouped in one card per cluster (sizes in graph units)
 const FOREIGN_GROUP = '__foreign';
-const FOCUS_CHIP_W = 230;
-const FOCUS_CHIP_H = 46;
+const GRAPH_FONT = "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
+const FOCUS_CHIP_W = 262;
+const FOCUS_CHIP_H = 52;
 const FOCUS_GAP = 8;
 const FOCUS_PAD = 14;
 const FOCUS_HEADER = 34;
 const FOCUS_COLUMNS = 2;
 const FOCUS_GROUP_GAP = 22;
-const FOCUS_OFFSET = 170;     // from the selected function's centre to the cards
-const FOCUS_MIN_ZOOM = 0.5;   // below this the chip labels stop being readable
+const FOCUS_OFFSET = 200;     // from the selected function's centre to the cards
+const FOCUS_CENTER_W = 230;   // the selected function itself
+const FOCUS_CENTER_H = 96;
+const FOCUS_TITLE_GAP = 46;   // room above the cards for the column title
+const FOCUS_CARD_GAP = 36;    // between two cards side by side
+const FOCUS_ROW_GAP = 44;     // between rows of cards; a line runs through it
+const FOCUS_MIN_ZOOM = 0.6;   // below this the chip labels stop being readable
+
+let measureContext: CanvasRenderingContext2D | null = null;
+
+/** Width in px of the widest word of a label (labels wrap on spaces only). */
+function widestWord(label: string, fontSize: number, weight: number): number {
+  measureContext = measureContext || document.createElement('canvas').getContext('2d');
+  if (!measureContext) {
+    return 0;
+  }
+  measureContext.font = `${weight} ${fontSize}px ${GRAPH_FONT}`;
+  return Math.max(...label.split(/\s+/).map(word => measureContext!.measureText(word).width));
+}
+
+/** Font size at which the widest word still fits maxWidth (never below 10px). */
+function fittingFontSize(label: string, maxWidth: number, base: number, weight: number): number {
+  const width = widestWord(label, base, weight);
+  return width <= maxWidth ? base : Math.max(10, Math.floor(base * maxWidth / width));
+}
 
 /** Dark text on light fills, white on dark ones (WCAG relative luminance). */
 function readableTextColor(hex: string): string {
@@ -214,7 +233,13 @@ export class Explore implements OnInit, AfterViewInit {
     const center = node.position();
     let cards = this.cy.collection();
 
-    const place = (collection: any, side: 'in' | 'out') => {
+    const container = this.cytoscapeContainer.nativeElement;
+    const centerHalf = node.width() / 2;
+    // A wide selected function (long name) pushes the cards out with it
+    const offset = Math.max(FOCUS_OFFSET, centerHalf + 85);
+    const cardWidth = FOCUS_PAD * 2 + FOCUS_COLUMNS * FOCUS_CHIP_W + (FOCUS_COLUMNS - 1) * FOCUS_GAP;
+
+    const place = (collection: any, side: 'in' | 'out', otherSideEmpty: boolean) => {
       const groups = new Map<string, any[]>();
       collection.forEach((n: any) => {
         const key = n.data('isForeign') ? FOREIGN_GROUP : (n.data('careCluster') || 'nvt');
@@ -223,22 +248,73 @@ export class Explore implements OnInit, AfterViewInit {
       if (groups.size === 0) {
         return;
       }
+      const dir = side === 'out' ? 1 : -1;
 
       // Alphabetical, with the catch-all cluster and the other family last
       const order = (key: string) => key === FOREIGN_GROUP ? 2 : key === 'nvt' ? 1 : 0;
       const keys = [...groups.keys()].sort((a, b) =>
         order(a) - order(b) || this.getClusterLabel(a).localeCompare(this.getClusterLabel(b)));
 
-      const cardWidth = FOCUS_PAD * 2 + FOCUS_COLUMNS * FOCUS_CHIP_W + (FOCUS_COLUMNS - 1) * FOCUS_GAP;
       const heights = keys.map(key => {
         const rows = Math.ceil(groups.get(key)!.length / FOCUS_COLUMNS);
         return FOCUS_PAD * 2 + FOCUS_HEADER + rows * FOCUS_CHIP_H + (rows - 1) * FOCUS_GAP;
       });
-      const total = heights.reduce((a, b) => a + b, 0) + (keys.length - 1) * FOCUS_GROUP_GAP;
-      const cardCenterX = center.x + (side === 'out' ? 1 : -1) * (FOCUS_OFFSET + cardWidth / 2);
-      let top = center.y - total / 2;
+
+      // Cards go side by side, two per row, when one stack would not fit the
+      // screen at a readable zoom (and two columns do fit its width)
+      const stacked = heights.reduce((a, b) => a + b, 0) + (keys.length - 1) * FOCUS_GROUP_GAP + FOCUS_TITLE_GAP;
+      const wide = (otherSideEmpty ? centerHalf : offset + cardWidth) +
+        offset + 2 * cardWidth + FOCUS_CARD_GAP;
+      const perRow = keys.length > 1 &&
+        stacked * FOCUS_MIN_ZOOM > container.clientHeight - 60 &&
+        wide * FOCUS_MIN_ZOOM <= container.clientWidth - 60 ? 2 : 1;
+      const rowGap = perRow === 2 ? FOCUS_ROW_GAP : FOCUS_GROUP_GAP;
+
+      const rowHeights: number[] = [];
+      keys.forEach((_, i) => {
+        const r = Math.floor(i / perRow);
+        rowHeights[r] = Math.max(rowHeights[r] || 0, heights[i]);
+      });
+      const total = rowHeights.reduce((a, b) => a + b, 0) + (rowHeights.length - 1) * rowGap;
+      const firstTop = center.y - total / 2;
+      const rowTops = rowHeights.map((_, r) =>
+        firstTop + rowHeights.slice(0, r).reduce((a, b) => a + b, 0) + r * rowGap);
+      const cardX = (col: number) =>
+        center.x + dir * (offset + cardWidth / 2 + col * (cardWidth + FOCUS_CARD_GAP));
+
+      // Say what the column is: left and right don't explain themselves
+      const title = this.cy.add({
+        group: 'nodes',
+        classes: 'focus-decor',
+        data: { id: `__focus-title-${side}`, isDecor: true },
+        position: {
+          x: (cardX(0) + cardX(perRow - 1)) / 2,
+          y: firstTop - FOCUS_TITLE_GAP / 2 - 4 - (perRow === 2 ? 20 : 0)
+        }
+      });
+      title.style({
+        'shape': 'rectangle',
+        'width': cardWidth,
+        'height': FOCUS_TITLE_GAP - 12,
+        'background-opacity': 0,
+        'border-width': 0,
+        'label': side === 'out' ? 'Vervolgstappen  →' : 'Instroom vanuit  →',
+        'color': '#4b5563',
+        'text-outline-width': 0,
+        'font-size': '19px',
+        'font-weight': 600,
+        'text-wrap': 'none',
+        'text-valign': 'center',
+        'text-halign': 'center',
+        'z-index': 2,
+        'events': 'no'
+      });
+      cards = cards.union(title);
 
       keys.forEach((key, i) => {
+        const col = i % perRow;
+        const top = rowTops[Math.floor(i / perRow)];
+        const cardCenterX = cardX(col);
         const members = groups.get(key)!.sort((a: any, b: any) =>
           salaryRank(a.data('salary')) - salaryRank(b.data('salary')) ||
           (a.data('label') || '').localeCompare(b.data('label') || ''));
@@ -266,7 +342,7 @@ export class Explore implements OnInit, AfterViewInit {
           'color': '#1f2937',
           'text-outline-width': 0,
           'font-size': '17px',
-          'font-weight': 'bold',
+          'font-weight': 600,
           'text-wrap': 'none',
           'text-valign': 'top',
           'text-halign': 'center',
@@ -282,11 +358,11 @@ export class Explore implements OnInit, AfterViewInit {
           if (!this.focusSavedPositions.has(n.id())) {
             this.focusSavedPositions.set(n.id(), { ...n.position() });
           }
-          const col = j % FOCUS_COLUMNS;
-          const row = Math.floor(j / FOCUS_COLUMNS);
+          const chipCol = j % FOCUS_COLUMNS;
+          const chipRow = Math.floor(j / FOCUS_COLUMNS);
           n.position({
-            x: left + col * (FOCUS_CHIP_W + FOCUS_GAP) + FOCUS_CHIP_W / 2,
-            y: top + FOCUS_PAD + FOCUS_HEADER + row * (FOCUS_CHIP_H + FOCUS_GAP) + FOCUS_CHIP_H / 2
+            x: left + chipCol * (FOCUS_CHIP_W + FOCUS_GAP) + FOCUS_CHIP_W / 2,
+            y: top + FOCUS_PAD + FOCUS_HEADER + chipRow * (FOCUS_CHIP_H + FOCUS_GAP) + FOCUS_CHIP_H / 2
           });
           const fill = n.data('isForeign') ? '#e9d5ff' : this.getClusterColor(n.data('careCluster'));
           const border = n.data('isRole')
@@ -300,51 +376,80 @@ export class Explore implements OnInit, AfterViewInit {
             'shape': 'round-rectangle',
             'width': FOCUS_CHIP_W,
             'height': FOCUS_CHIP_H,
-            'font-size': '15px',
-            'text-max-width': `${FOCUS_CHIP_W - 14}px`,
+            'font-size': fittingFontSize(n.data('label'), FOCUS_CHIP_W - 20, 16, 500),
+            'font-weight': 500,
+            'text-max-width': `${FOCUS_CHIP_W - 16}px`,
             'text-margin-y': 0,
             'color': readableTextColor(fill),
             'text-outline-width': 0,
             // The overview's "extra rol" band doesn't fit a chip; say it in words
             'background-image': 'none',
-            'label': n.data('hasExtraRole') ? `${n.data('label')}\n+ extra rol` : n.data('label'),
+            'label': this.focusLabel(n),
             ...border,
             'z-index': 25
           });
           this.focusChipIds.add(n.id());
         });
 
-        // One bundled line per cluster
-        const edge = this.cy.add({
-          group: 'edges',
-          classes: 'focus-decor',
-          data: {
-            id: `__focus-edge-${side}-${i}`,
-            source: side === 'out' ? node.id() : card.id(),
-            target: side === 'out' ? card.id() : node.id()
-          }
-        });
+        // One bundled line per cluster, always straight from the selected
+        // function: a card in the second column gets its own line through the
+        // gap above its row and enters from the top, never via its neighbour -
+        // that would read as "first do that function"
         const lineColor = key === FOREIGN_GROUP
           ? CROSS_FAMILY_COLOR
           : side === 'out' ? OUTGOING_EDGE_COLOR : INCOMING_EDGE_COLOR;
-        edge.style({
-          'curve-style': 'taxi',
-          'taxi-direction': 'horizontal',
-          'taxi-turn': '50%',
+        const lineStyle = {
           'line-color': lineColor,
           'target-arrow-color': lineColor,
           'line-style': key === FOREIGN_GROUP ? 'dashed' : 'solid',
           'width': side === 'out' ? 4 : 3,
           'opacity': 1,
           'z-index': 20
+        };
+        // All trunks turn at the same x, halfway between function and cards
+        const span = offset - centerHalf;
+        const taxi = (length: number, fromNode: boolean) => ({
+          'curve-style': 'taxi',
+          'taxi-direction': 'horizontal',
+          'taxi-turn': `${Math.round(100 * (fromNode ? span / 2 : length - span / 2) / length)}%`,
+          'taxi-turn-min-distance': 4
         });
+        const addEdge = (id: string, source: string, target: string, style: any) =>
+          this.cy.add({ group: 'edges', classes: 'focus-decor', data: { id, source, target } })
+            .style({ ...lineStyle, ...style });
 
-        top += heights[i] + FOCUS_GROUP_GAP;
+        if (col === 0) {
+          addEdge(`__focus-edge-${side}-${i}`,
+            side === 'out' ? node.id() : card.id(),
+            side === 'out' ? card.id() : node.id(),
+            taxi(span, side === 'out'));
+        } else {
+          const bend = this.cy.add({
+            group: 'nodes',
+            classes: 'focus-decor',
+            data: { id: `__focus-bend-${side}-${i}`, isDecor: true },
+            position: { x: cardCenterX, y: top - FOCUS_ROW_GAP / 2 }
+          });
+          bend.style({ 'width': 1, 'height': 1, 'opacity': 0, 'label': '', 'events': 'no' });
+          const length = Math.abs(cardCenterX - center.x) - centerHalf;
+          const drop = { 'curve-style': 'straight', 'source-endpoint': '0 0', 'target-endpoint': '0 0' };
+          if (side === 'out') {
+            addEdge(`__focus-edge-${side}-${i}a`, node.id(), bend.id(),
+              { ...taxi(length, true), 'target-arrow-shape': 'none', 'target-endpoint': '0 0' });
+            addEdge(`__focus-edge-${side}-${i}b`, bend.id(), card.id(),
+              { ...drop, 'target-endpoint': '0% -50%' });
+          } else {
+            addEdge(`__focus-edge-${side}-${i}a`, card.id(), bend.id(),
+              { ...drop, 'source-endpoint': '0% -50%', 'target-arrow-shape': 'none' });
+            addEdge(`__focus-edge-${side}-${i}b`, bend.id(), node.id(),
+              { ...taxi(length, false), 'source-endpoint': '0 0' });
+          }
+        }
       });
     };
 
-    place(outgoingNodes, 'out');
-    place(incomingNodes, 'in');
+    place(outgoingNodes, 'out', incomingNodes.length === 0);
+    place(incomingNodes, 'in', outgoingNodes.length === 0);
 
     // Nothing to grow to from here: say so where the next steps would be
     if (node.data('isEndpoint')) {
@@ -352,7 +457,7 @@ export class Explore implements OnInit, AfterViewInit {
         group: 'nodes',
         classes: 'focus-decor',
         data: { id: '__focus-endpoint', label: 'Eindpunt van deze loopbaanlijn', isDecor: true },
-        position: { x: center.x + FOCUS_OFFSET + 150, y: center.y }
+        position: { x: center.x + offset + 150, y: center.y }
       });
       card.style({
         'shape': 'round-rectangle',
@@ -368,13 +473,25 @@ export class Explore implements OnInit, AfterViewInit {
         'color': '#111827',
         'text-outline-width': 0,
         'font-size': '15px',
-        'font-weight': 'bold',
+        'font-weight': 600,
         'z-index': 2,
         'events': 'no'
       });
       cards = cards.union(card);
     }
     return cards;
+  }
+
+  // The name, plus in words what the overview shows with shapes: role, extra
+  // role, endpoint. No salary scale: it made every chip two lines and harder
+  // to read; the scale is in the sidebar and the popup
+  private focusLabel(n: any, isCenter = false): string {
+    const facts = [
+      n.data('isRole') ? 'rol' : '',
+      n.data('hasExtraRole') ? 'extra rol' : '',
+      n.data('isEndpoint') && !isCenter ? 'eindpunt' : ''
+    ].filter(Boolean);
+    return facts.length ? `${n.data('label')}\n${facts.join(' · ')}` : n.data('label');
   }
 
   // Run the overview layout as soon as the graph container has real dimensions.
@@ -446,7 +563,6 @@ export class Explore implements OnInit, AfterViewInit {
     if (!controls) {
       return;
     }
-    const padding = 50;
     const containerRect = this.cytoscapeContainer.nativeElement.getBoundingClientRect();
     const controlsRect = controls.getBoundingClientRect();
     const controlsLeft = controlsRect.left - containerRect.left - 16;
@@ -455,6 +571,9 @@ export class Explore implements OnInit, AfterViewInit {
     if (box.x2 <= controlsLeft || box.y1 >= controlsBottom) {
       return;
     }
+    // Nearly as wide as the pane: keep to the left edge, so the right end
+    // stays clear of the zoom buttons
+    const padding = box.w + 120 > containerRect.width ? 24 : 50;
 
     const scale = Math.min(1, (controlsLeft - padding) / box.w);
     if (scale < 1) {
@@ -463,6 +582,14 @@ export class Explore implements OnInit, AfterViewInit {
       box = eles.renderedBoundingBox();
     }
     this.cy.panBy({ x: padding - box.x1, y: 0 });
+
+    // Still under the buttons (already at the minimum zoom): drop below them
+    // when there is room for that
+    box = eles.renderedBoundingBox();
+    const shift = controlsBottom + 12 - box.y1;
+    if (box.x2 > controlsLeft && shift > 0 && box.y2 + shift <= containerRect.height - 8) {
+      this.cy.panBy({ x: 0, y: shift });
+    }
   }
 
   // The legend floats over the bottom-left of the graph; fold it away when it
@@ -489,11 +616,13 @@ export class Explore implements OnInit, AfterViewInit {
     this.focusChipIds.forEach(id => {
       const n = this.cy.getElementById(id);
       if (n && n.length) {
-        n.removeStyle('shape width height font-size text-max-width text-margin-y color ' +
+        n.removeStyle('shape width height font-size font-weight text-max-width text-margin-y color ' +
           'text-outline-width background-image label border-color border-width border-style');
+        n.style('font-size', n.data('overviewFont'));
       }
     });
     this.focusChipIds.clear();
+    this.cy.nodes().removeStyle('overlay-opacity');
 
     this.focusSavedPositions.forEach((position, id) => {
       const n = this.cy.getElementById(id);
@@ -691,6 +820,9 @@ export class Explore implements OnInit, AfterViewInit {
           isRole: node.isRole || undefined,
           isForeign: this.foreignNodeIds.has(node.id) || undefined,
           hasExtraRole: hasExtraRole(node) || undefined,
+          // Long one-word names ("Neonatologieverpleegkundige") get a smaller
+          // font in the overview instead of sticking out of their box
+          overviewFont: fittingFontSize(node.label, node.isRole ? 104 : 136, node.isRole ? 13 : 14, 600),
           // Only judged for this family: a foreign node's own steps aren't loaded
           isEndpoint: (!this.foreignNodeIds.has(node.id) &&
             !this.careerPaths.some(path => path.from === node.id)) || undefined
@@ -730,7 +862,10 @@ export class Explore implements OnInit, AfterViewInit {
             'text-valign': 'center',
             'text-halign': 'center',
             'font-size': '14px',
-            'font-weight': 'bold',
+            'font-weight': 600,
+            // Same typeface as the page around the graph (cytoscape's own
+            // default is Helvetica, which reads harsher next to it)
+            'font-family': GRAPH_FONT,
             'width': '150px',
             'height': '80px',
             'shape': 'round-rectangle',
@@ -738,8 +873,9 @@ export class Explore implements OnInit, AfterViewInit {
             'border-color': '#ffffff',
             'text-wrap': 'wrap',
             'text-max-width': '140px',
-            'text-outline-color': '#000000',
-            'text-outline-width': '1px',
+            // No outline around the letters: contrast comes from choosing dark
+            // or white text per cluster colour
+            'text-outline-width': 0,
             'opacity': 1,
             'z-index': 1,
             'z-index-compare': 'manual'
@@ -750,6 +886,7 @@ export class Explore implements OnInit, AfterViewInit {
           selector: `node[careCluster="${cluster}"]`,
           style: {
             'background-color': color,
+            'color': readableTextColor(color),
             'opacity': 1
           }
         })),
@@ -835,6 +972,8 @@ export class Explore implements OnInit, AfterViewInit {
       maxZoom: 3,
       zoom: 1
     });
+
+    this.cy.nodes().forEach((n: any) => { n.style('font-size', n.data('overviewFont')); });
 
     // Custom zoom handler
     const zoomStep = 0.1;
@@ -923,12 +1062,10 @@ export class Explore implements OnInit, AfterViewInit {
         this.tooltipPosition = { x, y };
         this.showTooltip = true;
 
-        // Add hover style to node (neutral: hue stays reserved for clusters).
-        // Darker than the edges on purpose - a hover ring has to register.
-        node.style({
-          'border-color': '#4b5563',
-          'border-width': '3px'
-        });
+        // Hover is a soft overlay, not a border: borders already mean
+        // something (selected, endpoint, role) and a border that outlived the
+        // hover was read as one of those
+        this.setNodeHighlight(node, true);
       }
     });
 
@@ -936,11 +1073,7 @@ export class Explore implements OnInit, AfterViewInit {
       this.showTooltip = false;
       this.hoveredNode = null;
 
-      // Reset border unless it's the selected node
-      const node = event.target;
-      if (!node.hasClass('selected') && !this.focusChipIds.has(node.id())) {
-        node.removeStyle('border-color border-width border-style');
-      }
+      this.setNodeHighlight(event.target, false);
     });
 
     this.cy.on('tap', 'node', (event: any) => {
@@ -1012,8 +1145,28 @@ export class Explore implements OnInit, AfterViewInit {
         'opacity': 1,
         'border-color': '#fbbf24',
         'border-width': '5px',
+        'border-style': 'solid',
         'z-index': 30
       });
+      // Larger and with crisp text, like the chips around it (a role keeps
+      // its triangle)
+      if (!node.data('isRole')) {
+        const fill = this.getClusterColor(node.data('careCluster'));
+        // Wide enough for its longest word
+        const centerWidth = Math.max(FOCUS_CENTER_W, Math.ceil(widestWord(node.data('label'), 20, 600)) + 48);
+        node.style({
+          'width': centerWidth,
+          'height': FOCUS_CENTER_H,
+          'font-size': '20px',
+          'text-max-width': `${centerWidth - 40}px`,
+          'text-margin-y': 0,
+          'color': readableTextColor(fill),
+          'text-outline-width': 0,
+          'background-image': 'none',
+          'label': this.focusLabel(node, true)
+        });
+      }
+      this.focusChipIds.add(nodeId); // restored with the chips
 
       // Arrange the neighborhood as cluster cards: incoming left, outgoing right
       const cards = this.applyFocusLayout(
@@ -1050,6 +1203,12 @@ export class Explore implements OnInit, AfterViewInit {
           } else if (this.cy.zoom() < FOCUS_MIN_ZOOM) {
             this.cy.zoom(FOCUS_MIN_ZOOM);
             this.cy.center(node);
+            // Too tall to show whole: start at the top, so the column titles
+            // and first cards are in view and the rest is a scroll down
+            const top = nodesToFit.renderedBoundingBox().y1;
+            if (top < 16) {
+              this.cy.panBy({ x: 0, y: 16 - top });
+            }
           }
           this.keepClearOfControls(nodesToFit);
           this.keepClearOfLegend(node);
@@ -1135,7 +1294,7 @@ export class Explore implements OnInit, AfterViewInit {
         'opacity': 1,
         'z-index': 1,
         'label': this.showLabels ? node.data('label') : '',
-        'font-size': '14px',
+        'font-size': node.data('overviewFont') || 14,
         'text-opacity': this.showLabels ? 1 : 0
       });
       // Borders come from the stylesheet (foreign, endpoint, plain)
@@ -1201,11 +1360,6 @@ export class Explore implements OnInit, AfterViewInit {
 
   getClusterLabel(cluster?: string): string {
     return capitalize((cluster && CLUSTER_LABELS[cluster]) || cluster || '');
-  }
-
-  getCareNonCareLabel(value?: string): string {
-    const key = (value || '').trim().toLowerCase();
-    return CARE_NON_CARE_LABELS[key] || capitalize(value);
   }
 
   // A path's timeframe field holds a condition for the step ("mits HBO");
@@ -1420,9 +1574,30 @@ export class Explore implements OnInit, AfterViewInit {
       node.style({
         'label': this.showLabels ? node.data('label') : '',
         'text-opacity': this.showLabels ? 1 : 0,
-        'font-size': '14px'
+        'font-size': node.data('overviewFont') || 14
       });
     });
+
+    // The focus view writes its own labels; build it again
+    if (this.showLabels && this.selectedNode) {
+      this.cy.getElementById(this.selectedNode.id).trigger('tap');
+    }
+  }
+
+  private setNodeHighlight(node: any, on: boolean) {
+    node.style({
+      'overlay-color': '#000000',
+      'overlay-padding': 3,
+      'overlay-opacity': on ? 0.18 : 0
+    });
+  }
+
+  // Hovering a function in the sidebar lists points it out in the overview
+  highlightInOverview(nodeId: string, on: boolean) {
+    const node = this.cy?.getElementById(nodeId);
+    if (node && node.length) {
+      this.setNodeHighlight(node, on);
+    }
   }
 
   // Zoom control methods
